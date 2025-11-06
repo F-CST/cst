@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detecting compression or divergence + calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* استایل سفارشی برای اسکرول بار */
+    .display-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: #4B5563 #1F2937;
+    }
+    
+    .display-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    .display-scroll::-webkit-scrollbar-track {
+      background: #1F2937;
+      border-radius: 3px;
+    }
+    
+    .display-scroll::-webkit-scrollbar-thumb {
+      background: #4B5563;
+      border-radius: 3px;
+    }
+    
+    .display-scroll::-webkit-scrollbar-thumb:hover {
+      background: #6B7280;
+    }
+    
+    /* انیمیشن برای نمایشگر ماشین حساب */
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+      50% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.8); }
+      100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+    }
+    
+    .active-input {
+      animation: pulse-glow 2s infinite;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4">
+  <h1 class="text-2xl font-bold mb-6">تشخیص فشردگی یا واگرایی</h1>
+
+  <div class="flex flex-col md:flex-row gap-6 w-full max-w-4xl">
+    <!-- بخش تشخیص واگرایی/فشردگی -->
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 w-full md:w-1/2">
+      <h2 class="text-xl font-semibold mb-4 text-center">وارد کردن دو جفت عدد</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <label for="prevPair" class="block mb-2">اعداد دیروز (مثلاً 42)</label>
+          <input id="prevPair" type="text" placeholder="اعداد دیروز (مثلاً 42)"
+            class="number-input w-full text-center bg-gray-700 text-white p-2 rounded focus:ring-2 focus:ring-blue-500"
+            maxlength="2" inputmode="numeric">
+          <p class="text-xs text-gray-400 mt-1">عدد دو رقمی وارد کنید (نیازی به کاما نیست)</p>
+        </div>
+        
+        <div>
+          <label for="nowPair" class="block mb-2">اعداد امروز (مثلاً 15)</label>
+          <input id="nowPair" type="text" placeholder="اعداد امروز (مثلاً 15)"
+            class="number-input w-full text-center bg-gray-700 text-white p-2 rounded focus:ring-2 focus:ring-blue-500"
+            maxlength="2" inputmode="numeric">
+          <p class="text-xs text-gray-400 mt-1">عدد دو رقمی وارد کنید (نیازی به کاما نیست)</p>
+        </div>
+        
+        <button id="analyzeBtn" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded w-full mt-2 transition-colors">
+          تحلیل کن
+        </button>
+        
+        <div id="resultContainer" class="mt-4 p-3 rounded bg-gray-700 hidden">
+          <p id="resultText" class="text-lg font-bold text-center"></p>
+          <div class="mt-2 text-sm text-gray-300 text-center">
+            <span id="prevNumbers"></span> → <span id="nowNumbers"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- بخش ماشین حساب -->
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 w-full md:w-1/2">
+      <h2 class="text-xl font-semibold mb-4 text-center">ماشین حساب</h2>
+      
+      <!-- نمایشگر ماشین حساب -->
+      <div class="bg-gray-900 p-3 rounded mb-4 border border-gray-600 calculator-display">
+        <div id="calcHistory" class="text-right text-sm text-gray-400 h-6 overflow-x-auto display-scroll whitespace-nowrap mb-1"></div>
+        <div id="calcDisplay" class="text-right text-2xl font-mono h-8 overflow-x-auto display-scroll whitespace-nowrap">0</div>
+      </div>
+      
+      <!-- دکمه‌های ماشین حساب -->
+      <div class="grid grid-cols-4 gap-2 mb-4">
+        <button class="calc-btn bg-red-600 hover:bg-red-700 p-2 rounded" data-value="C">C</button>
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="CE">CE</button>
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="backspace">
+          <i class="fas fa-backspace"></i>
+        </button>
+        <button class="calc-btn bg-amber-600 hover:bg-amber-700 p-2 rounded" data-value="/">÷</button>
+        
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="7">7</button>
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="8">8</button>
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="9">9</button>
+        <button class="calc-btn bg-amber-600 hover:bg-amber-700 p-2 rounded" data-value="*">×</button>
+        
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="4">4</button>
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="5">5</button>
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="6">6</button>
+        <button class="calc-btn bg-amber-600 hover:bg-amber-700 p-2 rounded" data-value="-">−</button>
+        
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="1">1</button>
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="2">2</button>
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value="3">3</button>
+        <button class="calc-btn bg-amber-600 hover:bg-amber-700 p-2 rounded" data-value="+">+</button>
+        
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded col-span-2" data-value="0">0</button>
+        <button class="calc-btn bg-gray-700 hover:bg-gray-600 p-2 rounded" data-value=".">.</button>
+        <button class="calc-btn bg-green-600 hover:bg-green-700 p-2 rounded" data-value="=">=</button>
+      </div>
+      
+      <!-- تاریخچه محاسبات -->
+      <div class="bg-gray-700 p-3 rounded">
+        <h3 class="font-semibold mb-2 flex justify-between items-center">
+          <span>تاریخچه محاسبات</span>
+          <button id="clearHistory" class="text-xs bg-red-600 hover:bg-red-700 px-2 py-1 rounded">پاک کردن</button>
+        </h3>
+        <div id="historyList" class="max-h-32 overflow-y-auto text-sm space-y-1">
+          <!-- تاریخچه اینجا نمایش داده می‌شود -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // بخش تشخیص واگرایی/فشردگی
+    document.getElementById('analyzeBtn').addEventListener('click', () => {
+      const prevInput = document.getElementById('prevPair').value;
+      const nowInput = document.getElementById('nowPair').value;
+      const resultText = document.getElementById('resultText');
+      const resultContainer = document.getElementById('resultContainer');
+      const prevNumbers = document.getElementById('prevNumbers');
+      const nowNumbers = document.getElementById('nowNumbers');
+
+      // بررسی اینکه ورودی‌ها دو رقمی هستند
+      if (prevInput.length !== 2 || nowInput.length !== 2 || 
+          isNaN(prevInput) || isNaN(nowInput)) {
+        resultText.textContent = '⚠️ لطفاً دو عدد دو رقمی وارد کنید!';
+        resultText.className = 'text-red-500 font-bold';
+        resultContainer.classList.remove('hidden');
+        return;
+      }
+
+      // تبدیل اعداد دو رقمی به جفت اعداد
+      const prevPair = [parseInt(prevInput[0]), parseInt(prevInput[1])];
+      const nowPair = [parseInt(nowInput[0]), parseInt(nowInput[1])];
+
+      const gapPrev = Math.abs(prevPair[0] - prevPair[1]);
+      const gapNow = Math.abs(nowPair[0] - nowPair[1]);
+
+      // نمایش اعداد به صورت جفت
+      prevNumbers.textContent = `${prevPair[0]},${prevPair[1]}`;
+      nowNumbers.textContent = `${nowPair[0]},${nowPair[1]}`;
+
+      if (gapNow > gapPrev) {
+        resultText.textContent = '🔺 واگرایی (Divergence)';
+        resultText.className = 'text-green-400 font-bold';
+      } else if (gapNow < gapPrev) {
+        resultText.textContent = '🔻 فشردگی (Compression)';
+        resultText.className = 'text-yellow-400 font-bold';
+      } else {
+        resultText.textContent = '⚪ بدون تغییر قابل توجه';
+        resultText.className = 'text-gray-300 font-bold';
+      }
+      
+      resultContainer.classList.remove('hidden');
+    });
+
+    // بخش ماشین حساب
+    let currentInput = '0';
+    let previousInput = '';
+    let operation = null;
+    let resetInput = false;
+    let calculationHistory = [];
+    let calculatorActive = false;
+
+    const calcDisplay = document.getElementById('calcDisplay');
+    const calcHistory = document.getElementById('calcHistory');
+    const historyList = document.getElementById('historyList');
+    const calculatorDisplay = document.querySelector('.calculator-display');
+
+    // فعال کردن ماشین حساب
+    function activateCalculator() {
+      calculatorActive = true;
+      calculatorDisplay.classList.add('active-input');
+      document.querySelectorAll('.number-input').forEach(input => {
+        input.classList.remove('active-input');
+      });
+    }
+
+    // غیرفعال کردن ماشین حساب
+    function deactivateCalculator() {
+      calculatorActive = false;
+      calculatorDisplay.classList.remove('active-input');
+    }
+
+    // فعال کردن فیلدهای عددی
+    function activateNumberInputs() {
+      calculatorActive = false;
+      calculatorDisplay.classList.remove('active-input');
+      document.querySelectorAll('.number-input').forEach(input => {
+        input.classList.add('active-input');
+      });
+    }
+
+    // به‌روزرسانی نمایشگر
+    function updateDisplay() {
+      calcDisplay.textContent = currentInput;
+      calcHistory.textContent = previousInput + (operation ? ` ${getOperationSymbol(operation)}` : '');
+    }
+
+    // دریافت نماد عملگر
+    function getOperationSymbol(op) {
+      switch(op) {
+        case '+': return '+';
+        case '-': return '−';
+        case '*': return '×';
+        case '/': return '÷';
+        default: return op;
+      }
+    }
+
+    // اضافه کردن به تاریخچه
+    function addToHistory(calculation) {
+      calculationHistory.unshift(calculation);
+      if (calculationHistory.length > 10) {
+        calculationHistory.pop();
+      }
+      updateHistoryDisplay();
+    }
+
+    // به‌روزرسانی نمایش تاریخچه
+    function updateHistoryDisplay() {
+      historyList.innerHTML = '';
+      calculationHistory.forEach(item => {
+        const historyItem = document.createElement('div');
+        historyItem.className = 'border-b border-gray-600 pb-1';
+        historyItem.textContent = item;
+        historyList.appendChild(historyItem);
+      });
+    }
+
+    // انجام محاسبه
+    function calculate() {
+      let result;
+      const prev = parseFloat(previousInput);
+      const current = parseFloat(currentInput);
+
+      if (isNaN(prev) || isNaN(current)) return;
+
+      switch(operation) {
+        case '+':
+          result = prev + current;
+          break;
+        case '-':
+          result = prev - current;
+          break;
+        case '*':
+          result = prev * current;
+          break;
+        case '/':
+          result = prev / current;
+          break;
+        default:
+          return;
+      }
+
+      // اضافه کردن به تاریخچه
+      const calculation = `${previousInput} ${getOperationSymbol(operation)} ${currentInput} = ${result}`;
+      addToHistory(calculation);
+
+      currentInput = result.toString();
+      operation = null;
+      previousInput = '';
+      resetInput = true;
+    }
+
+    // مدیریت کلیک روی دکمه‌های ماشین حساب
+    document.querySelectorAll('.calc-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        activateCalculator(); // فعال کردن ماشین حساب هنگام کلیک روی دکمه‌های آن
+        
+        const value = button.getAttribute('data-value');
+
+        if (value === 'C') {
+          // پاک کردن همه
+          currentInput = '0';
+          previousInput = '';
+          operation = null;
+        } else if (value === 'CE') {
+          // پاک کردن ورودی فعلی
+          currentInput = '0';
+        } else if (value === 'backspace') {
+          // حذف آخرین رقم
+          if (currentInput.length > 1) {
+            currentInput = currentInput.slice(0, -1);
+          } else {
+            currentInput = '0';
+          }
+        } else if (value === '=') {
+          // انجام محاسبه
+          if (operation && previousInput) {
+            calculate();
+          }
+        } else if (['+', '-', '*', '/'].includes(value)) {
+          // تنظیم عملگر
+          if (previousInput === '') {
+            previousInput = currentInput;
+            operation = value;
+            resetInput = true;
+          } else if (operation) {
+            calculate();
+            operation = value;
+            previousInput = currentInput;
+            resetInput = true;
+          }
+        } else {
+          // اضافه کردن رقم
+          if (resetInput) {
+            currentInput = value;
+            resetInput = false;
+          } else {
+            currentInput = currentInput === '0' ? value : currentInput + value;
+          }
+        }
+
+        updateDisplay();
+      });
+    });
+
+    // کلیک روی نمایشگر ماشین حساب
+    calculatorDisplay.addEventListener('click', activateCalculator);
+
+    // کلیک روی فیلدهای عددی
+    document.querySelectorAll('.number-input').forEach(input => {
+      input.addEventListener('click', activateNumberInputs);
+      
+      // جلوگیری از انتشار رویداد به document
+      input.addEventListener('keydown', (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    // پاک کردن تاریخچه
+    document.getElementById('clearHistory').addEventListener('click', () => {
+      calculationHistory = [];
+      updateHistoryDisplay();
+    });
+
+    // پشتیبانی از کیبورد برای ماشین حساب - فقط وقتی فعال است
+    document.addEventListener('keydown', (e) => {
+      // اگر ماشین حساب فعال نیست، کیبورد کار نکند
+      if (!calculatorActive) return;
+      
+      const key = e.key;
+      
+      if (key >= '0' && key <= '9') {
+        // اعداد
+        document.querySelector(`.calc-btn[data-value="${key}"]`).click();
+      } else if (key === '.') {
+        // نقطه اعشار
+        document.querySelector('.calc-btn[data-value="."]').click();
+      } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+        // عملگرها
+        document.querySelector(`.calc-btn[data-value="${key}"]`).click();
+      } else if (key === 'Enter' || key === '=') {
+        // مساوی
+        e.preventDefault();
+        document.querySelector('.calc-btn[data-value="="]').click();
+      } else if (key === 'Escape') {
+        // پاک کردن
+        document.querySelector('.calc-btn[data-value="C"]').click();
+      } else if (key === 'Backspace') {
+        // حذف
+        e.preventDefault();
+        document.querySelector('.calc-btn[data-value="backspace"]').click();
+      }
+    });
+
+    // غیرفعال کردن ماشین حساب هنگام کلیک در جای دیگر
+    document.addEventListener('click', (e) => {
+      // اگر کلیک روی ماشین حساب یا فیلدهای عددی نبود، هر دو را غیرفعال کن
+      if (!e.target.closest('.calculator-display') && 
+          !e.target.closest('.calc-btn') && 
+          !e.target.closest('.number-input')) {
+        deactivateCalculator();
+        document.querySelectorAll('.number-input').forEach(input => {
+          input.classList.remove('active-input');
+        });
+      }
+    });
+
+    // مقداردهی اولیه
+    updateDisplay();
+  </script>
+  
+  <!-- این کد را در انتهای body، قبل از بسته شدن </body> قرار دهید -->
+
+
+<div style="
+    color: white;
+    text-align: center;
+    padding: 12px 25px;
+    font-family: Vazirmatn, system-ui;
+    background: rgba(255, 255, 255, 0.1); /* باکس شفاف */
+    border-radius: 10px;
+    backdrop-filter: blur(5px); /* افکت شیشه‌ای */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 16px;
+    font-weight: 500;
+    display: block;
+    margin: 50px auto; /* وسط صفحه افقی و فاصله از بالا */
+    width: fit-content;
+">
+    طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
+</div>
+  
+</body>
+</html>

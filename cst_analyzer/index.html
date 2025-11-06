@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CST Geometry Analyzer</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  /* استایل‌ها بدون تغییر */
+  :root {
+    --bg-primary: #071020;
+    --bg-secondary: #0b1220;
+    --bg-tertiary: #071826;
+    --border-color: #163043;
+    --text-primary: #e6eef8;
+    --text-secondary: #9fb3c8;
+    --accent-color: #0ea5a4;
+    --danger-color: #ef4444;
+    --success-color: #10b981;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: system-ui, "Segoe UI", Roboto, Tahoma, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 12px;
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  .container {
+    max-width: 1150px;
+    margin: 0 auto;
+  }
+  
+  .card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  
+  h1, h2, h3 {
+    margin-top: 0;
+    color: var(--text-primary);
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  
+  input, select, textarea, button {
+    font-family: inherit;
+    font-size: 1rem;
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #234;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .col {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  button {
+    background: var(--accent-color);
+    color: #021;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    width: auto;
+    min-width: 120px;
+    display: inline-block;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  
+  .btn-full {
+    width: 100%;
+  }
+  
+  .btn-danger {
+    background: var(--danger-color);
+    color: white;
+  }
+  
+  .btn-success {
+    background: var(--success-color);
+    color: white;
+  }
+  
+  .btn-small {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    min-width: 100px;
+  }
+  
+  .btn-auto {
+    width: auto;
+  }
+  
+  .btn-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 0.85rem;
+  }
+  
+  th, td {
+    padding: 8px;
+    border-bottom: 1px solid var(--bg-tertiary);
+    text-align: center;
+    white-space: nowrap;
+  }
+  
+  th {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  
+  .small {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  
+  .symbols-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+    min-height: 60px;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    align-items: flex-start;
+  }
+  
+  .chip {
+    display: inline-flex;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #062b2a, #0a3a38);
+    color: #9ff;
+    cursor: grab;
+    margin: 4px;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    user-select: none;
+    border: 1px solid #0ea5a4;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    min-width: 80px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .chip:hover {
+    background: linear-gradient(135deg, #0ea5a4, #0d9488);
+    color: #021;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(14, 165, 164, 0.3);
+  }
+  
+  .chip.dragging {
+    opacity: 0.8;
+    cursor: grabbing;
+    transform: rotate(5deg) scale(1.05);
+    z-index: 1000;
+    box-shadow: 0 6px 12px rgba(14, 165, 164, 0.4);
+  }
+  
+  .chip-placeholder {
+    display: inline-block;
+    padding: 10px 16px;
+    margin: 4px;
+    border: 2px dashed #0ea5a4;
+    border-radius: 8px;
+    opacity: 0.6;
+    background: rgba(14, 165, 164, 0.1);
+    min-width: 80px;
+    height: 40px;
+  }
+  
+  .chip-overlay {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--accent-color);
+    color: #021;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .chip:hover .chip-overlay {
+    opacity: 1;
+  }
+  
+  .controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  pre {
+    background: #041219;
+    padding: 8px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    font-size: 0.8rem;
+    overflow-x: auto;
+  }
+  
+  .icon-btn {
+    background: transparent;
+    border: 1px solid #234;
+    color: var(--text-secondary);
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: auto;
+    margin: 2px;
+    font-size: 0.8rem;
+    min-width: auto;
+  }
+  
+  .action-col {
+    white-space: nowrap;
+  }
+  
+  .action-col button {
+    width: auto;
+    display: inline-block;
+    margin: 0 2px;
+    min-width: auto;
+  }
+  
+  #alertModal, #statsModal, #editModal, #moveModal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #061322;
+    border: 2px solid #16424a;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 10000;
+    display: none;
+    width: 90%;
+    max-width: 420px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .modal-bg {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 9998;
+    display: none;
+  }
+  
+  .date-range-toggle {
+    background: #1e3a5f;
+    color: var(--text-primary);
+    border: 1px solid #234;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    width: auto;
+    min-width: auto;
+  }
+  
+  .date-range-toggle.active {
+    background: var(--accent-color);
+    color: #021;
+  }
+  
+  .danger-zone {
+    background: #7f1d1d;
+    border: 1px solid rgba(239,68,68,0.3);
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 16px;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .mb-2 {
+    margin-bottom: 8px;
+  }
+  
+  .mt-2 {
+    margin-top: 8px;
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .flex-1 {
+    flex: 1;
+  }
+  
+  .items-center {
+    align-items: center;
+  }
+  
+  .gap-2 {
+    gap: 8px;
+  }
+  
+  .block {
+    display: block;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .form-group {
+    margin-bottom: 12px;
+  }
+  
+  .chart-wrapper {
+    position: relative;
+    width: 100%;
+    margin-top: 16px;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .chart-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+  }
+  
+  @media (max-width: 768px) {
+    body {
+      padding: 8px;
+    }
+    
+    .card {
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    
+    h1 {
+      font-size: 1.3rem;
+    }
+    
+    h3 {
+      font-size: 1.1rem;
+    }
+    
+    .row {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .col {
+      width: 100%;
+    }
+    
+    button {
+      padding: 12px;
+      font-size: 1rem;
+      width: 100%;
+      min-width: auto;
+    }
+    
+    .btn-group {
+      flex-direction: column;
+    }
+    
+    .btn-group button {
+      width: 100%;
+    }
+    
+    .chart-container {
+      height: 300px;
+    }
+    
+    .chart-wrapper {
+      padding: 12px;
+    }
+    
+    .symbols-grid {
+      padding: 8px;
+      gap: 6px;
+    }
+    
+    .chip {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      min-width: 70px;
+    }
+    
+    table {
+      font-size: 0.75rem;
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    
+    th, td {
+      padding: 6px 4px;
+    }
+    
+    .icon-btn {
+      padding: 4px 6px;
+      font-size: 0.7rem;
+    }
+    
+    input, select, textarea {
+      padding: 12px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    body {
+      padding: 6px;
+    }
+    
+    .card {
+      padding: 10px;
+    }
+    
+    h1 {
+      font-size: 1.2rem;
+    }
+    
+    .chart-container {
+      height: 250px;
+    }
+    
+    .symbols-grid {
+      padding: 6px;
+      gap: 4px;
+    }
+    
+    .chip {
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      min-width: 60px;
+    }
+    
+    table {
+      font-size: 0.7rem;
+    }
+    
+    th, td {
+      padding: 4px 2px;
+    }
+  }
+  
+  .history-table-container {
+    overflow-x: auto;
+    margin-top: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+  }
+  
+  .history-card {
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .history-card .row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 6px;
+  }
+  
+  .history-card .row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  .history-card .label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+  }
+  
+  .history-card .value {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    text-align: left;
+  }
+  
+  .history-card .actions {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  
+  .footer {
+    color: white;
+    text-align: center;
+    padding: 16px;
+    font-family: Vazirmatn, system-ui;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    margin: 30px auto;
+    width: fit-content;
+    max-width: 90%;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>CST Geometry Analyzer — پیشرفته</h1>
+
+  <div class="card">
+    <h3>۱) مدیریت جفت‌ارزها (با قابلیت جابجایی کاملاً آزاد)</h3>
+    <div class="form-group">
+      <label>نام جفت‌ارز (مثال: EURUSD یا BTCUSD)</label>
+      <input id="newSymbol" placeholder="نام جفت‌ارز را بنویسید">
+    </div>
+    
+    <div class="btn-group">
+      <button id="addSymbolBtn">افزودن / انتخاب</button>
+    </div>
+
+    <div class="small">لیست جفت‌ارزها (برای انتخاب کلیک کنید / برای جابجایی کاملاً آزاد بکشید و رها کنید):</div>
+    
+    <div id="symbolsList" class="symbols-grid">
+    </div>
+    
+    <div style="margin-top:8px" class="small">
+      💡 <strong>امکان جابجایی کاملاً آزاد:</strong> هر جفت ارزی را می‌توانید در هر موقعیتی از صفحه و کنار هر جفت ارز دیگری قرار دهید
+    </div>
+    
+    <div class="btn-group">
+      <button id="deleteSelectedSymbol" class="btn-danger">حذف جفت انتخاب‌شده</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>۲) وارد کردن / ثبت روز جدید</h3>
+    <div class="small">ابتدا یک جفت را انتخاب کن. سپس High و Low روز جدید را وارد کن (یا Mid).</div>
+
+    <div class="row">
+      <div class="col">
+        <label>جفت انتخاب‌شده</label>
+        <select id="selectedSymbol"></select>
+      </div>
+      <div class="col">
+        <label>تاریخ (اختیاری)</label>
+        <input id="inputDate" type="date">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label>High روز جدید</label>
+        <input id="inputHigh" placeholder="مثال: 76500">
+      </div>
+      <div class="col">
+        <label>Low روز جدید</label>
+        <input id="inputLow" placeholder="مثال: 76300">
+      </div>
+    </div>
+    
+    <div class="btn-group">
+      <button id="addDayBtn">ثبت روز جدید</button>
+      <button id="useMidBtn" class="btn-small">میانگین خودکار</button>
+      <button id="voiceToggle" class="btn-small">🔊 فعال/غیرفعال فرمان صوتی</button>
+    </div>
+
+    <div style="margin-top:6px" class="small">اگر فقط Mid داری، High = Low = Mid قرار بده یا از دکمه «میانگین خودکار» استفاده کن.</div>
+  </div>
+
+  <div class="card">
+    <h3>۳) نمایش تاریخچه و تحلیل (ویرایش / حذف / جابجایی رکوردها)</h3>
+    
+    <div style="margin-bottom:12px">
+      <label>نوع بازه تحلیل</label>
+      <div class="btn-group">
+        <button id="daysRangeToggle" class="date-range-toggle active">تعداد روز از جدیدترین</button>
+        <button id="dateRangeToggle" class="date-range-toggle">بازه تاریخ دلخواه</button>
+      </div>
+    </div>
+
+    <div id="daysRangeSection">
+      <div class="form-group">
+        <label>بازهٔ تحلیل (تعداد روز از جدیدترین)</label>
+        <input id="analysisDays" type="number" min="2" max="1000" value="5">
+        <div class="small">پیش‌فرض = 5 روز. برای مثال 7 یا 17 وارد کن و سپس «نمایش تاریخچه و تحلیل» را بزن.</div>
+      </div>
+      
+      <div class="btn-group">
+        <button id="showHistoryBtn">نمایش تاریخچه و تحلیل</button>
+      </div>
+    </div>
+
+    <div id="dateRangeSection" class="hidden">
+      <div class="row">
+        <div class="col">
+          <label>تاریخ شروع</label>
+          <input id="startDate" type="date">
+        </div>
+        <div class="col">
+          <label>تاریخ پایان</label>
+          <input id="endDate" type="date">
+        </div>
+      </div>
+      
+      <div class="btn-group">
+        <button id="showDateRangeBtn">نمایش تاریخچه و تحلیل</button>
+      </div>
+      
+      <div class="small">تاریخ شروع و پایان دلخواه را انتخاب کنید (مثال: 2024-09-10 تا 2024-09-13)</div>
+    </div>
+
+    <div id="analysisOut" style="margin-top:12px;display:none"></div>
+    
+    <div class="chart-wrapper">
+      <div class="chart-container">
+        <canvas id="midChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>۴) هشدارها و مدیریت پیشرفته داده‌ها</h3>
+    
+    <div class="row">
+      <div class="col">
+        <label>نوع هشدار صوتی هنگام «احتمال تغییر روند»</label>
+        <select id="alertSoundMode">
+          <option value="tts">TTS (صدای زنانه فارسی)</option>
+          <option value="beep">Beep ساده</option>
+          <option value="both">هر دو (TTS + Beep)</option>
+          <option value="off">خاموش</option>
+        </select>
+      </div>
+      <div class="col">
+        <label>&nbsp;</label>
+        <button id="testAlertBtn">آزمایش هشدار</button>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button id="exportBtn">خروجی (Backup)</button>
+    </div>
+    
+    <div class="form-group">
+      <label>ورودی (Restore)</label>
+      <input id="importFile" type="file" accept=".json">
+    </div>
+
+    <div class="danger-zone">
+      <div class="text-center mb-2">
+        <span style="color: white; font-weight: bold;">⚙ مدیریت پیشرفته داده‌ها</span>
+      </div>
+      
+      <div class="mb-3">
+        <label class="small block mb-1">حذف رکوردهای قدیمی‌تر از:</label>
+        <div class="flex gap-2">
+          <input id="manualPruneDays" type="number" min="1" max="3650" value="365" style="flex:1; text-align:center;">
+          <span class="small flex items-center">روز</span>
+        </div>
+        <button id="manualPruneBtn" class="btn-danger w-full mt-2">
+          حذف رکوردهای قدیمی
+        </button>
+      </div>
+
+      <button id="showStatsBtn" class="w-full mb-2">
+        نمایش آمار و اطلاعات
+      </button>
+
+      <p class="small text-center mt-2">این عملیات غیرقابل بازگشت هستند</p>
+    </div>
+  </div>
+
+  <div class="card small">
+    <strong>یادداشت‌ها:</strong>
+    <ul>
+      <li>✅ <strong>ذخیره‌سازی نامحدود:</strong> همه داده‌ها به طور دائمی حفظ می‌شوند (حتی تاریخ‌های قدیمی)</li>
+      <li>✅ <strong>حذف دستی:</strong> فقط از طریق بخش "مدیریت پیشرفته داده‌ها" می‌توانید رکوردهای قدیمی را حذف کنید</li>
+      <li>تحلیل زاویه بر اساس Mid هر روز انجام می‌شود (Mid = (High+Low)/2). پیش‌فرض نمایش تحلیل برای هر جفت ۵ روزه است اما می‌توانی عدد دلخواه 2..1000 وارد کنی.</li>
+      <li>فرمان صوتی نیاز به اجازه مرورگر دارد — ممکن است یک‌بار اجازه بخواهد.</li>
+    </ul>
+  </div>
+
+</div>
+
+<div id="statsModal">
+  <h3>📊 آمار و اطلاعات سیستم</h3>
+  <div id="statsContent" style="margin-bottom:10px;color:#e6eef8"></div>
+  <div class="btn-group">
+    <button id="closeStatsBtn">بستن</button>
+  </div>
+</div>
+
+<div id="alertModal">
+  <h3 id="alertTitle">⚠️ هشدار: احتمال تغییر روند</h3>
+  <div id="alertBody" style="margin-bottom:10px;color:#ffd9d9"></div>
+  <div class="btn-group">
+    <button id="closeAlert">بستن</button>
+  </div>
+</div>
+<div class="modal-bg" id="modalBg"></div>
+
+<div id="editModal">
+  <h3>✏️ ویرایش رکورد</h3>
+  <div class="small" style="margin-bottom:6px">در اینجا می‌توانید تاریخ، High و Low رکورد را ویرایش کنید.</div>
+  <div style="margin-bottom:8px">
+    <label>تاریخ</label><input id="editDate" type="date">
+    <label>High</label><input id="editHigh">
+    <label>Low</label><input id="editLow">
+  </div>
+  <div class="btn-group">
+    <button id="saveEditBtn">ذخیره</button>
+    <button id="cancelEditBtn" class="btn-danger">انصراف</button>
+  </div>
+</div>
+
+<div id="moveModal">
+  <h3>🔀 جابجایی رکورد</h3>
+  <div class="small" style="margin-bottom:6px">شمارهٔ جدید ردیف (1 = جدیدترین، ...)</div>
+  <div style="margin-bottom:8px">
+    <label>شماره ردیف جدید (1..30)</label><input id="moveToIndex" type="number" min="1" max="30" value="1">
+  </div>
+  <div class="btn-group">
+    <button id="doMoveBtn">جابجایی</button>
+    <button id="cancelMoveBtn" class="btn-danger">انصراف</button>
+  </div>
+</div>
+
+<script>
+// ---------- helpers ----------
+function parseNum(v){
+  if(v===null||v===undefined) return null;
+  v = String(v).trim();
+  if(v==="") return null;
+  v = v.replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));
+  v = v.replace(/,/g, '.');
+  v = v.replace(/\./g, '');
+  
+  const n = Number(v);
+  return isNaN(n)?null:n;
+}
+
+const STORAGE_KEY = 'cst_data_final_v5';
+let store = { symbols: {}, symbolOrder: [] };
+let voiceEnabled = false;
+let lastAlertShownAt = 0;
+const ALERT_THROTTLE_MS = 3000;
+
+function sanitizeAndMigrateStore(data) {
+    if (!data.symbols) data.symbols = {};
+    if (!data.symbolOrder || !Array.isArray(data.symbolOrder)) {
+        data.symbolOrder = Object.keys(data.symbols);
+    } else {
+        const symbolKeys = new Set(Object.keys(data.symbols));
+        data.symbolOrder = data.symbolOrder.filter(s => symbolKeys.has(s));
+        symbolKeys.forEach(s => {
+            if (!data.symbolOrder.includes(s)) {
+                data.symbolOrder.push(s);
+            }
+        });
+    }
+    return data;
+}
+
+function loadStore(){
+  let s;
+  try {
+    s = localStorage.getItem(STORAGE_KEY);
+    if(s) s = JSON.parse(s);
+    else s = { symbols: {}, symbolOrder: [] };
+  } catch(e){
+    console.error(e);
+    s = { symbols: {}, symbolOrder: [] };
+  }
+  store = sanitizeAndMigrateStore(s);
+}
+
+function saveStore(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }
+
+// ---------- Drag & Drop کاملاً آزاد ----------
+function refreshSymbolsList(){
+  const container = document.getElementById('symbolsList');
+  const sel = document.getElementById('selectedSymbol');
+  const currentSelected = sel.value;
+  
+  container.innerHTML = ''; 
+  sel.innerHTML = '';
+  
+  const names = store.symbolOrder || [];
+  if(names.length === 0){
+    container.innerHTML = '<div class="small" style="width:100%; text-align:center; padding:20px;">هیچ جفت‌ارزی ثبت نشده. یک نام وارد کن و «افزودن» بزن.</div>';
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.text = '-- جفت انتخاب نشده --';
+    sel.appendChild(opt);
+    return;
+  }
+
+  names.forEach((name, index) => {
+    const chip = createSymbolChip(name, index);
+    container.appendChild(chip);
+  });
+
+  names.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.text = name;
+    sel.appendChild(opt);
+  });
+  
+  if (currentSelected && names.includes(currentSelected)) {
+    sel.value = currentSelected;
+  } else if (names.length > 0) {
+    sel.value = names[0];
+  }
+
+  setupFreeDragAndDrop(container);
+}
+
+function createSymbolChip(name, index) {
+  const chip = document.createElement('div');
+  chip.className = 'chip';
+  chip.textContent = name;
+  chip.dataset.symbolName = name;
+  chip.dataset.index = index;
+  chip.draggable = true;
+  
+  const overlay = document.createElement('div');
+  overlay.className = 'chip-overlay';
+  overlay.textContent = '⇅';
+  chip.appendChild(overlay);
+  
+  chip.onclick = () => { 
+    document.getElementById('selectedSymbol').value = name; 
+    renderAnalysisFor(name); 
+  };
+  
+  return chip;
+}
+
+function setupFreeDragAndDrop(container) {
+  let draggedItem = null;
+  let placeholder = null;
+
+  container.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('dragstart', function(e) {
+      draggedItem = this;
+      this.classList.add('dragging');
+      
+      placeholder = document.createElement('div');
+      placeholder.className = 'chip-placeholder';
+      this.parentNode.insertBefore(placeholder, this.nextSibling);
+      
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', this.dataset.symbolName);
+    });
+
+    chip.addEventListener('dragend', function() {
+      this.classList.remove('dragging');
+      
+      if (placeholder && placeholder.parentNode) {
+        placeholder.parentNode.removeChild(placeholder);
+      }
+      
+      draggedItem = null;
+      placeholder = null;
+      
+      updateSymbolOrderFromFreeDOM();
+    });
+  });
+
+  container.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    if (!draggedItem) return;
+    
+    const afterElement = getFreeDragAfterElement(container, e.clientX, e.clientY);
+    
+    if (afterElement == null) {
+      container.appendChild(placeholder);
+    } else {
+      container.insertBefore(placeholder, afterElement);
+    }
+  });
+
+  container.addEventListener('drop', function(e) {
+    e.preventDefault();
+    if (!draggedItem) return;
+    
+    if (placeholder && placeholder.parentNode) {
+      container.insertBefore(draggedItem, placeholder);
+      placeholder.parentNode.removeChild(placeholder);
+    }
+    
+    draggedItem.classList.remove('dragging');
+    draggedItem = null;
+    placeholder = null;
+    
+    updateSymbolOrderFromFreeDOM();
+  });
+}
+
+function getFreeDragAfterElement(container, x, y) {
+  const draggableElements = [...container.querySelectorAll('.chip:not(.dragging)')];
+  
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offsetX = x - box.left - box.width / 2;
+    const offsetY = y - box.top - box.height / 2;
+    
+    const distance = Math.sqrt(offsetX * offsetX + offsetY * offsetY);
+    
+    if (distance < 100 && distance > closest.distance) {
+      return { distance: distance, element: child };
+    } else {
+      return closest;
+    }
+  }, { distance: Number.NEGATIVE_INFINITY, element: null }).element;
+}
+
+function updateSymbolOrderFromFreeDOM() {
+  const container = document.getElementById('symbolsList');
+  const newOrder = Array.from(container.querySelectorAll('.chip'))
+    .map(chip => chip.dataset.symbolName);
+  
+  store.symbolOrder = newOrder;
+  saveStore();
+  
+  refreshSymbolDropdown();
+}
+
+function refreshSymbolDropdown() {
+  const sel = document.getElementById('selectedSymbol');
+  const currentSelected = sel.value;
+  sel.innerHTML = '';
+  
+  store.symbolOrder.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.text = name;
+    sel.appendChild(opt);
+  });
+  
+  if (currentSelected && store.symbolOrder.includes(currentSelected)) {
+    sel.value = currentSelected;
+  } else if (store.symbolOrder.length > 0) {
+    sel.value = store.symbolOrder[0];
+  }
+}
+
+function ensureSymbol(name){
+  name = String(name || '').trim().toUpperCase();
+  if(!name) return null;
+  if(!store.symbols[name]){
+    store.symbols[name] = { name, history: [], created: Date.now() };
+    if (!store.symbolOrder.includes(name)) {
+      store.symbolOrder.push(name);
+    }
+    saveStore();
+    refreshSymbolsList();
+  }
+  return store.symbols[name];
+}
+
+function computeMid(high, low){ return (high + low) / 2; }
+
+function analyzeAnglesFor(midArray, windows=5){
+  if(!midArray || midArray.length < 2) return {angles:[], avgAbs:0, verdict:'داده کافی نیست'};
+  const use = Math.min(windows, midArray.length);
+  const arr = midArray.slice(-use);
+  const angles = [];
+  for(let i=0;i<arr.length-1;i++){
+    const dp = arr[i+1] - arr[i];
+    const ang = Math.atan(dp/1) * 180 / Math.PI;
+    angles.push(ang);
+  }
+  const absAngles = angles.map(a=>Math.abs(a));
+  const avgAbs = absAngles.length ? (absAngles.reduce((s,x)=>s+x,0)/absAngles.length) : 0;
+  const pos = angles.filter(a=>a>0).length;
+  const neg = angles.filter(a=>a<0).length;
+  const lastSign = angles.length ? (angles[angles.length-1] > 0 ? 'pos' : (angles[angles.length-1] < 0 ? 'neg' : 'zero')) : 'zero';
+  let verdict = '';
+  const majority = pos >= neg ? 'pos' : 'neg';
+  let weakening = false;
+  if(absAngles.length >= 2){
+    const la = absAngles;
+    if(la[la.length-1] < la[la.length-2] && la[la.length-2] <= (la[la.length-3]||Infinity)) weakening = true;
+  }
+  if(lastSign !== 'zero' && lastSign !== majority) verdict = '🔴 احتمال تغییر روند (علامت اخیر مخالف اکثریت)';
+  else {
+    if(avgAbs > 45) verdict = '🔵 ادامه‌دهندهٔ قوی';
+    else if(avgAbs >= 25) verdict = '🟡 روند متوسط — مراقب اصلاح';
+    else verdict = '🔻 فشردگی یا ضعف روند — احتمال تغییر یا شکست ناگهانی';
+    if(weakening) verdict += '\n⚠️ نشانهٔ تضعیف: زاویه‌ها کاهش یافته‌اند';
+  }
+  return {angles, avgAbs, verdict};
+}
+
+function addDayToSymbol(symName, high, low, dateStr=null){
+  const sym = store.symbols[symName]; if(!sym) return false;
+  const h = parseFloat(high); const l = parseFloat(low);
+  if(isNaN(h) || isNaN(l)) return false;
+  const mid = computeMid(h,l);
+  const rec = { date: dateStr || new Date().toISOString().slice(0,10), high:h, low:l, mid };
+  sym.history.push(rec);
+  
+  recomputeAnalysesForSymbol(sym);
+  saveStore(); return true;
+}
+
+function recomputeAnalysesForSymbol(sym){
+  sym.history.forEach((r, idx) => {
+    const window5 = sym.history.slice(Math.max(0, idx-4), idx+1).map(x=>x.mid);
+    r.analysis5 = analyzeAnglesFor(window5, window5.length).verdict || '';
+    const window30 = sym.history.slice(Math.max(0, idx-29), idx+1).map(x=>x.mid);
+    r.analysis30 = analyzeAnglesFor(window30, window30.length).verdict || '';
+  });
+  const mids = sym.history.map(r=>r.mid);
+  const last5 = analyzeAnglesFor(mids, Math.min(5,mids.length));
+  const last30 = analyzeAnglesFor(mids, Math.min(30,mids.length));
+  sym.lastSummary = { date: (sym.history[sym.history.length-1]||{}).date || '', last5:last5.verdict, last30:last30.verdict, avgAngle5:last5.avgAbs, avgAngle30:last30.avgAbs };
+}
+
+// ---------- توابع تحلیل و نمایش ----------
+function renderAnalysisFor(symName){
+  const out = document.getElementById('analysisOut');
+  const sym = store.symbols[symName];
+  if(!sym){ out.style.display='none'; if(window._chart) window._chart.destroy(); return; }
+
+  const hist = sym.history.slice();
+  if(hist.length===0){ out.style.display='block'; out.innerHTML='هیچ داده‌ای برای این جفت ثبت نشده.'; if(window._chart) window._chart.destroy(); return; }
+  
+  const requestedDays = (() => {
+    const v = parseInt(document.getElementById('analysisDays').value);
+    if(isNaN(v) || v < 2) return 5;
+    return Math.min(1000, v);
+  })();
+
+  const midsForAnalysis = hist.map(h => h.mid);
+  const lastN = analyzeAnglesFor(midsForAnalysis, Math.min(requestedDays, midsForAnalysis.length));
+  
+  const summaryHtml = `<div><strong>خلاصه (بازهٔ ${requestedDays} روزه - از جدیدترین روز):</strong><br>
+    نتیجه تحلیل: ${lastN.verdict || '-'} <br>
+    زاویه میانگین: ${lastN.avgAbs.toFixed(2)}° <br>
+    (تعداد داده‌ها در بازه: ${Math.min(requestedDays, midsForAnalysis.length)})</div>`;
+
+  let table = `<div class="history-table-container"><table><thead><tr>
+    <th>ردیف</th><th>تاریخ</th><th>High</th><th>Low</th><th>Mid</th><th>تحلیل ۵‌روزه</th><th>تحلیل ۳۰‌روزه</th><th>عملیات</th>
+    </tr></thead><tbody>`;
+
+  const startIndex = Math.max(0, hist.length - requestedDays);
+  for(let i = hist.length - 1; i >= startIndex; i--){
+    const r = hist[i];
+    const rowIndex = hist.length - i;
+    table += `<tr data-idx="${i}">
+      <td>${rowIndex}</td><td>${r.date}</td><td>${r.high}</td><td>${r.low}</td><td>${r.mid.toFixed(2)}</td><td>${r.analysis5||''}</td><td>${r.analysis30||''}</td>
+      <td class="action-col">
+        <button class="icon-btn edit-btn" data-idx="${i}">✏️</button>
+        <button class="icon-btn del-btn" data-idx="${i}">❌</button>
+        <button class="icon-btn move-btn" data-idx="${i}">🔀</button>
+      </td>
+    </tr>`;
+  }
+  table += `</tbody></table></div>`;
+  out.style.display='block';
+  out.innerHTML = `<div class="small">${summaryHtml}</div>${table}`;
+
+  out.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', () => openEditModal(symName, parseInt(btn.dataset.idx))));
+  out.querySelectorAll('.del-btn').forEach(btn => btn.addEventListener('click', () => {
+    if(!confirm('آیا می‌خواهی این رکورد حذف شود؟')) return;
+    sym.history.splice(parseInt(btn.dataset.idx),1); recomputeAnalysesForSymbol(sym); saveStore(); renderAnalysisFor(symName); checkAndAlertIfChange(symName);
+  }));
+  out.querySelectorAll('.move-btn').forEach(btn => btn.addEventListener('click', () => openMoveModal(symName, parseInt(btn.dataset.idx))));
+
+  const displayHist = hist.slice(-requestedDays);
+  const chartLabels = displayHist.map(h=>h.date);
+  const chartMids = displayHist.map(h=>h.mid);
+  const ctx = document.getElementById('midChart').getContext('2d');
+  if(window._chart) window._chart.destroy();
+  window._chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: chartLabels, datasets: [{ label: symName + ' — Mid', data: chartMids, fill:false, borderWidth:2, tension:0.2, borderColor: '#0ea5a4' }] },
+    options: { 
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins:{ legend:{ display:false } }, 
+      scales:{ 
+        y: { 
+          beginAtZero:false, 
+          ticks: { color: '#9fb3c8' }, 
+          grid: { color: 'rgba(159, 179, 200, 0.1)' } 
+        }, 
+        x: { 
+          ticks: { color: '#9fb3c8' }, 
+          grid: { color: 'rgba(159, 179, 200, 0.1)' } 
+        } 
+      } 
+    }
+  });
+}
+
+function renderAnalysisForDateRange(symName, startDate, endDate) {
+  const out = document.getElementById('analysisOut');
+  const sym = store.symbols[symName];
+  if(!sym){ out.style.display='none'; if(window._chart) window._chart.destroy(); return; }
+
+  const hist = sym.history.slice();
+  if(hist.length===0){ out.style.display='block'; out.innerHTML='هیچ داده‌ای برای این جفت ثبت نشده.'; if(window._chart) window._chart.destroy(); return; }
+  
+  // Filter records by date range
+  const filteredHist = hist.filter(record => {
+    const recordDate = new Date(record.date);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    return recordDate >= start && recordDate <= end;
+  });
+
+  if(filteredHist.length === 0) {
+    out.style.display='block'; 
+    out.innerHTML=`هیچ داده‌ای در بازه ${startDate} تا ${endDate} یافت نشد.`;
+    if(window._chart) window._chart.destroy(); 
+    return;
+  }
+
+  const midsForAnalysis = filteredHist.map(h => h.mid);
+  const analysis = analyzeAnglesFor(midsForAnalysis, midsForAnalysis.length);
+  
+  const summaryHtml = `<div><strong>خلاصه (بازه تاریخ ${startDate} تا ${endDate}):</strong><br>
+    نتیجه تحلیل: ${analysis.verdict || '-'} <br>
+    زاویه میانگین: ${analysis.avgAbs.toFixed(2)}° <br>
+    (تعداد داده‌ها در بازه: ${filteredHist.length})</div>`;
+
+  let table = `<div class="history-table-container"><table><thead><tr>
+    <th>ردیف</th><th>تاریخ</th><th>High</th><th>Low</th><th>Mid</th><th>تحلیل ۵‌روزه</th><th>تحلیل ۳۰‌روزه</th><th>عملیات</th>
+    </tr></thead><tbody>`;
+
+  for(let i = filteredHist.length - 1; i >= 0; i--){
+    const r = filteredHist[i];
+    const rowIndex = filteredHist.length - i;
+    // Find original index for operations
+    const originalIdx = hist.findIndex(origRec => origRec.date === r.date && origRec.high === r.high && origRec.low === r.low);
+    
+    table += `<tr data-idx="${originalIdx}">
+      <td>${rowIndex}</td><td>${r.date}</td><td>${r.high}</td><td>${r.low}</td><td>${r.mid.toFixed(2)}</td><td>${r.analysis5||''}</td><td>${r.analysis30||''}</td>
+      <td class="action-col">
+        <button class="icon-btn edit-btn" data-idx="${originalIdx}">✏️</button>
+        <button class="icon-btn del-btn" data-idx="${originalIdx}">❌</button>
+        <button class="icon-btn move-btn" data-idx="${originalIdx}">🔀</button>
+      </td>
+    </tr>`;
+  }
+  table += `</tbody></table></div>`;
+  out.style.display='block';
+  out.innerHTML = `<div class="small">${summaryHtml}</div>${table}`;
+
+  out.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', () => openEditModal(symName, parseInt(btn.dataset.idx))));
+  out.querySelectorAll('.del-btn').forEach(btn => btn.addEventListener('click', () => {
+    if(!confirm('آیا می‌خواهی این رکورد حذف شود؟')) return;
+    sym.history.splice(parseInt(btn.dataset.idx),1); recomputeAnalysesForSymbol(sym); saveStore(); renderAnalysisForDateRange(symName, startDate, endDate); checkAndAlertIfChange(symName);
+  }));
+  out.querySelectorAll('.move-btn').forEach(btn => btn.addEventListener('click', () => openMoveModal(symName, parseInt(btn.dataset.idx))));
+
+  const chartLabels = filteredHist.map(h=>h.date);
+  const chartMids = filteredHist.map(h=>h.mid);
+  const ctx = document.getElementById('midChart').getContext('2d');
+  if(window._chart) window._chart.destroy();
+  window._chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: chartLabels, datasets: [{ label: symName + ' — Mid', data: chartMids, fill:false, borderWidth:2, tension:0.2, borderColor: '#0ea5a4' }] },
+    options: { 
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins:{ legend:{ display:false } }, 
+      scales:{ 
+        y: { 
+          beginAtZero:false, 
+          ticks: { color: '#9fb3c8' }, 
+          grid: { color: 'rgba(159, 179, 200, 0.1)' } 
+        }, 
+        x: { 
+          ticks: { color: '#9fb3c8' }, 
+          grid: { color: 'rgba(159, 179, 200, 0.1)' } 
+        } 
+      } 
+    }
+  });
+}
+
+// ---------- Event Listeners ----------
+// [همان event listeners قبلی بدون تغییر]
+
+document.getElementById('deleteSelectedSymbol').addEventListener('click', ()=>{
+  const sym = document.getElementById('selectedSymbol').value;
+  if(!sym){ alert('یک جفت انتخاب کنید'); return; }
+  if(!confirm(`آیا مطمئنی می‌خواهی جفت "${sym}" و تمام داده‌هایش حذف شود؟`)) return;
+  delete store.symbols[sym];
+  const idx = store.symbolOrder.indexOf(sym);
+  if (idx > -1) store.symbolOrder.splice(idx, 1);
+  saveStore();
+  refreshSymbolsList();
+  document.getElementById('analysisOut').style.display = 'none';
+  if(window._chart) window._chart.destroy();
+});
+
+document.getElementById('addSymbolBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('newSymbol').value.trim().toUpperCase();
+  if(!name){ alert('نام معتبر وارد کنید'); return; }
+  const sym = ensureSymbol(name);
+  if(sym){
+    document.getElementById('selectedSymbol').value = name;
+    renderAnalysisFor(name);
+  }
+});
+
+document.getElementById('useMidBtn').addEventListener('click', ()=>{
+  const h = parseNum(document.getElementById('inputHigh').value);
+  const l = parseNum(document.getElementById('inputLow').value);
+  if(h===null && l===null){ alert('ابتدا مقدار Mid یا High/Low را وارد کنید'); return; }
+  if(h===null) document.getElementById('inputHigh').value = String(l);
+  if(l===null) document.getElementById('inputLow').value = String(h);
+});
+
+document.getElementById('addDayBtn').addEventListener('click', ()=>{
+  const symName = document.getElementById('selectedSymbol').value;
+  if(!symName){ alert('ابتدا یک جفت را انتخاب کنید'); return; }
+  const high = parseNum(document.getElementById('inputHigh').value);
+  const low = parseNum(document.getElementById('inputLow').value);
+  const date = document.getElementById('inputDate').value || null;
+  if(high===null || low===null){ alert('High و Low معتبر وارد کنید'); return; }
+  const ok = addDayToSymbol(symName, high, low, date);
+  if(ok){ alert('ثبت شد'); renderAnalysisFor(symName); document.getElementById('inputHigh').value = ''; document.getElementById('inputLow').value = ''; }
+  else alert('خطا در ثبت');
+});
+
+document.getElementById('daysRangeToggle').addEventListener('click', () => {
+  document.getElementById('daysRangeSection').style.display = 'block';
+  document.getElementById('dateRangeSection').style.display = 'none';
+  document.getElementById('daysRangeToggle').classList.add('active');
+  document.getElementById('dateRangeToggle').classList.remove('active');
+});
+
+document.getElementById('dateRangeToggle').addEventListener('click', () => {
+  document.getElementById('daysRangeSection').style.display = 'none';
+  document.getElementById('dateRangeSection').style.display = 'block';
+  document.getElementById('dateRangeToggle').classList.add('active');
+  document.getElementById('daysRangeToggle').classList.remove('active');
+  
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 7);
+  
+  document.getElementById('endDate').value = endDate.toISOString().slice(0,10);
+  document.getElementById('startDate').value = startDate.toISOString().slice(0,10);
+});
+
+document.getElementById('showDateRangeBtn').addEventListener('click', ()=>{
+  const symName = document.getElementById('selectedSymbol').value;
+  if(!symName){ alert('یک جفت انتخاب کنید'); return; }
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById('endDate').value;
+  
+  if(!startDate || !endDate){ alert('لطفاً تاریخ شروع و پایان را انتخاب کنید'); return; }
+  if(new Date(startDate) > new Date(endDate)){ alert('تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد'); return; }
+  
+  renderAnalysisForDateRange(symName, startDate, endDate);
+});
+
+document.getElementById('showHistoryBtn').addEventListener('click', ()=>{
+  const symName = document.getElementById('selectedSymbol').value;
+  if(!symName){ alert('یک جفت انتخاب کنید'); return; }
+  renderAnalysisFor(symName);
+});
+
+document.getElementById('manualPruneBtn').addEventListener('click', function() {
+  const days = parseInt(document.getElementById('manualPruneDays').value) || 365;
+  if (days < 1) {
+    alert('تعداد روز باید بیشتر از ۰ باشد');
+    return;
+  }
+  
+  if (confirm(`آیا از حذف رکوردهای قدیمی‌تر از ${days} روز مطمئن هستید؟\nاین عمل غیرقابل بازگشت است.`)) {
+    const result = manualPruneOldEntries(days);
+    if (result.totalDeleted > 0) {
+      alert(`✅ ${result.totalDeleted} رکورد قدیمی حذف شد.\nجفت‌ارزهای affected: ${result.affectedSymbols.join(', ')}`);
+      const currentSymbol = document.getElementById('selectedSymbol').value;
+      if (currentSymbol) {
+        renderAnalysisFor(currentSymbol);
+      }
+    } else {
+      alert('ℹ️ هیچ رکورد قدیمی‌ای برای حذف یافت نشد.');
+    }
+  }
+});
+
+document.getElementById('showStatsBtn').addEventListener('click', showSystemStats);
+document.getElementById('closeStatsBtn').addEventListener('click', function() {
+  document.getElementById('statsModal').style.display = 'none';
+  document.getElementById('modalBg').style.display = 'none';
+});
+
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const dataStr = JSON.stringify(store, null, 2);
+  const blob = new Blob([dataStr], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url;
+  a.download = 'cst_backup_' + new Date().toISOString().slice(0,10) + '.json'; a.click(); URL.revokeObjectURL(url);
+});
+
+document.getElementById('importFile').addEventListener('change', (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            let importedObj = JSON.parse(reader.result);
+            if (!importedObj || !importedObj.symbols) {
+                alert('فایل بک‌آپ معتبر نیست یا ساختار اشتباهی دارد.');
+                return;
+            }
+
+            importedObj = sanitizeAndMigrateStore(importedObj);
+
+            if (confirm('می‌خواهی داده‌های فایل جایگزین کل داده‌ها شوند (OK) یا به داده‌های فعلی اضافه شوند (Cancel)؟')) {
+                store = importedObj;
+            } else {
+                Object.keys(importedObj.symbols || {}).forEach(k => {
+                    store.symbols[k] = importedObj.symbols[k];
+                });
+                importedObj.symbolOrder.forEach(s => {
+                    if (!store.symbolOrder.includes(s)) {
+                        store.symbolOrder.push(s);
+                    }
+                });
+            }
+
+            saveStore();
+            refreshSymbolsList();
+            
+            const sel = document.getElementById('selectedSymbol');
+            if (sel.options.length > 0 && sel.options[0].value) {
+                sel.value = sel.options[0].value;
+                renderAnalysisFor(sel.value);
+            } else {
+                document.getElementById('analysisOut').style.display = 'none';
+                if(window._chart) window._chart.destroy();
+            }
+
+            alert('بازیابی اطلاعات با موفقیت انجام شد.');
+            e.target.value = '';
+
+        } catch (err) {
+            alert('خطا در خواندن فایل: ' + err);
+        }
+    };
+    reader.readAsText(f);
+});
+
+// بقیه event listeners بدون تغییر...
+let currentEdit = null;
+function openEditModal(symName, idx){
+  const sym = store.symbols[symName]; if(!sym) return;
+  const rec = sym.history[idx]; if(!rec) return;
+  currentEdit = { symName, idx };
+  document.getElementById('editDate').value = rec.date;
+  document.getElementById('editHigh').value = String(rec.high);
+  document.getElementById('editLow').value = String(rec.low);
+  document.getElementById('modalBg').style.display = 'block';
+  document.getElementById('editModal').style.display = 'block';
+}
+document.getElementById('cancelEditBtn').addEventListener('click', ()=>{ currentEdit = null; document.getElementById('editModal').style.display='none'; document.getElementById('modalBg').style.display='none'; });
+document.getElementById('saveEditBtn').addEventListener('click', ()=>{
+  if(!currentEdit) return;
+  const { symName, idx } = currentEdit;
+  const sym = store.symbols[symName]; if(!sym) return;
+  const d = document.getElementById('editDate').value || new Date().toISOString().slice(0,10);
+  const h = parseNum(document.getElementById('editHigh').value);
+  const l = parseNum(document.getElementById('editLow').value);
+  if(h===null || l===null){ alert('High و Low معتبر وارد کنید'); return; }
+  sym.history[idx].date = d; sym.history[idx].high = h; sym.history[idx].low = l; sym.history[idx].mid = computeMid(h,l);
+  recomputeAnalysesForSymbol(sym); saveStore();
+  currentEdit = null; document.getElementById('editModal').style.display='none'; document.getElementById('modalBg').style.display='none';
+  renderAnalysisFor(symName); checkAndAlertIfChange(symName);
+});
+
+let currentMove = null;
+function openMoveModal(symName, idx){
+  const sym = store.symbols[symName]; if(!sym) return;
+  currentMove = { symName, idx };
+  document.getElementById('moveToIndex').value = 1;
+  document.getElementById('modalBg').style.display = 'block';
+  document.getElementById('moveModal').style.display = 'block';
+}
+document.getElementById('cancelMoveBtn').addEventListener('click', ()=>{ currentMove = null; document.getElementById('moveModal').style.display='none'; document.getElementById('modalBg').style.display='none'; });
+document.getElementById('doMoveBtn').addEventListener('click', ()=>{
+  if(!currentMove) return;
+  const { symName, idx } = currentMove;
+  const sym = store.symbols[symName]; if(!sym) return;
+  const to = parseInt(document.getElementById('moveToIndex').value);
+  if(isNaN(to) || to < 1) { alert('شمارهٔ ردیف معتبر وارد کن'); return; }
+  const hist = sym.history;
+  const toIndex = Math.max(0, Math.min(hist.length-1, hist.length - to));
+  const [item] = hist.splice(idx,1);
+  hist.splice(toIndex,0,item);
+  recomputeAnalysesForSymbol(sym); saveStore();
+  currentMove = null; document.getElementById('moveModal').style.display='none'; document.getElementById('modalBg').style.display='none';
+  renderAnalysisFor(symName); checkAndAlertIfChange(symName);
+});
+
+function enableVoiceForField(fieldId){
+  const el = document.getElementById(fieldId); if(!el) return;
+  el.addEventListener('click', ()=>{
+    if(!window.webkitSpeechRecognition && !window.SpeechRecognition){ alert('مرورگر شما از فرمان صوتی پشتیبانی نمی‌کند (Chrome پیشنهاد می‌شود).'); return; }
+    const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new Rec();
+    recognition.lang = 'fa-IR'; recognition.interimResults = false; recognition.maxAlternatives = 1;
+    recognition.start();
+    recognition.onresult = (ev) => { el.value = ev.results[0][0].transcript.replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[^\d\.\-\,]/g, ''); };
+  });
+}
+document.getElementById('voiceToggle').addEventListener('click', ()=>{
+  voiceEnabled = !voiceEnabled;
+  if(voiceEnabled){
+    ['inputHigh','inputLow','editHigh','editLow'].forEach(id=>enableVoiceForField(id));
+    alert('فرمان صوتی فعال شد.');
+    document.getElementById('voiceToggle').textContent = '🔊 فرمان صوتی فعال است';
+  } else {
+    alert('فرمان صوتی خاموش شد.');
+    document.getElementById('voiceToggle').textContent = '🔊 فعال/غیرفعال فرمان صوتی';
+  }
+});
+
+function speakTTS(text){
+  if(!('speechSynthesis' in window)) return;
+  const ut = new SpeechSynthesisUtterance(text); ut.lang = 'fa-IR';
+  speechSynthesis.cancel(); speechSynthesis.speak(ut);
+}
+function playBeep(){
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(880, ctx.currentTime);
+    g.gain.setTargetAtTime(0, ctx.currentTime, 0.02);
+    o.connect(g); g.connect(ctx.destination); o.start();
+    setTimeout(() => o.stop(), 400);
+  } catch(e){}
+}
+function showAlertModal(title, body){
+  const now = Date.now();
+  if(now - lastAlertShownAt < ALERT_THROTTLE_MS) return;
+  lastAlertShownAt = now;
+  document.getElementById('alertTitle').textContent = title;
+  document.getElementById('alertBody').textContent = body;
+  document.getElementById('modalBg').style.display = 'block';
+  document.getElementById('alertModal').style.display = 'block';
+  const mode = document.getElementById('alertSoundMode').value;
+  if(mode === 'tts' || mode === 'both') speakTTS('احتمال تغییر روند');
+  if(mode === 'beep' || mode === 'both') playBeep();
+}
+document.getElementById('closeAlert').addEventListener('click', ()=>{ document.getElementById('alertModal').style.display = 'none'; document.getElementById('modalBg').style.display='none'; });
+document.getElementById('testAlertBtn').addEventListener('click', ()=>{ showAlertModal('هشدار آزمایشی','این یک هشدار آزمایشی است'); });
+
+function checkAndAlertIfChange(symName){
+  const sym = store.symbols[symName]; if(!sym || !sym.lastSummary) return;
+  const keyword = 'احتمال تغییر';
+  const v5 = sym.lastSummary.last5 || ''; const v30 = sym.lastSummary.last30 || '';
+  if((v5.includes(keyword)) || (v30.includes(keyword))){
+    const body = `جفت: ${symName}\nتحلیل ۵ روزه: ${sym.lastSummary.last5}\nتحلیل ۳۰ روزه: ${sym.lastSummary.last30}`;
+    showAlertModal('⚠️ احتمال تغییر روند شناسایی شد', body);
+  }
+}
+
+function manualPruneOldEntries(days = 365) {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+  
+  let totalDeleted = 0;
+  let affectedSymbols = [];
+
+  Object.keys(store.symbols).forEach(symbolName => {
+    const symbol = store.symbols[symbolName];
+    const initialLength = symbol.history.length;
+    
+    symbol.history = symbol.history.filter(record => {
+      const recordDate = new Date(record.date);
+      return recordDate >= cutoffDate;
+    });
+    
+    const deletedCount = initialLength - symbol.history.length;
+    if (deletedCount > 0) {
+      totalDeleted += deletedCount;
+      affectedSymbols.push(symbolName);
+      recomputeAnalysesForSymbol(symbol);
+    }
+  });
+
+  saveStore();
+  return { totalDeleted, affectedSymbols };
+}
+
+function showSystemStats() {
+  const totalSymbols = Object.keys(store.symbols).length;
+  let totalRecords = 0;
+  let oldestRecord = null;
+  let newestRecord = null;
+
+  Object.keys(store.symbols).forEach(symbolName => {
+    const symbol = store.symbols[symbolName];
+    totalRecords += symbol.history.length;
+    
+    symbol.history.forEach(record => {
+      const recordDate = new Date(record.date);
+      if (!oldestRecord || recordDate < oldestRecord) oldestRecord = recordDate;
+      if (!newestRecord || recordDate > newestRecord) newestRecord = recordDate;
+    });
+  });
+
+  const statsHTML = `
+    <div style="background:#071826;padding:10px;border-radius:6px;margin-bottom:10px;">
+      <div><strong>📊 آمار کلی سیستم:</strong></div>
+      <div>• تعداد جفت‌ارزها: ${totalSymbols}</div>
+      <div>• تعداد کل رکوردها: ${totalRecords}</div>
+      <div>• قدیمی‌ترین رکورد: ${oldestRecord ? oldestRecord.toLocaleDateString('fa-IR') : '---'}</div>
+      <div>• جدیدترین رکورد: ${newestRecord ? newestRecord.toLocaleDateString('fa-IR') : '---'}</div>
+    </div>
+    <div style="background:#071826;padding:10px;border-radius:6px;">
+      <div><strong>🔧 وضعیت سیستم:</strong></div>
+      <div>• حذف خودکار: ❌ غیرفعال</div>
+      <div>• ذخیره‌سازی: ✅ نامحدود</div>
+      <div>• مدیریت دستی: ✅ فعال</div>
+    </div>
+  `;
+
+  document.getElementById('statsContent').innerHTML = statsHTML;
+  document.getElementById('modalBg').style.display = 'block';
+  document.getElementById('statsModal').style.display = 'block';
+}
+
+// اضافه کردن event listener برای تغییر سایز پنجره
+window.addEventListener('resize', function() {
+  if (window._chart) {
+    window._chart.resize();
+  }
+});
+
+// ---------- init ----------
+document.addEventListener('DOMContentLoaded', () => {
+  loadStore();
+  refreshSymbolsList();
+  const sel = document.getElementById('selectedSymbol');
+  if(sel.value) { renderAnalysisFor(sel.value); }
+  sel.addEventListener('change', ()=>{ renderAnalysisFor(sel.value); });
+  if('speechSynthesis' in window){ window.speechSynthesis.onvoiceschanged = () => {}; }
+});
+</script>
+
+<div class="footer">
+    طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
+</div>
+
+</body>
+</html>
