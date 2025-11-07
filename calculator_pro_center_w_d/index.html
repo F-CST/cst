@@ -135,6 +135,40 @@
       padding: 10px;
       margin-bottom: 12px;
     }
+
+
+    .signature {
+    color: white;
+    text-align: center;
+    padding: 16px;
+    font-family: Vazirmatn, system-ui;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    margin: 30px auto;
+    width: fit-content;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+@media only screen and (max-width: 768px) {
+    .signature {
+        font-size: 13px;
+        padding: 14px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .signature {
+        font-size: 11px;
+        padding: 12px;
+    }
+}
+    
   </style>
 </head>
 <body>
@@ -2325,21 +2359,7 @@
   
   <!-- این کد را در انتهای body، قبل از بسته شدن </body> قرار دهید -->
 
-<div style="
-    color: white;
-    text-align: center;
-    padding: 12px 25px;
-    font-family: Vazirmatn, system-ui;
-    background: rgba(255, 255, 255, 0.1); /* باکس شفاف */
-    border-radius: 10px;
-    backdrop-filter: blur(5px); /* افکت شیشه‌ای */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    font-size: 16px;
-    font-weight: 500;
-    display: block;
-    margin: 50px auto; /* وسط صفحه افقی و فاصله از بالا */
-    width: fit-content;
-">
+<div class="signature">
     طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
 </div>
   
