@@ -959,7 +959,6 @@ function ensureDefaults(){
 }
 ensureDefaults();
 
-
 // ---------- تشخیص دستگاه موبایل/تبلت ----------
 function isMobileOrTablet() {
     return window.innerWidth <= 1024;
@@ -978,72 +977,6 @@ function initializeBoxStates() {
     }
 }
 
-
-
-
-
-
-
-// ---------- DOM refs ----------
-const $ = id => document.getElementById(id);
-const pairSelect = $('pair_select');
-const historyPairFilter = $('history_pair_filter');
-// ... بقیه متغیرها
-
-const toggleHistoryBtn = $('toggle_history_btn');
-const historyPanel = $('history_panel');
-// ... بقیه متغیرها
-
-// ---------- تابع جدید برای مدیریت دکمه تاگل ----------
-function updateToggleButton(isOpen) {
-  const toggleIcon = document.getElementById('toggle_icon');
-  const toggleText = document.getElementById('toggle_text');
-  const toggleBtn = document.getElementById('toggle_history_btn');
-  
-  if (isOpen) {
-    toggleIcon.textContent = '📁';
-    toggleIcon.style.transform = 'rotate(0deg) scale(1.1)';
-    toggleText.textContent = 'بستن ذخیره‌ها';
-    toggleBtn.classList.remove('closed');
-    toggleBtn.classList.add('open');
-  } else {
-    toggleIcon.textContent = '📂';
-    toggleIcon.style.transform = 'rotate(0deg) scale(1)';
-    toggleText.textContent = 'نمایش ذخیره‌ها';
-    toggleBtn.classList.remove('open');
-    toggleBtn.classList.add('closed');
-  }
-}
-
-// ---------- event listeners ----------
-if(calculateButton) calculateButton.addEventListener('click', ()=>{
-  // ... کدهای موجود
-});
-
-// ---------- مدیریت تاریخچه ----------
-if(toggleHistoryBtn) toggleHistoryBtn.addEventListener('click', ()=>{
-  const isCurrentlyHidden = historyPanel.classList.contains('hidden');
-  
-  if(isCurrentlyHidden){
-    historyPanel.classList.remove('hidden'); 
-    updateToggleButton(true); // اینجا فراخوانی شود
-    const today = new Date().toISOString().split('T')[0];
-    if(historyDate) historyDate.value = today;
-    renderHistory();
-  } else { 
-    historyPanel.classList.add('hidden'); 
-    updateToggleButton(false); // اینجا فراخوانی شود
-  }
-});
-
-
-
-
-
-
-
-
-  
 // ---------- DOM refs ----------
 const $ = id => document.getElementById(id);
 const pairSelect = $('pair_select');
@@ -1545,7 +1478,6 @@ function renderCategorySection(categoryId, categoryName, pairs){
   section.innerHTML = `
     <div class="category-header flex justify-between items-center" data-category="${categoryId || ''}">
       <div class="font-semibold text-sm">${categoryName} (${pairs.length})</div>
-
     </div>
     <div class="category-content">
       <ul class="space-y-2 pairs-list-${categoryId || 'uncategorized'}"></ul>
@@ -1940,24 +1872,43 @@ if(importFile) importFile.addEventListener('change', (e)=>{
 });
 
 // ---------- UI controls ----------
+// تابع جدید برای مدیریت دکمه تاگل - اینجا اضافه شده
+function updateToggleButton(isOpen) {
+  const toggleIcon = document.getElementById('toggle_icon');
+  const toggleText = document.getElementById('toggle_text');
+  const toggleBtn = document.getElementById('toggle_history_btn');
+  
+  if (isOpen) {
+    toggleIcon.textContent = '📁';
+    toggleIcon.style.transform = 'rotate(0deg) scale(1.1)';
+    toggleText.textContent = 'بستن ذخیره‌ها';
+    toggleBtn.classList.remove('closed');
+    toggleBtn.classList.add('open');
+  } else {
+    toggleIcon.textContent = '📂';
+    toggleIcon.style.transform = 'rotate(0deg) scale(1)';
+    toggleText.textContent = 'نمایش ذخیره‌ها';
+    toggleBtn.classList.remove('open');
+    toggleBtn.classList.add('closed');
+  }
+}
+
+// event listener اصلاح شده برای دکمه تاریخچه
 if(toggleHistoryBtn) toggleHistoryBtn.addEventListener('click', ()=>{
-  if(historyPanel.classList.contains('hidden')){
+  const isCurrentlyHidden = historyPanel.classList.contains('hidden');
+  
+  if(isCurrentlyHidden){
     historyPanel.classList.remove('hidden'); 
-    toggleHistoryBtn.textContent = 'بستن ذخیره‌ها';
+    updateToggleButton(true);
     const today = new Date().toISOString().split('T')[0];
     if(historyDate) historyDate.value = today;
     renderHistory();
   } else { 
     historyPanel.classList.add('hidden'); 
-    toggleHistoryBtn.textContent = 'نمایش ذخیره‌ها'; 
+    updateToggleButton(false);
   }
 });
 
-
-
-
-
-  
 if(historyDate) historyDate.addEventListener('change', renderHistory);
 if(historyPairFilter) historyPairFilter.addEventListener('change', renderHistory);
 
