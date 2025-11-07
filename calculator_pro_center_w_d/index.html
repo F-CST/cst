@@ -1329,13 +1329,13 @@
       const url = URL.createObjectURL(blob); 
       const a = document.createElement('a'); 
       a.href = url; 
-      a.download = `calc-pro-2-backup-${timestamp}.json`; 
+      a.download = `calculator_pro_center_w_d-backup-${timestamp}.json`; 
       document.body.appendChild(a); 
       a.click(); 
       a.remove(); 
       URL.revokeObjectURL(url);
       
-      alert(`✅ بک‌آپ با موفقیت ایجاد و دانلود شد!\n📁 فایل: calc-pro-2-backup-${timestamp}.json\n📊 حجم: ${(blob.size / 1024).toFixed(2)} KB`);
+      alert(`✅ بک‌آپ با موفقیت ایجاد و دانلود شد!\n📁 فایل: calculator_pro_center_w_d-backup-${timestamp}.json\n📊 حجم: ${(blob.size / 1024).toFixed(2)} KB`);
     }
 
     // تابع جدید: دانلود بک‌آپ کامل با آمار
@@ -1389,13 +1389,13 @@
       const url = URL.createObjectURL(blob); 
       const a = document.createElement('a'); 
       a.href = url; 
-      a.download = `calc-pro-2-full-backup-${timestamp}.json`; 
+      a.download = `calculator_pro_center_w_d-full-backup-${timestamp}.json`; 
       document.body.appendChild(a); 
       a.click(); 
       a.remove(); 
       URL.revokeObjectURL(url);
       
-      alert(`✅ بک‌آپ کامل با آمار ایجاد شد!\n📁 فایل: calc-pro-2-full-backup-${timestamp}.json\n📊 حجم: ${(blob.size / 1024).toFixed(2)} KB`);
+      alert(`✅ بک‌آپ کامل با آمار ایجاد شد!\n📁 فایل: calculator_pro_center_w_d-full-backup-${timestamp}.json\n📊 حجم: ${(blob.size / 1024).toFixed(2)} KB`);
     }
 
     // تابع جدید: بررسی یکپارچگی داده‌ها
@@ -2477,7 +2477,7 @@
       const url = URL.createObjectURL(blob); 
       const a = document.createElement('a'); 
       a.href = url; 
-      a.download = 'calc-pro-2-'+new Date().toISOString().slice(0,10)+'.json'; 
+      a.download = 'calculator_pro_center_w_d-'+new Date().toISOString().slice(0,10)+'.json'; 
       document.body.appendChild(a); 
       a.click(); 
       a.remove(); 
