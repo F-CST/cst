@@ -636,15 +636,9 @@
 
 // ثبت Service Worker
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('https://199166.github.io/cst/sw.js')
-      .then(function(registration) {
-        console.log('ServiceWorker با موفقیت ثبت شد: ', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('خطا در ثبت ServiceWorker: ', error);
-      });
-  });
+  navigator.serviceWorker.register('/cst/sw.js')
+    .then(registration => console.log('SW registered'))
+    .catch(error => console.log('SW failed'));
 }
 
         // تشخیص حالت نمایش
