@@ -635,6 +635,35 @@
         font-size: 0.95rem;
       }
     }
+
+
+
+/* استایل برای آیکون دکمه تاگل */
+#toggle_icon {
+  transition: all 0.3s ease;
+  font-weight: bold;
+  display: inline-block;
+}
+
+/* افکت hover برای دکمه تاگل */
+#toggle_history_btn:hover #toggle_icon {
+  transform: scale(1.2);
+}
+
+/* استایل برای حالت باز بودن */
+#toggle_history_btn.open {
+  background: #374151 !important;
+  border-color: #6b7280 !important;
+}
+
+/* استایل برای حالت بسته بودن */
+#toggle_history_btn.closed {
+  background: #475569 !important;
+  border-color: #64748b !important;
+}
+
+
+  
 </style>
 </head>
 <body>
@@ -810,10 +839,13 @@
           <div class="muted">کل: <span id="entries_count">0</span></div>
         </div>
 
-        <div class="flex gap-2 mb-3">
-          <button id="toggle_history_btn" class="small-btn flex-1 bg-slate-600 hover:bg-slate-700">نمایش ذخیره‌ها</button>
-          <button id="quick_prune" class="small-btn bg-rose-600 hover:bg-rose-700 hidden">پاک ۳۰ روزه</button>
-        </div>
+<div class="flex gap-2 mb-3">
+  <button id="toggle_history_btn" class="small-btn flex-1 bg-slate-600 hover:bg-slate-700 flex items-center justify-center gap-2 transition-all duration-300 closed">
+    <span id="toggle_icon" class="text-lg transition-all duration-300 transform">📂</span>
+    <span id="toggle_text" class="transition-all duration-300">نمایش ذخیره‌ها</span>
+  </button>
+  <button id="quick_prune" class="small-btn bg-rose-600 hover:bg-rose-700 hidden">پاک ۳۰ روزه</button>
+</div>
 
         <div id="history_panel" class="mt-3 hidden">
           <!-- کنترل‌های تاریخ چندگانه -->
@@ -935,27 +967,24 @@
     }
     ensureDefaults();
 
-
-// ---------- تشخیص دستگاه موبایل/تبلت ----------
-function isMobileOrTablet() {
-    return window.innerWidth <= 1024;
-}
-
-// ---------- مدیریت وضعیت باکس‌ها بر اساس دستگاه ----------
-function initializeBoxStates() {
-    if (isMobileOrTablet()) {
-        if(boxPairs) boxPairs.classList.add('hidden');
-        if(boxCalc) boxCalc.classList.add('hidden');
-        if(boxHistory) boxHistory.classList.add('hidden');
-    } else {
-        if(boxPairs) boxPairs.classList.remove('hidden');
-        if(boxCalc) boxCalc.classList.remove('hidden');
-        if(boxHistory) boxHistory.classList.remove('hidden');
+    // ---------- تشخیص دستگاه موبایل/تبلت ----------
+    function isMobileOrTablet() {
+        return window.innerWidth <= 1024;
     }
-}
 
-    
-    
+    // ---------- مدیریت وضعیت باکس‌ها بر اساس دستگاه ----------
+    function initializeBoxStates() {
+        if (isMobileOrTablet()) {
+            if(boxPairs) boxPairs.classList.add('hidden');
+            if(boxCalc) boxCalc.classList.add('hidden');
+            if(boxHistory) boxHistory.classList.add('hidden');
+        } else {
+            if(boxPairs) boxPairs.classList.remove('hidden');
+            if(boxCalc) boxCalc.classList.remove('hidden');
+            if(boxHistory) boxHistory.classList.remove('hidden');
+        }
+    }
+
     /* ---------- safe DOM refs ---------- */
     const $ = id => document.getElementById(id);
     const pairsListEl = $('pairs_list');
@@ -1019,6 +1048,27 @@ function initializeBoxStates() {
     const dateRangesContainer = $('date_ranges_container');
     const addDateBtn = $('add_date_btn');
     const applyMultiDateBtn = $('apply_multi_date_btn');
+
+    // ---------- تابع جدید برای مدیریت دکمه تاگل ----------
+    function updateToggleButton(isOpen) {
+      const toggleIcon = document.getElementById('toggle_icon');
+      const toggleText = document.getElementById('toggle_text');
+      const toggleBtn = document.getElementById('toggle_history_btn');
+      
+      if (isOpen) {
+        toggleIcon.textContent = '📁';
+        toggleIcon.style.transform = 'rotate(0deg) scale(1.1)';
+        toggleText.textContent = 'بستن ذخیره‌ها';
+        toggleBtn.classList.remove('closed');
+        toggleBtn.classList.add('open');
+      } else {
+        toggleIcon.textContent = '📂';
+        toggleIcon.style.transform = 'rotate(0deg) scale(1)';
+        toggleText.textContent = 'نمایش ذخیره‌ها';
+        toggleBtn.classList.remove('open');
+        toggleBtn.classList.add('closed');
+      }
+    }
 
     /* ---------- UI utils ---------- */
     function safeForEach(arr, fn){ if(!Array.isArray(arr)) return; arr.forEach(fn); }
@@ -2520,15 +2570,17 @@ function initializeBoxStates() {
 
     /* ---------- history panel toggle & section toggles ---------- */
     if(toggleHistoryBtn) toggleHistoryBtn.addEventListener('click', ()=>{
-      if(historyPanel.classList.contains('hidden')){
+      const isCurrentlyHidden = historyPanel.classList.contains('hidden');
+      
+      if(isCurrentlyHidden){
         historyPanel.classList.remove('hidden'); 
-        toggleHistoryBtn.textContent = 'بستن ذخیره‌ها';
+        updateToggleButton(true); // اینجا فراخوانی شود
         const today = new Date().toISOString().split('T')[0];
         if(historyDate) historyDate.value = today;
         renderHistory();
       } else { 
         historyPanel.classList.add('hidden'); 
-        toggleHistoryBtn.textContent = 'نمایش ذخیره‌ها'; 
+        updateToggleButton(false); // اینجا فراخوانی شود
       }
     });
 
@@ -2722,11 +2774,9 @@ function initializeBoxStates() {
       });
     }
 
+    // مدیریت وضعیت باکس‌ها بر اساس دستگاه - فقط هنگام لود صفحه
+    initializeBoxStates();
 
-// مدیریت وضعیت باکس‌ها بر اساس دستگاه - فقط هنگام لود صفحه
-initializeBoxStates();
-
-    
     // ---------- اضافه کردن event listeners جدید ----------
 
     // دکمه حذف دستی
@@ -2845,10 +2895,9 @@ initializeBoxStates();
       console.log('• نمایش اعداد بر اساس ورودی: فعال');
       console.log('• عدم تداخل با برنامه اول: فعال');
       console.log('• حالت چندتاریخی: فعال');
+      console.log('• مدیریت پیشرفته دکمه تاگل: فعال');
     }, 1000);
-
-  </script>
-  
+</script>
   <!-- این کد را در انتهای body، قبل از بسته شدن </body> قرار دهید -->
 
 <div class="signature">
