@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator Pro Formula 2</title>
-    <style>
+<style>
         :root {
             --bg-color: #f5f5f5;
             --container-bg: white;
@@ -108,7 +108,7 @@
     width: 44px;
     height: 44px;
     border: none;
-    background: rgba(255, 255, 255, 0.1);
+    background: transparent; /* تغییر: حذف background */
     border-radius: 8px;
     cursor: pointer;
     display: flex;
@@ -135,6 +135,7 @@
         width: 40px;
         height: 40px;
         font-size: 16px;
+        background: transparent; /* تغییر: حذف background در موبایل */
     }
 }
 
@@ -154,6 +155,7 @@
         width: 36px;
         height: 36px;
         font-size: 14px;
+        background: transparent; /* تغییر: حذف background در موبایل کوچک */
     }
 }
 
@@ -259,10 +261,7 @@
             right: 10px;
             top: 50%;
             transform: translateY(-50%);
-            background-color: var(--menu-bg);
-            border-radius: 5px;
-            border: 1px solid var(--menu-border);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            /* حذف شده: background-color, border, box-shadow */
             z-index: 100;
         }
 
@@ -1018,6 +1017,9 @@
             
             .mobile-menu-toggle {
                 display: block;
+                background: transparent; /* تغییر: حذف background */
+                border: none; /* تغییر: حذف border */
+                box-shadow: none; /* تغییر: حذف box-shadow */
             }
             
             .mobile-tabs {
