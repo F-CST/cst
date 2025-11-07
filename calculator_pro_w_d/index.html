@@ -448,6 +448,27 @@ function ensureDefaults(){
 }
 ensureDefaults();
 
+
+// ---------- تشخیص دستگاه موبایل/تبلت ----------
+function isMobileOrTablet() {
+    return window.innerWidth <= 1024;
+}
+
+// ---------- مدیریت وضعیت باکس‌ها بر اساس دستگاه ----------
+function initializeBoxStates() {
+    if (isMobileOrTablet()) {
+        if(boxPairs) boxPairs.classList.add('hidden');
+        if(boxCalc) boxCalc.classList.add('hidden');
+        if(boxHistory) boxHistory.classList.add('hidden');
+    } else {
+        if(boxPairs) boxPairs.classList.remove('hidden');
+        if(boxCalc) boxCalc.classList.remove('hidden');
+        if(boxHistory) boxHistory.classList.remove('hidden');
+    }
+}
+
+
+  
 // ---------- DOM refs ----------
 const $ = id => document.getElementById(id);
 const pairSelect = $('pair_select');
@@ -717,6 +738,16 @@ function pruneOldEntries(){
   if(kept.length !== entries.length) storageSet('entries', kept);
 }
 
+// مدیریت وضعیت باکس‌ها بر اساس دستگاه
+document.addEventListener('DOMContentLoaded', function() {
+    initializeBoxStates();
+});
+
+window.addEventListener('resize', function() {
+    initializeBoxStates();
+});
+
+  
 // ---------- event listeners ----------
 if(calculateButton) calculateButton.addEventListener('click', ()=>{
   if(!inputY1 || !inputY2 || !inputCurrentHigh || !inputCurrentLow){ 
