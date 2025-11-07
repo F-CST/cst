@@ -4,7 +4,7 @@
 یک وب اپلیکیشن پیشرفته برای مدیریت ربات CST با قابلیت نصب (PWA)
 
 ## 🌐 مشاهده آنلاین
-<a href="https://199166.github.io/cst" target="_blank" rel="noopener noreferrer"></a>
+<a href="https://199166.github.io/cst" target="_blank" rel="noopener noreferrer">https://199166.github.io/cst</a>
 ## 📱 قابلیت‌ها
 - ورود امن با Google Authenticator
 - قابلیت نصب روی دستگاه (PWA)
