@@ -205,7 +205,7 @@
             text-align: center;
         }
         
-.signature {
+.signature, .login-signature {
     color: white;
     text-align: center;
     padding: 16px;
@@ -220,24 +220,22 @@
     margin: 30px auto;
     width: fit-content;
     max-width: 90%;
-  }
+    box-sizing: border-box;
+}
 
-.login-signature {
-    color: white;
-    text-align: center;
-    padding: 16px;
-    font-family: Vazirmatn, system-ui;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    font-size: 14px;
-    font-weight: 500;
-    display: block;
-    margin: 30px auto;
-    width: fit-content;
-    max-width: 90%;
-        }
+@media only screen and (max-width: 768px) {
+    .signature, .login-signature {
+        font-size: 13px;
+        padding: 14px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .signature, .login-signature {
+        font-size: 12px;
+        padding: 12px;
+    }
+}
 
         @media (max-width: 768px) {
             .container, .login-container {
