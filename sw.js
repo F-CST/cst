@@ -1,10 +1,21 @@
-const CACHE_NAME = 'cst-pwa-v1';
-
-self.addEventListener('install', (event) => {
-  self.skipWaiting();
-  console.log('Service Worker نصب شد');
-});
-
-self.addEventListener('activate', (event) => {
-  console.log('Service Worker فعال شد');
-});
+{
+  "name": "ربات CST",
+  "short_name": "CST",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#6a11cb",
+  "theme_color": "#2575fc",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
