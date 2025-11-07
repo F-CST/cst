@@ -11,10 +11,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ربات CST">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="icons/icon-180x180.png">
     <meta name="msapplication-TileColor" content="#2575fc">
     <meta name="msapplication-TileImage" content="icons/icon-144x144.png">
-
+    <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+	  <meta name="description" content="وب اپلیکیشن ربات CST قابل نصب روی تمام مرورگرها و دستگاه‌ها.">
     <style>
         * {
             margin: 0;
@@ -605,18 +606,15 @@ window.addEventListener('appinstalled', (evt) => {
     deferredPrompt = null;
 });
 
-// ثبت Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/cst/sw.js')
-            .then(function(registration) {
-                console.log('ServiceWorker ثبت شد: ', registration.scope);
-            })
-            .catch(function(error) {
-                console.log('خطا در ثبت ServiceWorker: ', error);
-            });
-    });
-}
+  <script>
+    // ثبت Service Worker جهانی
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('✅ Service Worker ثبت شد', reg))
+          .catch(err => console.log('❌ خطا در ثبت SW:', err));
+      });
+    }
 
 // تشخیص حالت نمایش
 function detectDisplayMode() {
