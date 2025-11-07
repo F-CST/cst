@@ -673,9 +673,10 @@
             }
         }
         
-        @media (max-width: 992px) {
+        /* ویرایش شده: تبلت - نمایش دو ستونه مانند دسکتاپ */
+        @media (max-width: 992px) and (min-width: 769px) {
             .calculator-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr; /* دو ستونه در تبلت */
                 gap: 12px;
             }
             
@@ -688,6 +689,7 @@
             }
         }
         
+        /* ویرایش شده: فقط برای موبایل تک ستونه */
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -742,7 +744,7 @@
             }
             
             .calculator-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* فقط در موبایل تک ستونه */
             }
             
             .history-list {
