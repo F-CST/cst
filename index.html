@@ -39,22 +39,18 @@
             font-family: 'Vazirmatn', 'Sahel', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        /* * تغییر مهم: html و body باید 100% ارتفاع داشته باشند تا 
-         * flexbox بتواند کل صفحه را مدیریت کند.
-        */
         html, body {
             height: 100%;
         }
 
         body {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            display: flex; /* برای مدیریت صفحه لاگین و محتوای اصلی */
+            display: flex;
             flex-direction: column;
             padding: 0;
-            overflow: hidden; /* جلوگیری از اسکرول کل صفحه */
+            overflow: hidden;
         }
         
-        /* حالت standalone برای وقتی که اپ نصب شده */
         body.standalone {
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
@@ -74,7 +70,7 @@
             width: 100%;
             text-align: center;
             position: relative;
-            margin: auto; /* این باعث می‌شود وسط صفحه (عمودی و افقی) قرار گیرد */
+            margin: auto;
         }
         
         h1 {
@@ -176,13 +172,11 @@
             margin-bottom: 8px;
         }
         
-        /* * تغییرات مهم در این بخش
-        */
         .main-content {
-            display: none; /* در حالت عادی مخفی است */
-            flex-direction: column; /* فرزندان (تب و ایفریم) زیر هم قرار می‌گیرند */
-            flex: 1; /* تمام ارتفاع باقی‌مانده body را می‌گیرد */
-            min-height: 0; /* برای جلوگیری از سرریز flexbox */
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
         }
         
         .signature, .login-signature {
@@ -212,41 +206,33 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-top: none;
-            margin-bottom: 10px; /* فاصله بین تب و ایفریم */
+            margin-bottom: 15px; /* افزایش فاصله بین تب و ایفریم */
             position: relative;
             z-index: 1000;
-            flex-shrink: 0; /* این بخش کوچک نمی‌شود و ارتفاع ثابت خود را حفظ می‌کند */
+            flex-shrink: 0;
         }
         
         .tabs-scroll-container {
             overflow-x: auto;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+            scrollbar-width: none; /* مخفی کردن اسکرول بار پیشفرض */
+            -ms-overflow-style: none; /* برای اینترنت اکسپلورر */
             padding-bottom: 5px;
+            cursor: grab;
         }
         
         .tabs-scroll-container::-webkit-scrollbar {
-            height: 6px;
+            display: none; /* مخفی کردن اسکرول بار در وبکیت */
         }
         
-        .tabs-scroll-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-        }
-        
-        .tabs-scroll-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-        }
-        
-        .tabs-scroll-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
+        .tabs-scroll-container:active {
+            cursor: grabbing;
         }
         
         .tabs {
             display: flex;
             gap: 8px;
             min-width: min-content;
+            user-select: none; /* جلوگیری از انتخاب متن */
         }
         
         .tab {
@@ -283,25 +269,52 @@
             opacity: 0.9;
         }
         
-        /* * تغییرات مهم در این بخش
-        */
+        /* ========== IFRAME CONTAINER ========== */
         .iframe-container {
-            flex: 1; /* این باعث می‌شود کانتینر تمام ارتفاع باقی‌مانده را پر کند */
+            flex: 1;
             position: relative;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             overflow: hidden;
-            margin: 0 10px 10px 10px; /* فاصله از اطراف */
-            min-height: 0; /* کلید اصلی برای کارکرد صحیح flex: 1 در ستون‌ها */
+            margin: 0 10px 10px 10px;
+            min-height: 0;
         }
         
         iframe {
             width: 100%;
-            height: 100%; /* iframe به اندازه 100% والدش (.iframe-container) خواهد بود */
+            height: 100%;
             border: none;
             display: none;
             background: white;
             border-radius: 12px;
+            
+            /* استایل زیبا برای اسکرول بار */
+            scrollbar-width: thin;
+            scrollbar-color: #6a11cb #f0f0f0;
+        }
+        
+        /* استایل زیبا برای اسکرول بار در وبکیت */
+        iframe::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        iframe::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 6px;
+        }
+        
+        iframe::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border-radius: 6px;
+            border: 2px solid #f0f0f0;
+        }
+        
+        iframe::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+        }
+        
+        iframe::-webkit-scrollbar-corner {
+            background: #f0f0f0;
         }
         
         iframe.active {
@@ -353,7 +366,7 @@
             .tabs-container {
                 padding: 12px 15px;
                 border-radius: 0 0 15px 15px;
-                margin-bottom: 8px;
+                margin-bottom: 12px;
             }
             
             .tab {
@@ -426,14 +439,12 @@
             }
         }
 
-        /* حالت نمایش در حالت مستقل PWA */
         @media all and (display-mode: standalone) {
             .tabs-container {
                 padding-top: calc(15px + env(safe-area-inset-top));
             }
         }
 
-        /* حالت برای نمایشگرهای بسیار کوچک */
         @media (max-width: 360px) {
             .tab {
                 padding: 5px 8px;
@@ -475,8 +486,8 @@
 
     <div class="main-content" id="mainContent">
         <div class="tabs-container">
-            <div class="tabs-scroll-container">
-                <div class="tabs">
+            <div class="tabs-scroll-container" id="tabsScrollContainer">
+                <div class="tabs" id="tabs">
                     <div class="tab active" onclick="openTab(0)">
                         <i class="fa fa-pie-chart"></i>
                         Calculator Pro W/D
@@ -524,17 +535,7 @@
 
     <script>
         // ==================== AUTHENTICATION ====================
-        
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // !!!!!! توجه بسیار مهم !!!!!!
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //
-        // این کلید مخفی ('JBSWY3DPEHPK3PXP') باید دقیقاً با کلید مخفی 
-        // که در اپلیکیشن Google Authenticator خود وارد کرده‌اید، یکی باشد.
-        // اگر کد شما کار نمی‌کند، این مقدار را با کلید مخفی صحیح جایگزین کنید.
-        //
         const secretKey = 'JBSWY3DPEHPK3PXP';
-        
         const verifyOtpBtn = document.getElementById('verifyOtpBtn');
         const otpInput = document.getElementById('otp');
         const verifyError = document.getElementById('verifyError');
@@ -632,12 +633,12 @@
             
             if (verifyOTP(enteredOtp)) {
                 loginPage.style.display = 'none';
-                mainContent.style.display = 'flex'; // تغییر به flex برای فعال شدن چیدمان CSS
+                mainContent.style.display = 'flex';
                 sessionStorage.setItem('cst_authenticated', 'true');
                 sessionStorage.setItem('cst_login_time', new Date().getTime());
                 
-                // (کد تنظیم ارتفاع حذف شد - دیگر نیازی به آن نیست)
-                
+                // فعال کردن اسکرول موس برای تب‌ها بعد از لاگین
+                initMouseWheelScroll();
             } else {
                 verifyError.textContent = 'کد نامعتبر است. لطفاً کد جدید را از اپلیکیشن دریافت کنید.';
                 verifyError.style.display = 'block';
@@ -660,23 +661,22 @@
         // بررسی اگر کاربر قبلاً در این session وارد شده
         if (sessionStorage.getItem('cst_authenticated') === 'true') {
             loginPage.style.display = 'none';
-            mainContent.style.display = 'flex'; // تغییر به flex
+            mainContent.style.display = 'flex';
+            // فعال کردن اسکرول موس برای تب‌ها
+            setTimeout(initMouseWheelScroll, 100);
         } else {
-            // اطمینان از نمایش صفحه لاگین
-            loginPage.style.display = 'block'; // یا 'flex' یا 'grid' بسته به استایل login-container
+            loginPage.style.display = 'block';
             mainContent.style.display = 'none';
         }
 
         // تمرکز روی فیلد کد
-        // (این را به 'load' منتقل می‌کنیم تا مطمئن شویم صفحه لاگین دیده می‌شود)
         window.addEventListener('load', () => {
             if (loginPage.style.display !== 'none') {
                  setTimeout(() => {
                     otpInput.focus();
-                }, 500); // تاخیر کوتاه برای اطمینان از رندر شدن
+                }, 500);
             }
         });
-
 
         // ==================== TAB MANAGEMENT ====================
         function openTab(n) {
@@ -688,15 +688,68 @@
             });
         }
 
-        // ==================== IFRAME HEIGHT ADJUSTMENT (حذف شد) ====================
-        // دیگر نیازی به این بخش نیست. CSS Flexbox به صورت خودکار ارتفاع را مدیریت می‌کند.
-        
+        // ==================== MOUSE WHEEL SCROLL FOR TABS ====================
+        function initMouseWheelScroll() {
+            const tabsScrollContainer = document.getElementById('tabsScrollContainer');
+            const tabs = document.getElementById('tabs');
+            
+            if (!tabsScrollContainer || !tabs) return;
+            
+            // اسکرول با چرخ موس
+            tabsScrollContainer.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                this.scrollLeft += e.deltaY;
+            });
+            
+            // اسکرول با کشیدن (درایگ اند دراپ)
+            let isDragging = false;
+            let startX;
+            let scrollLeft;
+            
+            tabsScrollContainer.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                startX = e.pageX - this.offsetLeft;
+                scrollLeft = this.scrollLeft;
+                this.style.cursor = 'grabbing';
+            });
+            
+            tabsScrollContainer.addEventListener('mouseleave', function() {
+                isDragging = false;
+                this.style.cursor = 'grab';
+            });
+            
+            tabsScrollContainer.addEventListener('mouseup', function() {
+                isDragging = false;
+                this.style.cursor = 'grab';
+            });
+            
+            tabsScrollContainer.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - this.offsetLeft;
+                const walk = (x - startX) * 2;
+                this.scrollLeft = scrollLeft - walk;
+            });
+            
+            // برای تاچ دیوایس‌ها
+            tabsScrollContainer.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].pageX - this.offsetLeft;
+                scrollLeft = this.scrollLeft;
+            });
+            
+            tabsScrollContainer.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                const x = e.touches[0].pageX - this.offsetLeft;
+                const walk = (x - startX) * 2;
+                this.scrollLeft = scrollLeft - walk;
+            });
+        }
+
         // ==================== PWA INSTALL ====================
         let deferredPrompt;
         const pwaInstallButton = document.getElementById('pwaInstallButton');
         let installPromptTimeout;
 
-        // نمایش دکمه نصب
         function showInstallButton() {
             pwaInstallButton.style.display = 'block';
             
@@ -709,7 +762,6 @@
             }, 120000);
         }
 
-        // مخفی کردن دکمه
         function hideInstallButton() {
             pwaInstallButton.style.display = 'none';
             if (installPromptTimeout) {
@@ -717,14 +769,12 @@
             }
         }
 
-        // رویداد پیشنهاد نصب
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             showInstallButton();
         });
 
-        // تابع نصب
         pwaInstallButton.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
@@ -736,7 +786,6 @@
             }
         });
 
-        // بررسی اگر اپلیکیشن نصب شده
         window.addEventListener('appinstalled', () => {
             hideInstallButton();
             deferredPrompt = null;
@@ -754,14 +803,6 @@
                     });
             });
         }
-
-        // نمایش کد فعلی هر 30 ثانیه برای دیباگ
-        // (توصیه می‌شود این خط را برای نسخه نهایی حذف کنید یا کامنت کنید)
-        /*
-        setInterval(() => {
-            console.log('کد فعلی:', generateTOTP());
-        }, 30000);
-        */
 
     </script>
 </body>
