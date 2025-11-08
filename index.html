@@ -441,6 +441,37 @@
                 font-size: 0.75rem;
             }
         }
+
+
+#app-frame {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: block;
+    }
+
+    #install-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: none;
+    }
+
+    #install-btn:hover {
+      background: #0b5ed7;
+    }
+
+
+        
     </style>
 </head>
 
@@ -764,6 +795,57 @@
         setInterval(() => {
             console.log('کد فعلی:', generateTOTP());
         }, 30000);
+
+
+  
+const installBtn = document.getElementById('install-btn');
+    const iframe = document.getElementById('app-frame');
+    let deferredPrompt;
+
+    // ✅ تنظیم خودکار ارتفاع فریم در هر تغییر اندازه
+    function adjustIframeHeight() {
+      iframe.style.height = window.innerHeight + 'px';
+      iframe.style.width = window.innerWidth + 'px';
+    }
+
+    window.addEventListener('resize', adjustIframeHeight);
+    window.addEventListener('load', adjustIframeHeight);
+
+    // ✅ نمایش دکمه نصب PWA در صورت مجاز بودن
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'block';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const result = await deferredPrompt.userChoice;
+      if (result.outcome === 'accepted') {
+        console.log('کاربر نصب را پذیرفت ✅');
+        installBtn.style.display = 'none';
+      } else {
+        console.log('کاربر نصب را لغو کرد ❌');
+      }
+      deferredPrompt = null;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      installBtn.style.display = 'none';
+      console.log('اپ با موفقیت نصب شد 🎉');
+    });
+
+    // ✅ ثبت Service Worker برای حالت آفلاین
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker ثبت شد ✅', reg.scope))
+          .catch(err => console.error('خطا در ثبت Service Worker ❌', err));
+      });
+    }
+
+        
     </script>
 </body>
 </html>
