@@ -414,16 +414,46 @@
             font-size: 14px;
         }
 
-        /* استایل‌های جدول برای دسکتاپ */
+        /* استایل‌های جدول برای دسکتاپ - بهبود یافته برای اسکرول */
         .table-container {
             overflow-x: auto;
+            overflow-y: hidden;
             margin: 20px 0;
+            cursor: grab;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--button-primary) var(--bg-color);
+            padding-bottom: 5px;
+        }
+
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: var(--bg-color);
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: var(--button-primary);
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: var(--button-primary-hover);
+        }
+
+        .table-container:active {
+            cursor: grabbing;
         }
 
         table {
-            width: 100%;
+            width: 200%; /* افزایش عرض برای ایجاد اسکرول افقی واقعی */
             border-collapse: collapse;
             margin: 10px 0;
+            min-width: 1200px; /* حداقل عرض برای ستون‌های زیاد */
         }
 
         th, td {
@@ -1104,6 +1134,7 @@
             
             .table-container {
                 display: block !important;
+                cursor: grab;
             }
             
             .mobile-menu-toggle,
@@ -1671,9 +1702,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
             setupAdvancedScroll();
+            setupTableScroll();
         });
 
-        // تابع تنظیم اسکرول پیشرفته
+        // تابع تنظیم اسکرول پیشرفته برای تب‌ها
         function setupAdvancedScroll() {
             // Wheel event برای اسکرول افقی با چرخ موس
             tabs.addEventListener('wheel', handleWheel, { passive: false });
@@ -1709,7 +1741,7 @@
             });
         }
 
-        // تابع wheel
+        // تابع wheel برای تب‌ها
         function handleWheel(e) {
             if (!isDesktopOrTablet) return;
             e.preventDefault();
@@ -1717,7 +1749,7 @@
             tabs.scrollLeft += delta;
         }
 
-        // Drag functions
+        // Drag functions برای تب‌ها
         function startDrag(e) {
             if (!isDesktopOrTablet) return;
             isDragging = true;
@@ -1740,6 +1772,80 @@
             if (isDesktopOrTablet) {
                 tabs.style.cursor = 'grab';
             }
+        }
+
+        // تابع تنظیم اسکرول پیشرفته برای جدول تاریخچه
+        function setupTableScroll() {
+            const tableContainer = document.querySelector('.table-container');
+            if (!tableContainer) return;
+
+            let isDraggingTable = false;
+            let startXTable = 0;
+            let scrollLeftTable = 0;
+
+            // Wheel event: فقط اسکرول عمودی (deltaY)، افقی را نادیده بگیر
+            tableContainer.addEventListener('wheel', (e) => {
+                e.preventDefault(); // جلوگیری از اسکرول پیش‌فرض
+                if (e.deltaX !== 0) return; // اگر افقی باشه (نادر)، نادیده بگیر
+                
+                tableContainer.scrollTop += e.deltaY; // فقط عمودی
+            }, { passive: false });
+
+            // شروع drag برای اسکرول افقی
+            tableContainer.addEventListener('mousedown', (e) => {
+                if (!isDesktopOrTablet) return;
+                isDraggingTable = true;
+                startXTable = e.pageX - tableContainer.offsetLeft;
+                scrollLeftTable = tableContainer.scrollLeft;
+                tableContainer.style.cursor = 'grabbing';
+                e.preventDefault();
+            });
+
+            // در حین drag
+            document.addEventListener('mousemove', (e) => {
+                if (!isDraggingTable) return;
+                e.preventDefault();
+                const x = e.pageX - tableContainer.offsetLeft;
+                const walk = (x - startXTable) * 2; // سرعت drag (قابل تنظیم)
+                tableContainer.scrollLeft = scrollLeftTable - walk;
+            });
+
+            // پایان drag
+            document.addEventListener('mouseup', () => {
+                isDraggingTable = false;
+                if (isDesktopOrTablet) {
+                    tableContainer.style.cursor = 'grab';
+                }
+            });
+
+            tableContainer.addEventListener('mouseleave', () => {
+                isDraggingTable = false;
+                if (isDesktopOrTablet) {
+                    tableContainer.style.cursor = 'grab';
+                }
+            });
+
+            // برای تبلت/لمس: swipe افقی طبیعی
+            tableContainer.addEventListener('touchstart', (e) => {
+                startXTable = e.touches[0].pageX - tableContainer.offsetLeft;
+                scrollLeftTable = tableContainer.scrollLeft;
+            });
+
+            tableContainer.addEventListener('touchmove', (e) => {
+                const x = e.touches[0].pageX - tableContainer.offsetLeft;
+                const walk = (x - startXTable) * 2;
+                tableContainer.scrollLeft = scrollLeftTable - walk;
+                e.preventDefault(); // جلوگیری از اسکرول صفحه
+            }, { passive: false });
+
+            // به‌روزرسانی cursor بر اساس اندازه صفحه
+            window.addEventListener('resize', () => {
+                isDesktopOrTablet = window.matchMedia('(min-width: 769px)').matches;
+                tableContainer.style.cursor = isDesktopOrTablet ? 'grab' : 'default';
+                if (!isDesktopOrTablet) {
+                    isDraggingTable = false;
+                }
+            });
         }
 
         // تابع نمایش اعلان
