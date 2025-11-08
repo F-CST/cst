@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta http-equiv="Content-Language" content="fa">
-        <meta name="language" content="fa">
-        <meta name="locale" content="fa_IR">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Language" content="fa">
+    <meta name="language" content="fa">
+    <meta name="locale" content="fa_IR">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ربات CST - ورود با Google Authenticator</title>
     
-<head>
-    <!-- این تگ‌ها رو حتماً داشته باشید -->
+    <!-- PWA Meta Tags -->
     <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
-	  <link rel="manifest" href="/cst/manifest.json">
+    <link rel="manifest" href="/cst/manifest.json">
     <meta name="theme-color" content="#2575fc">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -24,19 +23,20 @@
     <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180x180.png">
     <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167x167.png">
-    
-    <!-- اسپلاش اسکرین برای iOS -->
     <link rel="apple-touch-startup-image" href="icons/icon-512x512.png">
 
+    <!-- فونت‌های فارسی -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/sahel-font@v3.4.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CryptoJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
-	        <!-- فونت‌های فارسی -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/gh/rastikerdar/sahel-font@v3.4.0/dist/font-face.css" rel="stylesheet" type="text/css" />
-
-	
-</head>
     <style>
         * {
             margin: 0;
@@ -49,9 +49,8 @@
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            flex-direction: column;
+            padding: 0;
         }
         
         /* حالت standalone برای وقتی که اپ نصب شده */
@@ -62,13 +61,90 @@
             padding-right: env(safe-area-inset-right);
         }
         
-        /* مخفی کردن آدرس بار در برخی مرورگرها */
-        @media all and (display-mode: standalone) {
-            .container, .login-container {
-                padding-top: 20px;
-            }
+        /* ========== TAB STYLES ========== */
+        .tabs-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 0 0 20px 20px;
+            padding: 15px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: none;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 1000;
         }
         
+        .tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 5px;
+        }
+        
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+        
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .tab.active {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tab i {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        /* ========== IFRAME CONTAINER ========== */
+        .iframe-container {
+            flex: 1;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+            margin: 0;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+            background: white;
+        }
+        
+        iframe.active {
+            display: block;
+        }
+        
+        /* ========== LOGIN STYLES ========== */
         .login-container {
             background-color: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -80,6 +156,7 @@
             width: 100%;
             text-align: center;
             position: relative;
+            margin: auto;
         }
         
         h1 {
@@ -185,74 +262,6 @@
             display: none;
         }
         
-        .container {
-            background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 800px;
-            width: 100%;
-        }
-        
-        .buttons-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 25px;
-        }
-        
-        .btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 25px 20px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
-            transform: translateX(-100%);
-            transition: transform 0.5s ease;
-        }
-        
-        .btn:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-        
-        .btn:hover::before {
-            transform: translateX(100%);
-        }
-        
-        .btn i {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            opacity: 0.9;
-        }
-        
-        .btn span {
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-align: center;
-        }
-        
         .signature, .login-signature {
             color: white;
             text-align: center;
@@ -271,135 +280,112 @@
             box-sizing: border-box;
         }
 
-        @media only screen and (max-width: 768px) {
+        /* ========== PWA INSTALL BUTTON ========== */
+        .pwa-install-btn {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            padding: 16px 28px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            font-family: 'Vazirmatn', 'Segoe UI', sans-serif;
+            min-width: 180px;
+            min-height: 55px;
+            display: none;
+        }
+
+        .pwa-install-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+        }
+
+        /* ========== RESPONSIVE DESIGN ========== */
+        @media (max-width: 768px) {
+            .tabs-container {
+                padding: 12px 15px;
+                border-radius: 0 0 15px 15px;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .tab i {
+                font-size: 1rem;
+            }
+            
+            .login-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .pwa-install-btn {
+                padding: 14px 22px;
+                font-size: 15px;
+                min-width: 160px;
+                min-height: 50px;
+                bottom: 20px;
+                left: 20px;
+            }
+            
             .signature, .login-signature {
                 font-size: 14px;
                 padding: 15px;
             }
         }
 
-        @media only screen and (max-width: 480px) {
+        @media (max-width: 480px) {
+            .tabs {
+                gap: 5px;
+            }
+            
+            .tab {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .tab i {
+                font-size: 0.9rem;
+            }
+            
+            h1 {
+                font-size: 1.7rem;
+            }
+            
             .signature, .login-signature {
                 font-size: 11px;
                 padding: 12px;
             }
         }
 
-        @media (max-width: 768px) {
-            .container, .login-container {
-                padding: 30px 20px;
+        /* حالت نمایش در حالت مستقل PWA */
+        @media all and (display-mode: standalone) {
+            .tabs-container {
+                padding-top: calc(15px + env(safe-area-inset-top));
             }
             
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .buttons-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
+            .iframe-container {
+                height: calc(100vh - 80px - env(safe-area-inset-top));
             }
         }
-        
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.7rem;
-            }
-            
-            .btn {
-                padding: 20px 15px;
-            }
-            
-            .btn i {
-                font-size: 2rem;
-            }
-            
-            .btn span {
-                font-size: 1rem;
-            }
-        }
-
-
-/* اضافه کردن به بخش استایل */
-.pwa-install-btn {
-    position: fixed;
-    bottom: 25px;
-    left: 25px;
-    padding: 16px 28px;
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    z-index: 1000;
-    transition: all 0.3s ease;
-    font-family: 'Vazirmatn', 'Segoe UI', sans-serif;
-    min-width: 180px;
-    min-height: 55px;
-    display: none;
-}
-
-.pwa-install-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-    background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
-}
-
-/* برای موبایل استایل جدا */
-@media (max-width: 768px) {
-    .pwa-install-btn {
-        padding: 14px 22px;
-        font-size: 15px;
-        min-width: 160px;
-        min-height: 50px;
-        bottom: 20px;
-        left: 20px;
-    }
-}
-
-
-
-
-
-
-
- .tabs {
-      display: flex;
-      background: #0d47a1;
-      color: #fff;
-    }
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 10px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .tab:hover, .tab.active {
-      background: #1565c0;
-    }
-    /* iframeها */
-    iframe {
-      width: 100%;
-      height: calc(100vh - 48px);
-      border: none;
-      display: none;
-    }
-    iframe.active {
-      display: block;
-    }
-
-
-		
     </style>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
- 
     <!-- صفحه ورود با Google Authenticator -->
     <div class="login-container" id="loginPage">
         <h1>ورود به ربات CST</h1>
@@ -425,46 +411,67 @@
         </div>
     </div>
 
+    <!-- محتوای اصلی بعد از ورود -->
+    <div class="main-content" id="mainContent" style="display: none; flex: 1; display: flex; flex-direction: column;">
+        <!-- تب‌ها -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <div class="tab active" onclick="openTab(0)">
+                    <i class="fa fa-pie-chart"></i>
+                    Calculator Pro W/D
+                </div>
+                <div class="tab" onclick="openTab(1)">
+                    <i class="fa fa-bar-chart"></i>
+                    Calculator Pro Formula 4
+                </div>
+                <div class="tab" onclick="openTab(2)">
+                    <i class="fa fa-area-chart"></i>
+                    Calculator Pro Formula 2
+                </div>
+                <div class="tab" onclick="openTab(3)">
+                    <i class="fa fa-sort-alpha-asc"></i>
+                    Calculator Pro Center W/D
+                </div>
+                <div class="tab" onclick="openTab(4)">
+                    <i class="fa fa-line-chart"></i>
+                    Cst Analyzer
+                </div>
+                <div class="tab" onclick="openTab(5)">
+                    <i class="fa fa-exchange-alt"></i>
+                    Forex Manager
+                </div>
+                <div class="tab" onclick="openTab(6)">
+                    <i class="fa fa-calculator"></i>
+                    Calculator Pro C/D
+                </div>
+            </div>
+        </div>
 
-
-  <div class="tabs">
-    <div class="tab active" onclick="openTab(0)">📘 Calculator</div>
-    <div class="tab" onclick="openTab(1)">🧮 Tool</div>
-    <div class="tab" onclick="openTab(2)">📊 Stats</div>
-<div class="tab" onclick="openTab(3)">📊 Stats</div>
-<div class="tab" onclick="openTab(4)">📊 Stats</div>
-<div class="tab" onclick="openTab(5)">📊 Stats</div>
-	  <div class="tab" onclick="openTab(6)">📊 Stats</div>
-  </div>
-
-  <!-- iframeها برای هر صفحه -->
-  <iframe src="calculator_pro_center_w_d/index.html" class="active"></iframe>
-  <iframe src="calculator_pro_formula_4/index.html"></iframe>
-  <iframe src="calculator_pro_formula_2/index.html"></iframe>
-	  <iframe src="calculator_pro_center_w_d/index.html"></iframe>
-  <iframe src="cst_analyzer/index.html"></iframe>
-	  <iframe src="forex_manager/index.html"></iframe>
-  <iframe src="calculator_pro_cd/index.html"></iframe>
-	
-   
-        
-        <div class="signature">
-            طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
+        <!-- کانتینر ایفریم -->
+        <div class="iframe-container">
+            <iframe src="calculator_pro_w_d/index.html" class="active"></iframe>
+            <iframe src="calculator_pro_formula_4/index.html"></iframe>
+            <iframe src="calculator_pro_formula_2/index.html"></iframe>
+            <iframe src="calculator_pro_center_w_d/index.html"></iframe>
+            <iframe src="cst_analyzer/index.html"></iframe>
+            <iframe src="forex_manager/index.html"></iframe>
+            <iframe src="calculator_pro_cd/index.html"></iframe>
         </div>
     </div>
 
+    <!-- دکمه نصب PWA -->
+    <button class="pwa-install-btn" id="pwaInstallButton">📥 نصب برنامه</button>
+
     <script>
-        // کلید مخفی اصلی
+        // ==================== AUTHENTICATION ====================
         const secretKey = 'JBSWY3DPEHPK3PXP';
-        
-        // عناصر DOM
         const verifyOtpBtn = document.getElementById('verifyOtpBtn');
         const otpInput = document.getElementById('otp');
         const verifyError = document.getElementById('verifyError');
         const loginPage = document.getElementById('loginPage');
         const mainContent = document.getElementById('mainContent');
 
-        // تبدیل Base32 به Hex - نسخه کاملاً اصلاح شده
+        // تبدیل Base32 به Hex
         function base32ToHex(base32) {
             const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
             let bits = '';
@@ -478,7 +485,6 @@
                 bits += val.toString(2).padStart(5, '0');
             }
             
-            // تبدیل هر 8 بیت به یک بایت هگز
             for (let i = 0; i + 8 <= bits.length; i += 8) {
                 const chunk = bits.substr(i, 8);
                 hex += parseInt(chunk, 2).toString(16).padStart(2, '0');
@@ -487,32 +493,22 @@
             return hex;
         }
 
-        // تولید کد TOTP - نسخه ساده و قابل اطمینان
+        // تولید کد TOTP
         function generateTOTP() {
             try {
-                // زمان فعلی بر اساس 30 ثانیه
                 const time = Math.floor(Date.now() / 1000 / 30);
-                
-                // تبدیل زمان به بایت‌های 8 بایتی (Big Endian)
                 const timeHex = CryptoJS.enc.Hex.parse(
                     ('0000000000000000' + time.toString(16)).slice(-16)
                 );
                 
-                // تبدیل کلید مخفی
                 const keyHex = base32ToHex(secretKey);
                 const key = CryptoJS.enc.Hex.parse(keyHex);
-                
-                // تولید HMAC-SHA1
                 const hmac = CryptoJS.HmacSHA1(timeHex, key);
                 const hmacHex = hmac.toString(CryptoJS.enc.Hex);
                 
-                // استخراج offset
                 const offset = (parseInt(hmacHex.substr(-1), 16)) & 0xf;
-                
-                // استخراج 4 بایت از offset
                 const code = parseInt(hmacHex.substr(offset * 2, 8), 16) & 0x7fffffff;
                 
-                // تولید کد 6 رقمی
                 return (code % 1000000).toString().padStart(6, '0');
             } catch (error) {
                 console.error('Error generating TOTP:', error);
@@ -520,13 +516,11 @@
             }
         }
 
-        // بررسی کد وارد شده با window برای جبران تفاوت زمان
+        // بررسی کد وارد شده
         function verifyOTP(enteredOtp) {
-            // بررسی کد فعلی و کدهای 30 ثانیه قبل و بعد
             for (let i = -1; i <= 1; i++) {
                 const testTime = Math.floor(Date.now() / 1000 / 30) + i;
                 const testOtp = generateTOTPWithTime(testTime);
-                console.log(`Testing time offset ${i}: ${testOtp}`);
                 if (enteredOtp === testOtp) {
                     return true;
                 }
@@ -543,7 +537,6 @@
                 
                 const keyHex = base32ToHex(secretKey);
                 const key = CryptoJS.enc.Hex.parse(keyHex);
-                
                 const hmac = CryptoJS.HmacSHA1(timeHex, key);
                 const hmacHex = hmac.toString(CryptoJS.enc.Hex);
                 
@@ -567,21 +560,12 @@
                 return;
             }
             
-            // برای دیباگ
-            const currentCode = generateTOTP();
-            console.log('کد تولید شده فعلی:', currentCode);
-            console.log('کد وارد شده:', enteredOtp);
-            
             if (verifyOTP(enteredOtp)) {
-                // ورود موفق
                 loginPage.style.display = 'none';
-                mainContent.style.display = 'block';
-                
-                // ذخیره وضعیت ورود در sessionStorage
+                mainContent.style.display = 'flex';
                 sessionStorage.setItem('cst_authenticated', 'true');
                 sessionStorage.setItem('cst_login_time', new Date().getTime());
             } else {
-                // کد اشتباه
                 verifyError.textContent = 'کد نامعتبر است. لطفاً کد جدید را از اپلیکیشن دریافت کنید.';
                 verifyError.style.display = 'block';
                 otpInput.value = '';
@@ -603,7 +587,7 @@
         // بررسی اگر کاربر قبلاً در این session وارد شده
         if (sessionStorage.getItem('cst_authenticated') === 'true') {
             loginPage.style.display = 'none';
-            mainContent.style.display = 'block';
+            mainContent.style.display = 'flex';
         }
 
         // تمرکز روی فیلد کد
@@ -611,170 +595,84 @@
             otpInput.focus();
         }, 1000);
 
-        // برای دیباگ: نمایش کد تولید شده در کنسول
-        console.log('کد تولید شده فعلی:', generateTOTP());
-        
-        // رویداد برای زمانی که کاربر صفحه را ترک می‌کند
-        window.addEventListener('beforeunload', function() {
-            // هیچ کاری نکنیم، sessionStorage به طور خودکار با بستن تب پاک می‌شود
+        // ==================== TAB MANAGEMENT ====================
+        function openTab(n) {
+            document.querySelectorAll('.tab').forEach((t, i) => {
+                t.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('iframe').forEach((f, i) => {
+                f.classList.toggle('active', i === n);
+            });
+        }
+
+        // ==================== PWA INSTALL ====================
+        let deferredPrompt;
+        const pwaInstallButton = document.getElementById('pwaInstallButton');
+        let installPromptTimeout;
+
+        // نمایش دکمه نصب
+        function showInstallButton() {
+            pwaInstallButton.style.display = 'block';
+            
+            if (installPromptTimeout) {
+                clearTimeout(installPromptTimeout);
+            }
+            
+            installPromptTimeout = setTimeout(() => {
+                pwaInstallButton.style.display = 'none';
+            }, 120000);
+        }
+
+        // مخفی کردن دکمه
+        function hideInstallButton() {
+            pwaInstallButton.style.display = 'none';
+            if (installPromptTimeout) {
+                clearTimeout(installPromptTimeout);
+            }
+        }
+
+        // رویداد پیشنهاد نصب
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
         });
 
-        // نمایش کد فعلی هر 10 ثانیه برای دیباگ
-        setInterval(() => {
-            console.log('کد فعلی (آپدیت):', generateTOTP());
-        }, 10000);
-
-
-
-
-// ==================== PWA INSTALL ====================
-let deferredPrompt;
-let installButton = null;
-let installPromptTimeout;
-
-// ایجاد دکمه نصب
-function createInstallButton() {
-    if (installButton) return;
-    
-    installButton = document.createElement('button');
-    installButton.className = 'pwa-install-btn';
-    installButton.innerHTML = '📥 نصب برنامه';
-    installButton.style.display = 'none';
-    
-    // اضافه کردن افکت‌ها
-    installButton.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-3px)';
-        this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.4)';
-    });
-    
-    installButton.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-        this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
-    });
-    
-    installButton.addEventListener('click', installPWA);
-    document.body.appendChild(installButton);
-}
-
-// نمایش دکمه
-function showInstallButton() {
-    if (!installButton) {
-        createInstallButton();
-    }
-    installButton.style.display = 'block';
-    
-    // پاک کردن تایموت قبلی
-    if (installPromptTimeout) {
-        clearTimeout(installPromptTimeout);
-    }
-    
-    // تنظیم تایموت جدید برای ۲ دقیقه (120 ثانیه)
-    installPromptTimeout = setTimeout(() => {
-        if (installButton && installButton.style.display !== 'none') {
-            installButton.style.display = 'none';
-            console.log('⏰ دکمه نصب به صورت خودکار مخفی شد');
-        }
-    }, 120000); // 120 ثانیه = 2 دقیقه
-}
-
-// مخفی کردن دکمه
-function hideInstallButton() {
-    if (installButton) {
-        installButton.style.display = 'none';
-    }
-    if (installPromptTimeout) {
-        clearTimeout(installPromptTimeout);
-    }
-}
-
-// رویداد پیشنهاد نصب
-window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('🔔 قابلیت نصب فعال شد');
-    e.preventDefault();
-    deferredPrompt = e;
-    
-    // نمایش دکمه
-    showInstallButton();
-    
-    // همچنین بعد از ۱۰ ثانیه دوباره چک کن (برای موارد خاص)
-    setTimeout(() => {
-        if (deferredPrompt && installButton && installButton.style.display === 'none') {
-            showInstallButton();
-        }
-    }, 10000);
-});
-
-// تابع نصب
-function installPWA() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('✅ کاربر نصب را پذیرفت');
-                hideInstallButton();
-            } else {
-                console.log('❌ کاربر از نصب صرف نظر کرد');
-                // بعد از رد نصب، ۱۰ ثانیه دیگه نمایش بده
-                setTimeout(() => {
-                    showInstallButton();
-                }, 10000);
+        // تابع نصب
+        pwaInstallButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    hideInstallButton();
+                }
+                deferredPrompt = null;
             }
+        });
+
+        // بررسی اگر اپلیکیشن نصب شده
+        window.addEventListener('appinstalled', () => {
+            hideInstallButton();
             deferredPrompt = null;
         });
-    }
-}
 
-// بررسی اگر اپلیکیشن نصب شده
-window.addEventListener('appinstalled', (evt) => {
-    console.log('🎉 اپلیکیشن با موفقیت نصب شد');
-    hideInstallButton();
-    deferredPrompt = null;
-});
-
-// نمایش دکمه وقتی کاربر اسکرول می‌کنه (تعامل داره)
-let userInteracted = false;
-window.addEventListener('scroll', function() {
-    if (!userInteracted && deferredPrompt && installButton && installButton.style.display === 'none') {
-        userInteracted = true;
-        showInstallButton();
-    }
-});
-
-window.addEventListener('click', function() {
-    if (!userInteracted && deferredPrompt && installButton && installButton.style.display === 'none') {
-        userInteracted = true;
-        showInstallButton();
-    }
-});
-
-// ثبت Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/cst/sw.js')
-            .then(function(registration) {
-                console.log('✅ ServiceWorker ثبت شد: ', registration.scope);
-            })
-            .catch(function(error) {
-                console.log('❌ خطا در ثبت ServiceWorker: ', error);
+        // ثبت Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/cst/sw.js')
+                    .then(function(registration) {
+                        console.log('✅ ServiceWorker ثبت شد: ', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('❌ خطا در ثبت ServiceWorker: ', error);
+                    });
             });
-    });
-}
+        }
 
-
-    // تابع جابه‌جایی بین تب‌ها
-    function openTab(n) {
-      document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active', i===n));
-      document.querySelectorAll('iframe').forEach((f,i)=>f.classList.toggle('active', i===n));
-    }
-
-    // ثبت Service Worker برای PWA
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/cst/sw.js')
-        .then(reg => console.log('✅ Service Worker registered:', reg))
-        .catch(err => console.error('❌ Service Worker failed:', err));
-    }
-		
+        // نمایش کد فعلی هر 30 ثانیه برای دیباگ
+        setInterval(() => {
+            console.log('کد فعلی:', generateTOTP());
+        }, 30000);
     </script>
 </body>
 </html>
