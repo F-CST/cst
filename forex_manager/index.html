@@ -146,7 +146,7 @@
         }
 
         .dark-mode .glass-btn {
-            background: rgba(255, 0.1, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -2002,17 +2002,36 @@
             showAlert('محاسبه انجام و در تاریخچه ذخیره شد');
         });
 
+        // ریست ماشین حساب اصلی - فقط فیلدهای عددی
         document.getElementById('reset').addEventListener('click', function() {
-            // فقط فیلدهای عددی ورودی و یادداشت را پاک می‌کند، جفت ارز، تاریخ و نوع پوزیشن حفظ می‌شود
-            document.getElementById('lot-size').value = '';
-            document.getElementById('entry-price').value = '';
-            document.getElementById('take-profit').value = '';
-            document.getElementById('stop-loss').value = '';
-            document.getElementById('exit-price').value = '';
-            document.getElementById('trade-notes').value = '';
+            // لیست IDهای فیلدهایی که باید ریست شوند
+            const fieldsToReset = [
+                'lot-size', 'entry-price', 'take-profit', 
+                'stop-loss', 'exit-price', 'trade-notes'
+            ];
+            
+            // مقدار پیش‌فرض برای هر فیلد
+            const defaultValues = {
+                'lot-size': '0.1',
+                'entry-price': '',
+                'take-profit': '',
+                'stop-loss': '',
+                'exit-price': '',
+                'trade-notes': ''
+            };
+            
+            // ریست فیلدهای مشخص شده
+            fieldsToReset.forEach(fieldId => {
+                const element = document.getElementById(fieldId);
+                if (element) {
+                    element.value = defaultValues[fieldId] || '';
+                }
+            });
+            
+            // مخفی کردن نتایج
             document.getElementById('result').style.display = 'none';
             
-            showAlert('فیلدهای عددی با موفقیت ریست شد', 'info');
+            showAlert('فیلدهای ورودی با موفقیت ریست شدند', 'info');
         });
 
         // محاسبه ارزش پیپ
@@ -2057,13 +2076,29 @@
             document.getElementById('pip-result').style.display = 'block';
         });
 
+        // ریست ماشین حساب ارزش پیپ - فقط فیلدهای عددی
         document.getElementById('reset-pip-calculator').addEventListener('click', function() {
-            document.getElementById('pip-lot-size').value = '0.1';
-            document.getElementById('pip-price').value = '';
-            document.getElementById('account-currency').value = 'USD';
+            // لیست IDهای فیلدهایی که باید ریست شوند
+            const fieldsToReset = ['pip-lot-size', 'pip-price'];
+            
+            // مقدار پیش‌فرض برای هر فیلد
+            const defaultValues = {
+                'pip-lot-size': '0.1',
+                'pip-price': ''
+            };
+            
+            // ریست فیلدهای مشخص شده
+            fieldsToReset.forEach(fieldId => {
+                const element = document.getElementById(fieldId);
+                if (element) {
+                    element.value = defaultValues[fieldId] || '';
+                }
+            });
+            
+            // مخفی کردن نتایج
             document.getElementById('pip-result').style.display = 'none';
             
-            showAlert('ماشین حساب ارزش پیپ ریست شد', 'info');
+            showAlert('فیلدهای ماشین حساب ارزش پیپ ریست شدند', 'info');
         });
 
         document.querySelectorAll('.quick-lot-btn').forEach(button => {
