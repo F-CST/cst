@@ -1496,7 +1496,7 @@
         <div class="tab-content" id="currency-pairs-tab">
             <h2>مدیریت جفت ارزها و دسته‌بندی‌ها</h2>
             <BR>
-            <!-- بخش افزودن دسته‌��ندی جدید -->
+            <!-- بخش افزودن دسته‌بندی جدید -->
             <div class="form-group">
                 <h3><li>افزودن دسته‌بندی جدید</li></h3>
                 <label for="newCategoryName">نام دسته‌بندی:</label>
@@ -1888,7 +1888,8 @@
 
         // تابع کپی کردن متن (بهبود یافته برای جدول و کارت‌ها)
         function copyToClipboard(element, text = null) {
-            const textToCopy = text || element.textContent.trim() || element.dataset.value;
+            // تغییر اولویت: اگر dataset.value موجود باشد، از آن استفاده کن (فقط عدد برای خروجی‌ها)
+            const textToCopy = text || (element.dataset.value || element.textContent.trim());
             
             if (!textToCopy) return;
             
@@ -2185,7 +2186,7 @@
                     closeModals();
                     await loadCategories();
                     await loadCurrencyPairs();
-                    showNotification('دسته‌بندی با موفقیت ویرایش شد.');
+                    showNotification('دسته‌بندی با موفقیت ویرایش ش��.');
                 }
             } catch (error) {
                 console.error('خطا در ویرایش دسته‌بندی:', error);
@@ -2828,7 +2829,7 @@
                     resultsList.appendChild(resultElement);
                 });
                 
-                // اگر در حال ویرایش هستیم، رکورد قدیم را حذف می‌کنیم
+                // اگر در ��ال ویرایش هستیم، رکورد قدیم را حذف می‌کنیم
                 if (currentEditId) {
                     await deleteFromDatabase(STORE_CALCULATIONS, currentEditId);
                     currentEditId = null;
