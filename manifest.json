@@ -8,6 +8,8 @@
   "theme_color": "#2575fc",
   "orientation": "any",
   "scope": "/cst/",
+  "lang": "fa",
+  "dir": "rtl",
   "categories": ["business", "productivity", "utilities"],
   "icons": [
     {
