@@ -302,53 +302,99 @@
         }
         
         .tab i {
-            font-size: 1.2rem; /* آیکون‌ها بزرگتر شده */
+            font-size: 1.2rem;
             opacity: 0.9;
         }
         
         /* ========== RESPONSIVE TABS ONLY FOR DESKTOP ========== */
-        /* فقط برای دسکتاپ - حالت بسیار فشرده */
-        @media (min-width: 769px) and (max-width: 900px) {
+        /* فقط برای دسکتاپ - حالت بسیار فشرده برای سایزهای بسیار کوچک */
+        @media (min-width: 769px) and (max-width: 500px) {
             .tabs-container {
-                padding: 12px 8px;
+                padding: 8px 5px;
             }
             
             .tab {
-                padding: 12px 14px;
-                min-width: 60px;
+                padding: 10px 12px;
+                min-width: 50px;
                 justify-content: center;
             }
             
             .tab-text {
-                display: none;
+                display: none !important;
             }
             
             .tab i {
-                font-size: 1.4rem; /* آیکون بزرگتر در حالت فشرده */
+                font-size: 1.4rem;
+                margin: 0;
+            }
+        }
+        
+        /* فقط برای دسکتاپ - حالت بسیار فشرده */
+        @media (min-width: 769px) and (max-width: 600px) {
+            .tabs-container {
+                padding: 10px 8px;
+            }
+            
+            .tab {
+                padding: 12px 14px;
+                min-width: 55px;
+                justify-content: center;
+            }
+            
+            .tab-text {
+                display: none !important;
+            }
+            
+            .tab i {
+                font-size: 1.5rem;
                 margin: 0;
             }
         }
         
         /* فقط برای دسکتاپ - حالت فشرده */
-        @media (min-width: 901px) and (max-width: 1100px) {
+        @media (min-width: 769px) and (max-width: 700px) {
             .tab {
                 padding: 10px 12px;
-                min-width: 70px;
+                min-width: 60px;
                 justify-content: center;
             }
             
             .tab-text {
-                display: none;
+                display: none !important;
             }
             
             .tab i {
-                font-size: 1.3rem; /* آیکون بزرگتر */
+                font-size: 1.4rem;
                 margin: 0;
             }
         }
         
         /* فقط برای دسکتاپ - حالت نیمه فشرده */
-        @media (min-width: 1101px) and (max-width: 1300px) {
+        @media (min-width: 769px) and (max-width: 850px) {
+            .tab {
+                padding: 10px 12px;
+                min-width: 70px;
+            }
+            
+            .tab-text {
+                font-size: 0.7rem;
+            }
+            
+            .tab-text.long {
+                display: none;
+            }
+            
+            .tab-text.short {
+                display: inline;
+            }
+            
+            .tab i {
+                font-size: 1.3rem;
+            }
+        }
+        
+        /* فقط برای دسکتاپ - حالت متوسط */
+        @media (min-width: 769px) and (max-width: 1000px) {
             .tab {
                 padding: 10px 14px;
                 min-width: 80px;
@@ -371,7 +417,7 @@
             }
         }
 
-        /* حالت عادی برای دسکتاپ بزرگ */
+        /* حالت عادی برای دسکتاپ بزرگ و موبایل */
         .tab-text.short {
             display: none;
         }
@@ -683,13 +729,43 @@
             }
         }
 
+        // ==================== DETECT DESKTOP AND APPLY RESPONSIVE TABS ====================
+        function handleDesktopResponsiveTabs() {
+            const tabsContainer = document.getElementById('tabsContainer');
+            const windowWidth = window.innerWidth;
+            
+            // فقط برای دسکتاپ (عرض بیشتر از 768px)
+            if (windowWidth > 768) {
+                // حذف تمام کلاس‌های قبلی
+                tabsContainer.classList.remove('extra-compact', 'compact', 'semi-compact', 'medium');
+                
+                if (windowWidth < 600) {
+                    // حالت بسیار فشرده برای دسکتاپ کوچک
+                    tabsContainer.classList.add('extra-compact');
+                } else if (windowWidth < 700) {
+                    // حالت فشرده
+                    tabsContainer.classList.add('compact');
+                } else if (windowWidth < 850) {
+                    // حالت نیمه فشرده
+                    tabsContainer.classList.add('semi-compact');
+                } else if (windowWidth < 1000) {
+                    // حالت متوسط
+                    tabsContainer.classList.add('medium');
+                }
+            }
+        }
+
         // اعمال در لود اولیه
         document.addEventListener('DOMContentLoaded', () => {
             updateThemeColor();
+            handleDesktopResponsiveTabs();
         });
 
         // اعمال در تغییر سایز صفحه
-        window.addEventListener('resize', updateThemeColor);
+        window.addEventListener('resize', () => {
+            updateThemeColor();
+            handleDesktopResponsiveTabs();
+        });
 
         // ==================== AUTHENTICATION ====================
         const secretKey = 'JBSWY3DPEHPK3PXP';
