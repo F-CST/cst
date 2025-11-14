@@ -268,7 +268,7 @@
         
         .tabs {
             display: flex;
-            gap: 8px; /* تغییر: gap پیش‌فرض */
+            gap: 8px;
             min-width: min-content;
             user-select: none;
         }
@@ -306,140 +306,23 @@
             opacity: 0.9;
         }
         
-        /* ========== RESPONSIVE TABS - ONLY FOR DESKTOP (با کلاس .is-desktop) ========== */
-        /* حالت پیش‌فرض: متن بلند نمایش داده میشه، متن کوتاه مخفیه */
-        .tab-text.short {
-            display: none;
+        /* ========== RESPONSIVE TABS ONLY FOR DESKTOP ========== */
+        /* فقط برای دسکتاپ - حالت فشرده (فقط آیکون) در سایزهای بسیار کوچک */
+        body.desktop .tabs-container.icons-only .tab {
+            padding: 12px 14px;
+            min-width: 55px;
+            justify-content: center;
         }
         
-        .tab-text.long {
-            display: inline;
+        body.desktop .tabs-container.icons-only .tab-text {
+            display: none !important;
+        }
+        
+        body.desktop .tabs-container.icons-only .tab i {
+            font-size: 1.4rem;
+            margin: 0;
         }
 
-        /* تغییر: برای دسکتاپ عریض (بالای 1301px): متن long کامل - فقط اگر .is-desktop */
-        @media (min-width: 1301px) {
-            .is-desktop .tab {
-                padding: 12px 18px;
-                font-size: 0.9rem;
-                gap: 10px;
-            }
-            
-            .is-desktop .tab i {
-                font-size: 1.3rem;
-            }
-            
-            .is-desktop .tabs {
-                gap: 10px;
-            }
-        }
-
-        /* تغییر: برای دسکتاپ متوسط (1101-1300px): متن short نمایش بده، فشرده‌تر - فقط اگر .is-desktop */
-        @media (min-width: 1101px) and (max-width: 1300px) {
-            .is-desktop .tab-text.long {
-                display: none;
-            }
-            
-            .is-desktop .tab-text.short {
-                display: inline;
-            }
-            
-            .is-desktop .tab {
-                padding: 10px 14px;
-                font-size: 0.8rem;
-                gap: 6px; /* فشرده‌تر */
-            }
-            
-            .is-desktop .tab i {
-                font-size: 1.1rem;
-            }
-            
-            .is-desktop .tabs {
-                gap: 6px; /* gap کمتر */
-            }
-        }
-        
-        /* فقط برای دسکتاپ: حالت آیکون فقط - برای 769-1100px - فقط اگر .is-desktop */
-        @media (min-width: 769px) and (max-width: 1100px) {
-            /* فقط آیکون - متن کاملاً مخفی */
-            .is-desktop .tab-text {
-                display: none !important;
-            }
-            
-            .is-desktop .tab {
-                min-width: 60px;
-                justify-content: center;
-                padding: 12px 16px;
-                gap: 0; /* بدون gap برای آیکون */
-            }
-            
-            .is-desktop .tab i {
-                font-size: 1.5rem;
-                margin: 0;
-            }
-            
-            .is-desktop .tabs {
-                gap: 5px; /* gap کمتر برای فشرده شدن */
-            }
-            
-            .is-desktop .tabs-container {
-                padding: 12px 8px;
-            }
-        }
-        
-        /* فقط برای دسکتاپ: صفحات کوچک (769-600px) - فقط اگر .is-desktop */
-        @media (min-width: 769px) and (max-width: 600px) {
-            .is-desktop .tab-text {
-                display: none !important;
-            }
-            
-            .is-desktop .tab {
-                min-width: 50px;
-                justify-content: center;
-                padding: 10px 14px;
-                gap: 0;
-            }
-            
-            .is-desktop .tab i {
-                font-size: 1.4rem;
-                margin: 0;
-            }
-            
-            .is-desktop .tabs-container {
-                padding: 10px 8px;
-            }
-            
-            .is-desktop .tabs {
-                gap: 4px; /* حتی کمتر */
-            }
-        }
-        
-        /* فقط برای دسکتاپ: صفحات خیلی کوچک (769-450px) - فقط اگر .is-desktop */
-        @media (min-width: 769px) and (max-width: 450px) {
-            .is-desktop .tab-text {
-                display: none !important;
-            }
-            
-            .is-desktop .tab {
-                min-width: 45px;
-                justify-content: center;
-                padding: 8px 12px;
-                gap: 0;
-            }
-            
-            .is-desktop .tab i {
-                font-size: 1.3rem;
-                margin: 0;
-            }
-            
-            .is-desktop .tabs-container {
-                padding: 8px 6px;
-            }
-            
-            .is-desktop .tabs {
-                gap: 3px; /* فشرده‌ترین */
-            }
-        }
-        
         /* ========== IFRAME CONTAINER ========== */
         .iframe-container {
             flex: 1;
@@ -500,7 +383,19 @@
             background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
         }
 
-        /* ========== RESPONSIVE DESIGN FOR MOBILE ========== */
+        /* ========== RESPONSIVE DESIGN ========== */
+        @media (max-width: 1024px) {
+            .tab {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+                gap: 6px;
+            }
+            
+            .tab i {
+                font-size: 1.1rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .tabs-container {
                 padding: 12px 15px;
@@ -656,38 +551,31 @@
                 <div class="tabs" id="tabs">
                     <div class="tab active" onclick="openTab(0)">
                         <i class="fa fa-align-justify"></i>
-                        <span class="tab-text long">Calculator Pro W/D</span>
-                        <span class="tab-text short">Calc WD</span> <!-- تغییر: کوتاه‌تر برای فشرده‌تر شدن -->
+                        <span class="tab-text">Calculator Pro W/D</span>
                     </div>
                     <div class="tab" onclick="openTab(1)">
                         <i class="fa fa-bar-chart"></i>
-                        <span class="tab-text long">Calculator Pro Formula 4</span>
-                        <span class="tab-text short">Form 4</span> <!-- تغییر: کوتاه‌تر -->
+                        <span class="tab-text">Calculator Pro Formula 4</span>
                     </div>
                     <div class="tab" onclick="openTab(2)">
                         <i class="fa fa-area-chart"></i>
-                        <span class="tab-text long">Calculator Pro Formula 2</span>
-                        <span class="tab-text short">Form 2</span> <!-- تغییر: کوتاه‌تر -->
+                        <span class="tab-text">Calculator Pro Formula 2</span>
                     </div>
                     <div class="tab" onclick="openTab(3)">
                         <i class="fa fa-indent"></i>
-                        <span class="tab-text long">Calculator Pro Center W/D</span>
-                        <span class="tab-text short">Ctr WD</span> <!-- تغییر: کوتاه‌تر -->
+                        <span class="tab-text">Calculator Pro Center W/D</span>
                     </div>
                     <div class="tab" onclick="openTab(4)">
                         <i class="fa fa-line-chart"></i>
-                        <span class="tab-text long">Cst Analyzer</span>
-                        <span class="tab-text short">Anlz</span> <!-- تغییر: کوتاه‌تر -->
+                        <span class="tab-text">Cst Analyzer</span>
                     </div>
                     <div class="tab" onclick="openTab(5)">
                         <i class="fa fa-exchange-alt"></i>
-                        <span class="tab-text long">Forex Manager</span>
-                        <span class="tab-text short">Frx</span> <!-- تغییر: کوتاه‌تر -->
+                        <span class="tab-text">Forex Manager</span>
                     </div>
                     <div class="tab" onclick="openTab(6)">
                         <i class="fa fa-calculator"></i>
-                        <span class="tab-text long">Calculator Pro C/D</span>
-                        <span class="tab-text short">Calc CD</span> <!-- تغییر: کوتاه‌تر -->
+                        <span class="tab-text">Calculator Pro C/D</span>
                     </div>
                 </div>
             </div>
@@ -707,20 +595,37 @@
     <button class="pwa-install-btn" id="pwaInstallButton">📥 نصب برنامه</button>
 
     <script>
-        // ==================== DETECT DESKTOP FOR RESPONSIVE TABS ====================
-        // تابع برای تشخیص دسکتاپ (غیر از Android/iOS)
-        function detectDesktop() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-            return !isMobile;
+        // ==================== DETECT DEVICE TYPE ====================
+        function isMobileDevice() {
+            return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
-        // اضافه کردن کلاس is-desktop اگر دسکتاپ باشه
-        if (detectDesktop()) {
-            document.body.classList.add('is-desktop');
-            console.log('Desktop detected: Responsive tabs enabled for resize.');
-        } else {
-            console.log('Mobile detected (Android/iOS): Responsive tabs disabled.');
+        function detectDeviceType() {
+            // اگر موبایل یا تبلت باشد، هیچ تغییری اعمال نمی‌شود
+            if (isMobileDevice()) {
+                document.body.classList.add('mobile');
+                document.body.classList.remove('desktop');
+            } else {
+                document.body.classList.add('desktop');
+                document.body.classList.remove('mobile');
+            }
+        }
+
+        // ==================== RESPONSIVE TABS FOR DESKTOP ONLY ====================
+        function handleDesktopResponsiveTabs() {
+            const tabsContainer = document.getElementById('tabsContainer');
+            const windowWidth = window.innerWidth;
+            
+            // فقط برای دسکتاپ
+            if (document.body.classList.contains('desktop')) {
+                // حذف کلاس قبلی
+                tabsContainer.classList.remove('icons-only');
+                
+                // فقط در سایزهای بسیار کوچک دسکتاپ (600px و پایین‌تر) حالت آیکون فعال شود
+                if (windowWidth <= 600) {
+                    tabsContainer.classList.add('icons-only');
+                }
+            }
         }
 
         // ==================== DYNAMIC THEME COLOR ====================
@@ -742,7 +647,6 @@
             });
         }
 
-        // تنظیم theme-color بر اساس اندازه صفحه
         function updateThemeColor() {
             if (window.innerWidth <= 480) {
                 setThemeColor('#2575fc');
@@ -751,9 +655,18 @@
             }
         }
 
-        // اعمال در لود اولیه و تغییر سایز
-        document.addEventListener('DOMContentLoaded', updateThemeColor);
-        window.addEventListener('resize', updateThemeColor);
+        // اعمال در لود اولیه
+        document.addEventListener('DOMContentLoaded', () => {
+            detectDeviceType();
+            updateThemeColor();
+            handleDesktopResponsiveTabs();
+        });
+
+        // اعمال در تغییر سایز صفحه
+        window.addEventListener('resize', () => {
+            updateThemeColor();
+            handleDesktopResponsiveTabs();
+        });
 
         // ==================== AUTHENTICATION ====================
         const secretKey = 'JBSWY3DPEHPK3PXP';
@@ -883,6 +796,7 @@
         if (sessionStorage.getItem('cst_authenticated') === 'true') {
             loginPage.style.display = 'none';
             mainContent.style.display = 'flex';
+            // فعال کردن اسکرول موس برای تب‌ها
             setTimeout(initMouseWheelScroll, 100);
         } else {
             loginPage.style.display = 'block';
@@ -921,11 +835,12 @@
                 this.scrollLeft += e.deltaY;
             });
             
-            // اسکرول با کلیک و درگ
+            // اسکرول با کلیک و درگ روی هر قسمتی از تب‌ها
             let isDragging = false;
             let startX;
             let scrollLeft;
             
+            // برای کل کانتینر تب‌ها
             tabsScrollContainer.addEventListener('mousedown', function(e) {
                 isDragging = true;
                 startX = e.pageX - this.offsetLeft;
@@ -934,6 +849,7 @@
                 this.style.userSelect = 'none';
             });
             
+            // برای خود تب‌ها (اگر کاربر روی تب کلیک کرد)
             tabs.addEventListener('mousedown', function(e) {
                 isDragging = true;
                 startX = e.pageX - tabsScrollContainer.offsetLeft;
