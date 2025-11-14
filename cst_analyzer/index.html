@@ -592,6 +592,42 @@
     width: fit-content;
     max-width: 90%;
   }
+
+  /* استایل برای اعلان دانلود (toast) */
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 250px;
+    background: var(--success-color);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10001;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    font-size: 0.9rem;
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  .toast.show {
+    transform: translateX(0);
+  }
+  
+  .toast.error {
+    background: var(--danger-color);
+  }
+
+  @media (max-width: 768px) {
+    .toast {
+      right: 10px;
+      left: 10px;
+      min-width: auto;
+      top: 10px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1387,12 +1423,38 @@ document.getElementById('closeStatsBtn').addEventListener('click', function() {
   document.getElementById('modalBg').style.display = 'none';
 });
 
+// تابع اعلان زیبا (toast) برای دانلود
+function showToast(message, type = 'success') {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.className = `toast ${type}`;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 300);
+  }, 3000);
+}
+
 document.getElementById('exportBtn').addEventListener('click', ()=>{
-  const dataStr = JSON.stringify(store, null, 2);
-  const blob = new Blob([dataStr], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url;
-  a.download = 'cst_analyzer-' + new Date().toISOString().slice(0,10) + '.json'; a.click(); URL.revokeObjectURL(url);
+  try {
+    const dataStr = JSON.stringify(store, null, 2);
+    const blob = new Blob([dataStr], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = 'cst_analyzer-' + new Date().toISOString().slice(0,10) + '.json'; a.click(); URL.revokeObjectURL(url);
+    showToast('✅ فایل پشتیبان با موفقیت دانلود شد!');
+  } catch (e) {
+    showToast('❌ خطا در دانلود فایل پشتیبان: ' + e.message, 'error');
+  }
 });
 
 document.getElementById('importFile').addEventListener('change', (e) => {
