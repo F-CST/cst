@@ -305,35 +305,6 @@
       display:none !important; 
     }
     
-    .micro-btn{ 
-      background:#0ea5a4; 
-      color:#021; 
-      padding:.45rem .6rem; 
-      border-radius:6px; 
-      font-weight:700; 
-      cursor:pointer; 
-      border: 2px solid #0ea5a4;
-      transition: all 0.3s ease;
-    }
-    
-    .micro-btn:hover {
-      background: #0d9488;
-      border-color: #0d9488;
-      transform: translateY(-1px);
-    }
-    
-    .micro-btn.recording{ 
-      background:#ef4444; 
-      color:#fff; 
-      border-color: #ef4444;
-    }
-    
-    .micro-btn.connected{ 
-      background:#10b981; 
-      color:#fff; 
-      border-color: #10b981;
-    }
-    
     .icon-btn{ 
       background:var(--input-bg); 
       border:1px solid rgba(255,255,255,0.08); 
@@ -770,7 +741,6 @@
         <div class="mb-3">
           <div class="flex items-center gap-2 mb-2">
             <label class="muted flex-1">جفت‌ارز</label>
-            <button id="micro_toggle" class="micro-btn" title="شروع/توقف ورود صوتی">🎤 فعال کردن صوت</button>
           </div>
           <select id="pair_select"></select>
         </div>
@@ -822,7 +792,6 @@
           <h4 class="muted mb-2">تحلیل نهایی</h4>
           <div id="analysis_result" class="font-semibold text-center space-y-2"></div>
           <p id="error_message" class="muted text-rose-400 mt-2 text-center"></p>
-          <p id="voice_status" class="muted mt-2 text-center"></p>
         </div>
       </div>
     </main>
@@ -1010,7 +979,6 @@
     const resultsList2 = $('results_list_2');
     const analysisResult = $('analysis_result');
     const errorMessage = $('error_message');
-    const voiceStatus = $('voice_status');
 
     const exportBtn = $('export_btn');
     const importFile = $('import_file');
@@ -1037,8 +1005,6 @@
     const boxCalc = $('box_calc');
     const toggleHistoryHdr = $('hdr_history');
     const boxHistory = $('box_history');
-
-    const microToggle = $('micro_toggle');
 
     // عناصر جدید برای تاریخ چندگانه
     const toggleMultiDateBtn = $('toggle_multi_date');
@@ -1804,7 +1770,7 @@
       if (closest && closest.pair && Array.isArray(closest.pair) && closest.pair.length === 2 && 
           closest.indexes && Array.isArray(closest.indexes) && closest.indexes.length === 2) {
         
-        // استفاده از فرمت ساده برای نمایش در تحلیل
+             // استفاده از فرمت ساده برای نمایش در تحلیل
         const formattedPair = `${closest.pair[0]} (بخش ۱) و ${closest.pair[1]} (بخش ۲)`;
         const formattedDiff = closest.difference;
         const indexesText = `${closest.indexes[0]}/${closest.indexes[1]}`;
@@ -1965,7 +1931,7 @@
         // فعال کردن حالت چندتاریخی
         singleDateSection.classList.add('hidden');
         multiDateSection.classList.remove('hidden');
-        toggleMultiDateBtn.textContent = 'بازگشت به حالت ع��دی';
+        toggleMultiDateBtn.textContent = 'بازگشت به حالت عادی';
         toggleMultiDateBtn.classList.remove('bg-blue-600');
         toggleMultiDateBtn.classList.add('bg-gray-600');
         
@@ -2612,165 +2578,6 @@
       });
     }
 
-    /* ---------- Speech recognition ---------- */
-    let recognition = null;
-    let isRecording = false;
-    let isVoiceActive = false;
-    let currentField = null;
-
-    const numericFields = [inputY1, inputY2];
-
-    function parseNumberFromTranscript(transcript){
-      if(!transcript) return null;
-      
-      const persianDigits = {'۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'};
-      let normalized = transcript.replace(/[۰-۹]/g, d => persianDigits[d]);
-      
-      normalized = normalized.replace(/[^\d.-]/g, '');
-      
-      const match = normalized.match(/-?\d*\.?\d+/);
-      return match ? match[0] : null;
-    }
-
-    function startVoiceRecognition(){
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!SpeechRecognition){ 
-        if(voiceStatus) voiceStatus.textContent = 'مرورگر شما از تشخیص صوت پشتیبانی نمی‌کند.';
-        return; 
-      }
-      
-      recognition = new SpeechRecognition();
-      recognition.lang = 'fa-IR';
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
-      recognition.continuous = false;
-
-      recognition.onstart = () => {
-        isRecording = true;
-        if(microToggle) microToggle.classList.add('recording');
-        if(voiceStatus && currentField) {
-          const fieldName = getFieldName(currentField);
-          voiceStatus.textContent = `🎤 در حال گوش دادن لطفاً عدد را بگویید`;
-        }
-      };
-      
-      recognition.onend = () => {
-        isRecording = false;
-        if(microToggle) microToggle.classList.remove('recording');
-        
-        if(isVoiceActive && currentField){
-          setTimeout(() => {
-            if(!isRecording && isVoiceActive) {
-              startVoiceRecognition();
-            }
-          }, 300);
-        }
-      };
-      
-      recognition.onerror = (ev) => {
-        isRecording = false;
-        if(microToggle) microToggle.classList.remove('recording');
-        
-        if(isVoiceActive && currentField){
-          setTimeout(() => {
-            if(!isRecording && isVoiceActive) {
-              startVoiceRecognition();
-            }
-          }, 1000);
-        }
-      };
-      
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        const numStr = parseNumberFromTranscript(transcript);
-        
-        if(numStr && currentField){
-          currentField.value = numStr;
-          const fieldName = getFieldName(currentField);
-          if(voiceStatus) voiceStatus.textContent = `✅ عدد "${numStr}" در ${fieldName} وارد شد`;
-          
-          const currentIndex = numericFields.indexOf(currentField);
-          if(currentIndex < numericFields.length - 1){
-            setTimeout(() => {
-              numericFields[currentIndex + 1].focus();
-            }, 500);
-          }
-        } else if(voiceStatus) {
-          voiceStatus.textContent = '❌ عدد تشخیص داده نشد. دوباره تلاش کنید.';
-        }
-      };
-      
-      try{
-        recognition.start();
-      }catch(e){
-        console.log('خطا در شروع ضبط:', e);
-      }
-    }
-
-    function stopVoiceRecognition(){
-      isVoiceActive = false;
-      try{
-        if(recognition) recognition.stop();
-      }catch(e){}
-      recognition = null;
-      isRecording = false;
-      if(microToggle) {
-        microToggle.classList.remove('recording');
-        microToggle.classList.remove('connected');
-      }
-      if(voiceStatus) voiceStatus.textContent = '🔇 اتصال صوتی قطع شد';
-    }
-
-    function getFieldName(field){
-      const names = {
-        [inputY1]: 'عدد بخش ۱',
-        [inputY2]: 'عدد بخش ۲'
-      };
-      return names[field] || 'این فیلد';
-    }
-
-    safeForEach(numericFields, (field) => {
-      if(!field) return;
-      
-      field.addEventListener('focus', () => {
-        currentField = field;
-        
-        if(isVoiceActive && !isRecording){
-          startVoiceRecognition();
-        } else if(isVoiceActive) {
-          const fieldName = getFieldName(field);
-          if(voiceStatus) voiceStatus.textContent = `🎤 در حال گوش دادن لطفاً عدد را بگویید`;
-        }
-      });
-    });
-
-    if(microToggle){
-      microToggle.addEventListener('click', ()=>{
-        if(isVoiceActive){
-          stopVoiceRecognition();
-          microToggle.textContent = '🎤 فعال کردن صوت';
-          if(voiceStatus) voiceStatus.textContent = '🔇 اتصال صوتی قطع شد';
-        } else {
-          isVoiceActive = true;
-          microToggle.textContent = '🔇 قطع صوت';
-          microToggle.classList.add('connected');
-          
-          if(voiceStatus) voiceStatus.textContent = '🎤 اتصال صوتی فعال شد. روی فیلد مورد نظر کلیک کنید.';
-          
-          if(currentField){
-            startVoiceRecognition();
-          } else {
-            const emptyField = numericFields.find(field => !field.value || field.value.trim() === '');
-            if(emptyField){
-              emptyField.focus();
-            } else {
-              numericFields[0].focus();
-            }
-          }
-        }
-      });
-    }
-
     // مدیریت وضعیت باکس‌ها بر اساس دستگاه - فقط هنگام لود صفحه
     initializeBoxStates();
 
@@ -2858,8 +2665,8 @@
 
     window.addEventListener('load', () => {
       setTimeout(() => {
-        if(numericFields[0]){
-          numericFields[0].focus();
+        if(inputY1){
+          inputY1.focus();
         }
       }, 1000);
     });
@@ -2894,14 +2701,14 @@
       console.log('• حالت چندتاریخی: فعال');
       console.log('• مدیریت پیشرفته دکمه تاگل: فعال');
     }, 1000);
-</script>
-  <!-- این کد را در انتهای body، قبل از بسته شدن </body> قرار دهید -->
-
-<div class="signature">
-    طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
-</div>
+  </script>
   
-    <BR>
-    <BR>
+  <!-- این کد را در انتهای body، قبل از بسته شدن </body> قرار دهید -->
+  <div class="signature">
+      طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
+  </div>
+  
+  <BR>
+  <BR>
 </body>
 </html>
