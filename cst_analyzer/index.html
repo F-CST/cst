@@ -1702,32 +1702,36 @@ document.addEventListener('DOMContentLoaded', () => {
   sel.addEventListener('change', ()=>{ renderAnalysisFor(sel.value); });
   if('speechSynthesis' in window){ window.speechSynthesis.onvoiceschanged = () => {}; }
 
-  // حفظ و بازیابی موقعیت اسکرول
-  const SCROLL_KEY = 'cst_scroll_position';
-  const savedScroll = localStorage.getItem(SCROLL_KEY);
-  if (savedScroll) {
-    window.scrollTo(0, parseInt(savedScroll));
+  // حفظ و بازیابی موقعیت اسکرول (بهینه‌شده برای iframe)
+  const SCROLL_KEY = 'cst_scroll_position_iframe';
+  let currentScrollY = 0;
+
+  // ذخیره موقع scroll
+  window.addEventListener('scroll', () => {
+    currentScrollY = window.scrollY;
+    sessionStorage.setItem(SCROLL_KEY, currentScrollY);
+  });
+
+  // ذخیره موقع ترک صفحه (pagehide برای tab switching)
+  window.addEventListener('pagehide', () => {
+    sessionStorage.setItem(SCROLL_KEY, currentScrollY);
+  });
+
+  // بازیابی موقع لود یا برگشت به صفحه (pageshow)
+  function restoreScroll() {
+    const savedScroll = sessionStorage.getItem(SCROLL_KEY);
+    if (savedScroll !== null) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScroll));
+      }, 0); // setTimeout برای اطمینان از رندر کامل DOM
+    }
   }
 
-  window.addEventListener('scroll', () => {
-    localStorage.setItem(SCROLL_KEY, window.scrollY);
-  });
+  // restore موقع pageshow (وقتی از تب برمی‌گردی)
+  window.addEventListener('pageshow', restoreScroll);
 
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      const pos = localStorage.getItem(SCROLL_KEY);
-      if (pos) {
-        window.scrollTo(0, parseInt(pos));
-      }
-    }
-  });
-
-  window.addEventListener('focus', () => {
-    const pos = localStorage.getItem(SCROLL_KEY);
-    if (pos) {
-      window.scrollTo(0, parseInt(pos));
-    }
-  });
+  // restore اولیه موقع لود
+  restoreScroll();
 });
 </script>
 
