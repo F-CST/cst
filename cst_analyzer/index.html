@@ -41,6 +41,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    margin-bottom: 20px; /* اضافه کردن فاصله برای جداسازی از باکس یادداشت‌ها */
   }
   
   .card {
@@ -94,6 +95,8 @@
   
   .collapsible-content {
     padding: 0 16px 16px;
+    max-height: 800px; /* اضافه کردن max-height برای اسکرول عمودی */
+    overflow-y: auto; /* اسکرول عمودی */
   }
   
   h1, h2, h3 {
@@ -211,6 +214,7 @@
     border-bottom: 1px solid var(--bg-tertiary);
     text-align: center;
     white-space: nowrap;
+    user-select: text; /* اجازه سلکت و کپی متن */
   }
   
   th {
@@ -338,6 +342,7 @@
   
   .action-col {
     white-space: nowrap;
+    user-select: none; /* جلوگیری از سلکت در ستون عملیات */
   }
   
   .action-col button {
@@ -459,6 +464,73 @@
     width: 100%;
     height: 400px;
   }
+
+  /* استایل جدید برای جداسازی چارت میله‌ای */
+  .bar-chart-isolated {
+    position: relative;
+    z-index: 100; /* بالاتر از drag sections */
+    pointer-events: auto; /* اجازه interaction مستقل */
+  }
+  
+  /* استایل برای خط افقی روی چارت - بدون تغییر ظاهری */
+  .horizontal-line {
+    position: absolute;
+    border-top: 1px solid #9fb3c8; /* نازک و رنگ روشن */
+    pointer-events: none; /* خط خودش interact نکنه، wrapper handle کنه */
+    z-index: 101; /* بالاتر از چارت */
+    width: 100%;
+    left: 0;
+  }
+  
+  .horizontal-line:hover {
+    border-top-color: var(--accent-color); /* تغییر رنگ هنگام hover */
+  }
+  
+  /* wrapper جدید برای hit area بزرگ‌تر */
+  .horizontal-line-wrapper {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    height: 20px; /* ارتفاع hit area: 20px (10px بالا و پایین خط) */
+    cursor: ns-resize; /* نشانگر برای drag عمودی */
+    z-index: 102; /* بالاتر از خط */
+    pointer-events: auto; /* فقط wrapper interact کنه */
+    background: transparent; /* نامرئی */
+  }
+  
+  .horizontal-line-wrapper:hover {
+    background: rgba(14, 165, 164, 0.05); /* highlight ملایم هنگام hover */
+  }
+  
+  .line-guide {
+    position: absolute;
+    top: -25px;
+    left: 10px;
+    background: rgba(14, 165, 164, 0.9);
+    color: #021;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 103;
+    pointer-events: none;
+  }
+  
+  .horizontal-line-wrapper:hover .line-guide {
+    opacity: 1;
+  }
+  
+  /* جلوگیری از تداخل drag با چارت */
+  .collapsible-card {
+    touch-action: none; /* جلوگیری از touch drag تداخل در موبایل */
+  }
+  
+  .card[draggable="true"] .chart-wrapper .chart-container {
+    pointer-events: auto; /* چارت مستقل */
+  }
   
   @media (max-width: 768px) {
     body {
@@ -543,6 +615,10 @@
     input, select, textarea {
       padding: 12px;
     }
+    
+    .collapsible-content {
+      max-height: 600px; /* تنظیم برای موبایل */
+    }
   }
   
   @media (max-width: 480px) {
@@ -580,13 +656,28 @@
     th, td {
       padding: 4px 2px;
     }
+    
+    .collapsible-content {
+      max-height: 500px; /* تنظیم برای موبایل کوچک */
+    }
   }
   
   .history-table-container {
-    overflow-x: auto;
+    overflow-x: auto; /* اسکرول افقی فعال */
     margin-top: 12px;
     border: 1px solid var(--border-color);
     border-radius: 6px;
+    -webkit-overflow-scrolling: touch; /* اسکرول روان در iOS */
+    user-select: text; /* اجازه سلکت و کپی */
+    cursor: grab;
+  }
+  
+  .history-table-container table {
+    min-width: 800px; /* حداقل عرض برای فعال کردن اسکرول افقی */
+  }
+  
+  .history-table-container.dragging {
+    cursor: grabbing;
   }
   
   .history-card {
@@ -771,14 +862,41 @@
         <span class="toggle-icon">▼</span>
       </div>
       <div class="collapsible-content">
+        <!-- اول: کادر انتخاب جفت ارز -->
         <div class="row">
           <div class="col">
             <label>جفت انتخاب‌شده برای تحلیل</label>
             <select id="selectedSymbol3"></select>
           </div>
         </div>
-        
-        <div style="margin-bottom:12px">
+
+        <!-- دوم: نمایش خلاصه بازه انتخابی از جدیدترین روز + باکس نمایش تاریخچه + نمودار میله‌ای + نمودار هندسی -->
+        <div id="summarySection" style="margin-top:12px;display:none">
+          <div class="small">
+            <strong>خلاصه بازه انتخابی (از جدیدترین روز):</strong>
+            <div id="summaryText"></div>
+          </div>
+          <div class="history-table-container" id="tableContainer">
+            <table id="summaryTable"><thead><tr>
+              <th>ردیف</th><th>تاریخ</th><th>High</th><th>Low</th><th>Mid</th><th>زاویه</th><th>تحلیل ۵‌روزه</th><th>عملیات</th>
+            </tr></thead><tbody></tbody></table>
+          </div>
+          <div class="chart-wrapper">
+            <div class="small" style="margin-bottom: 8px; text-align: center; color: var(--text-secondary);">💡 برای تنظیم سطح، خط افقی را با موس جابجا کنید (بالا/پایین بکشید)</div>
+            <div class="chart-container bar-chart-isolated">
+              <canvas id="angleBarChart"></canvas>
+              <div id="horizontalLineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5;"></div>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <div class="chart-container">
+              <canvas id="midChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- سوم: نمایش نوع بازه تحلیل -->
+        <div style="margin-top:12px">
           <label>نوع بازه تحلیل</label>
           <div class="btn-group">
             <button id="daysRangeToggle" class="date-range-toggle active">تعداد روز از جدیدترین</button>
@@ -815,14 +933,6 @@
           </div>
           
           <div class="small">تاریخ شروع و پایان دلخواه را انتخاب کنید (مثال: 2024-09-10 تا 2024-09-13)</div>
-        </div>
-
-        <div id="analysisOut" style="margin-top:12px;display:none"></div>
-        
-        <div class="chart-wrapper">
-          <div class="chart-container">
-            <canvas id="midChart"></canvas>
-          </div>
         </div>
       </div>
     </div>
@@ -992,6 +1102,17 @@ let sectionsOrder = [1, 2, 3, 4]; // ترتیب پیش‌فرض
 let lastAlertShownAt = 0;
 const ALERT_THROTTLE_MS = 3000;
 
+// Global state for line drag - برای جلوگیری از duplicate listenerها
+let isDraggingLine = false;
+let startY = 0;
+let startTop = 50;
+let currentLineWrapper = null;
+let chartContainer = null;
+
+// Global handlers برای drag - فقط یکبار اضافه می‌شن
+let globalMouseMoveHandler;
+let globalMouseUpHandler;
+
 function sanitizeAndMigrateStore(data) {
     if (!data.symbols) data.symbols = {};
     if (!data.symbolOrder || !Array.isArray(data.symbolOrder)) {
@@ -1110,7 +1231,7 @@ function createSymbolChip(name, index) {
   chip.onclick = () => { 
     document.getElementById('selectedSymbol').value = name; 
     document.getElementById('selectedSymbol3').value = name;
-    renderAnalysisFor(name); 
+    renderSummaryForRange(name, true); 
   };
   
   return chip;
@@ -1304,61 +1425,133 @@ function recomputeAnalysesForSymbol(sym){
 }
 
 // ---------- توابع تحلیل و نمایش ----------
-function renderAnalysisFor(symName){
-  const out = document.getElementById('analysisOut');
+function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, startDate = null, endDate = null) {
+  const summaryDiv = document.getElementById('summarySection');
+  const summaryText = document.getElementById('summaryText');
+  const tableBody = document.querySelector('#summaryTable tbody');
   const sym = store.symbols[symName];
-  if(!sym){ out.style.display='none'; if(window._chart) window._chart.destroy(); return; }
+  if (!sym || sym.history.length === 0) {
+    summaryDiv.style.display = 'none';
+    if (window._barChart) window._barChart.destroy();
+    if (window._chart) window._chart.destroy();
+    return;
+  }
 
   const hist = sym.history.slice();
-  if(hist.length===0){ out.style.display='block'; out.innerHTML='هیچ داده‌ای برای این جفت ثبت نشده.'; if(window._chart) window._chart.destroy(); return; }
-  
-  const requestedDays = (() => {
-    const v = parseInt(document.getElementById('analysisDays').value);
-    if(isNaN(v) || v < 2) return 5;
-    return Math.min(1000, v);
-  })();
+  let displayHist, angles, analysis;
 
-  const midsForAnalysis = hist.map(h => h.mid);
-  const lastN = analyzeAnglesFor(midsForAnalysis, Math.min(requestedDays, midsForAnalysis.length));
-  
-  const summaryHtml = `<div><strong>خلاصه (بازهٔ ${requestedDays} روزه - از جدیدترین روز):</strong><br>
-    نتیجه تحلیل: ${lastN.verdict || '-'} <br>
-    زاویه میانگین: ${lastN.avgAbs.toFixed(2)}° <br>
-    (تعداد داده‌ها در بازه: ${Math.min(requestedDays, midsForAnalysis.length)})</div>`;
-
-  let table = `<div class="history-table-container"><table><thead><tr>
-    <th>ردیف</th><th>تاریخ</th><th>High</th><th>Low</th><th>Mid</th><th>تحلیل ۵‌روزه</th><th>تحلیل ۳۰‌روزه</th><th>عملیات</th>
-    </tr></thead><tbody>`;
-
-  const startIndex = Math.max(0, hist.length - requestedDays);
-  for(let i = hist.length - 1; i >= startIndex; i--){
-    const r = hist[i];
-    const rowIndex = hist.length - i;
-    table += `<tr data-idx="${i}">
-      <td>${rowIndex}</td><td>${r.date}</td><td>${r.high}</td><td>${r.low}</td><td>${r.mid.toFixed(2)}</td><td>${r.analysis5||''}</td><td>${r.analysis30||''}</td>
-      <td class="action-col">
-        <button class="icon-btn edit-btn" data-idx="${i}">✏️</button>
-        <button class="icon-btn del-btn" data-idx="${i}">❌</button>
-        <button class="icon-btn move-btn" data-idx="${i}">🔀</button>
-      </td>
-    </tr>`;
+  if (isDaysRange) {
+    displayHist = hist.slice(-requestedDays);
+    const mids = displayHist.map(h => h.mid);
+    analysis = analyzeAnglesFor(mids, requestedDays);
+    angles = analysis.angles;
+  } else {
+    // Filter by date range
+    displayHist = hist.filter(record => {
+      const recordDate = new Date(record.date);
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      return recordDate >= start && recordDate <= end;
+    });
+    if (displayHist.length === 0) {
+      summaryDiv.style.display = 'none';
+      if (window._barChart) window._barChart.destroy();
+      if (window._chart) window._chart.destroy();
+      return;
+    }
+    const mids = displayHist.map(h => h.mid);
+    analysis = analyzeAnglesFor(mids, displayHist.length);
+    angles = analysis.angles;
   }
-  table += `</tbody></table></div>`;
-  out.style.display='block';
-  out.innerHTML = `<div class="small">${summaryHtml}</div>${table}`;
 
-  out.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', () => openEditModal(symName, parseInt(btn.dataset.idx))));
-  out.querySelectorAll('.del-btn').forEach(btn => btn.addEventListener('click', () => {
-    if(!confirm('آیا می‌خواهی این رکورد حذف شود؟')) return;
-    sym.history.splice(parseInt(btn.dataset.idx),1); recomputeAnalysesForSymbol(sym); saveStore(); renderAnalysisFor(symName); checkAndAlertIfChange(symName);
+  // خلاصه متن
+  const rangeText = isDaysRange ? `${requestedDays} روزه` : `تاریخ ${startDate} تا ${endDate}`;
+  summaryText.innerHTML = `
+    <div>نتیجه تحلیل: ${analysis.verdict || '-'} <br>
+    زاویه میانگین: ${analysis.avgAbs.toFixed(2)}° <br>
+    (تعداد داده‌ها: ${displayHist.length})</div>
+  `;
+
+  // جدول
+  tableBody.innerHTML = '';
+  for (let i = displayHist.length - 1; i >= 0; i--) {
+    const r = displayHist[i];
+    const rowIndex = displayHist.length - i;
+    // Find angle for this interval (between i and i+1)
+    const angleIndex = displayHist.length - 1 - i; // Reverse index for angles
+    const angle = angleIndex < angles.length ? angles[angleIndex] : null;
+    // Find original index for operations
+    const originalIdx = hist.findIndex(origRec => origRec.date === r.date && origRec.high === r.high && origRec.low === r.low);
+    const row = document.createElement('tr');
+    row.dataset.idx = originalIdx;
+    row.innerHTML = `
+      <td>${rowIndex}</td>
+      <td>${r.date}</td>
+      <td>${r.high}</td>
+      <td>${r.low}</td>
+      <td>${r.mid.toFixed(2)}</td>
+      <td>${angle ? angle.toFixed(2) + '°' : '-'}</td>
+      <td>${r.analysis5 || ''}</td>
+      <td class="action-col">
+        <button class="icon-btn edit-btn" data-idx="${originalIdx}">✏️</button>
+        <button class="icon-btn del-btn" data-idx="${originalIdx}">❌</button>
+        <button class="icon-btn move-btn" data-idx="${originalIdx}">🔀</button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  }
+
+  // Event listeners
+  tableBody.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', () => openEditModal(symName, parseInt(btn.dataset.idx))));
+  tableBody.querySelectorAll('.del-btn').forEach(btn => btn.addEventListener('click', () => {
+    if (!confirm('آیا می‌خواهی این رکورد حذف شود؟')) return;
+    sym.history.splice(parseInt(btn.dataset.idx), 1);
+    recomputeAnalysesForSymbol(sym);
+    saveStore();
+    renderSummaryForRange(symName, isDaysRange, requestedDays, startDate, endDate);
+    checkAndAlertIfChange(symName);
   }));
-  out.querySelectorAll('.move-btn').forEach(btn => btn.addEventListener('click', () => openMoveModal(symName, parseInt(btn.dataset.idx))));
+  tableBody.querySelectorAll('.move-btn').forEach(btn => btn.addEventListener('click', () => openMoveModal(symName, parseInt(btn.dataset.idx))));
 
-  const displayHist = hist.slice(-requestedDays);
-  const chartLabels = displayHist.map(h=>h.date);
-  const chartMids = displayHist.map(h=>h.mid);
+  // Bar Chart برای زاویه‌ها
+  const displayDates = displayHist.map(h => h.date).slice(0, -1); // Dates for intervals
+  const ctxBar = document.getElementById('angleBarChart').getContext('2d');
+  if (window._barChart) window._barChart.destroy();
+  window._barChart = new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: displayDates,
+      datasets: [{
+        label: 'زاویه (درجه)',
+        data: angles,
+        backgroundColor: angles.map(ang => ang > 0 ? 'rgba(16, 185, 129, 0.6)' : 'rgba(239, 68, 68, 0.6)'),
+        borderColor: angles.map(ang => ang > 0 ? '#10b981' : '#ef4444'),
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { color: '#9fb3c8' },
+          grid: { color: 'rgba(159, 179, 200, 0.1)' }
+        },
+        x: {
+          ticks: { color: '#9fb3c8' },
+          grid: { color: 'rgba(159, 179, 200, 0.1)' }
+        }
+      }
+    }
+  });
+
+  // Line Chart برای Mid
+  const chartLabels = displayHist.map(h => h.date);
+  const chartMids = displayHist.map(h => h.mid);
   const ctx = document.getElementById('midChart').getContext('2d');
-  if(window._chart) window._chart.destroy();
+  if (window._chart) window._chart.destroy();
   window._chart = new Chart(ctx, {
     type: 'line',
     data: { labels: chartLabels, datasets: [{ label: symName + ' — Mid', data: chartMids, fill:false, borderWidth:2, tension:0.2, borderColor: '#0ea5a4' }] },
@@ -1379,91 +1572,141 @@ function renderAnalysisFor(symName){
       } 
     }
   });
+
+  // ایجاد و تنظیم خط افقی همیشه visible
+  createDraggableHorizontalLine();
+
+  summaryDiv.style.display = 'block';
+  setupTableDragScroll(); // تنظیم اسکرول drag
 }
 
-function renderAnalysisForDateRange(symName, startDate, endDate) {
-  const out = document.getElementById('analysisOut');
-  const sym = store.symbols[symName];
-  if(!sym){ out.style.display='none'; if(window._chart) window._chart.destroy(); return; }
+// تابع ایجاد خط افقی draggable (همیشه visible) - با wrapper برای hit area بزرگ‌تر (20px ارتفاع)
+// listenerهای global در init اضافه می‌شن، اینجا فقط wrapper ساخته می‌شه
+function createDraggableHorizontalLine() {
+  const container = document.getElementById('horizontalLineContainer');
+  chartContainer = document.querySelector('.bar-chart-isolated');
+  container.innerHTML = ''; // پاک کردن قبلی
 
-  const hist = sym.history.slice();
-  if(hist.length===0){ out.style.display='block'; out.innerHTML='هیچ داده‌ای برای این جفت ثبت نشده.'; if(window._chart) window._chart.destroy(); return; }
-  
-  // Filter records by date range
-  const filteredHist = hist.filter(record => {
-    const recordDate = new Date(record.date);
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    return recordDate >= start && recordDate <= end;
+  // wrapper برای hit area (20px ارتفاع، نامرئی)
+  currentLineWrapper = document.createElement('div');
+  currentLineWrapper.className = 'horizontal-line-wrapper';
+  currentLineWrapper.style.top = '50%'; // موقعیت اولیه وسط چارت (مرکز wrapper روی 50%)
+  currentLineWrapper.style.transform = 'translateY(-50%)'; // مرکز wrapper دقیقاً وسط باشه
+
+  // خط اصلی داخل wrapper (1px نازک)
+  const line = document.createElement('div');
+  line.className = 'horizontal-line';
+  line.style.position = 'absolute';
+  line.style.top = '50%'; // خط وسط wrapper
+  line.style.transform = 'translateY(-50%)';
+  line.style.height = '1px';
+
+  const guide = document.createElement('div');
+  guide.className = 'line-guide';
+  guide.textContent = 'برای تنظیم سطح، خط افقی را با موس جابجا کنید';
+  line.appendChild(guide);
+
+  currentLineWrapper.appendChild(line);
+  container.appendChild(currentLineWrapper);
+
+  // mousedown فقط روی wrapper - global listenerها در init
+  currentLineWrapper.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return; // فقط left click
+    e.stopPropagation(); // جلوگیری از bubble
+    e.preventDefault();
+    isDraggingLine = true;
+    startY = e.clientY;
+    startTop = parseFloat(currentLineWrapper.style.top) || 50; // درصد (از top wrapper)
+    document.body.style.userSelect = 'none'; // جلوگیری از text select
+  });
+}
+
+// Global handlers برای mousemove و mouseup - فقط یکبار در init اضافه می‌شن
+function initGlobalLineHandlers() {
+  globalMouseMoveHandler = (e) => {
+    if (!isDraggingLine || !currentLineWrapper || !chartContainer) return;
+    e.stopPropagation();
+    e.preventDefault();
+    // دقت بالاتر: deltaY بر اساس ارتفاع چارت (می‌تونی ضریب کوچک‌تر کنی اگر بخوای step ریزتر، مثلاً /2)
+    const deltaY = (e.clientY - startY) / chartContainer.offsetHeight * 100;
+    const newTop = Math.max(0, Math.min(100, startTop + deltaY)) + '%';
+    currentLineWrapper.style.top = newTop;
+  };
+
+  globalMouseUpHandler = (e) => {
+    if (!isDraggingLine) return;
+    e.stopPropagation();
+    e.preventDefault();
+    isDraggingLine = false;
+    document.body.style.userSelect = ''; // بازگردانی
+  };
+
+  document.addEventListener('mousemove', globalMouseMoveHandler, { passive: false });
+  document.addEventListener('mouseup', globalMouseUpHandler, { passive: false });
+}
+
+// ---------- اسکرول drag برای جدول (با پشتیبانی از دابل‌کلیک سلکت) ----------
+function setupTableDragScroll() {
+  const container = document.getElementById('tableContainer');
+  let isDragging = false;
+  let startX;
+  let scrollLeft;
+  let clickCount = 0;
+  let clickTimer = null;
+
+  container.addEventListener('mousedown', (e) => {
+    // Check for double-click to allow text selection
+    clickCount++;
+    if (clickTimer) clearTimeout(clickTimer);
+    clickTimer = setTimeout(() => {
+      clickCount = 0;
+    }, 300);
+
+    if (clickCount >= 2 && e.detail === 2) {
+      // Double-click detected: allow selection, prevent drag
+      isDragging = false;
+      container.style.userSelect = 'text';
+      container.style.cursor = 'text';
+      return;
+    }
+
+    isDragging = true;
+    startX = e.pageX - container.offsetLeft;
+    scrollLeft = container.scrollLeft;
+    container.classList.add('dragging');
+    e.preventDefault();
   });
 
-  if(filteredHist.length === 0) {
-    out.style.display='block'; 
-    out.innerHTML=`هیچ داده‌ای در بازه ${startDate} تا ${endDate} یافت نشد.`;
-    if(window._chart) window._chart.destroy(); 
-    return;
-  }
+  container.addEventListener('mouseleave', () => {
+    isDragging = false;
+    container.classList.remove('dragging');
+    container.style.userSelect = 'none'; // Reset after drag
+    container.style.cursor = 'grab';
+  });
 
-  const midsForAnalysis = filteredHist.map(h => h.mid);
-  const analysis = analyzeAnglesFor(midsForAnalysis, midsForAnalysis.length);
-  
-  const summaryHtml = `<div><strong>خلاصه (بازه تاریخ ${startDate} تا ${endDate}):</strong><br>
-    نتیجه تحلیل: ${analysis.verdict || '-'} <br>
-    زاویه میانگین: ${analysis.avgAbs.toFixed(2)}° <br>
-    (تعداد داده‌ها در بازه: ${filteredHist.length})</div>`;
+  container.addEventListener('mouseup', () => {
+    isDragging = false;
+    container.classList.remove('dragging');
+    container.style.userSelect = 'none'; // Reset after drag
+    container.style.cursor = 'grab';
+  });
 
-  let table = `<div class="history-table-container"><table><thead><tr>
-    <th>ردیف</th><th>تاریخ</th><th>High</th><th>Low</th><th>Mid</th><th>تحلیل ۵‌روزه</th><th>تحلیل ۳۰‌روزه</th><th>عملیات</th>
-    </tr></thead><tbody>`;
+  container.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 2; // سرعت اسکرول
+    container.scrollLeft = scrollLeft - walk;
+  });
 
-  for(let i = filteredHist.length - 1; i >= 0; i--){
-    const r = filteredHist[i];
-    const rowIndex = filteredHist.length - i;
-    // Find original index for operations
-    const originalIdx = hist.findIndex(origRec => origRec.date === r.date && origRec.high === r.high && origRec.low === r.low);
-    
-    table += `<tr data-idx="${originalIdx}">
-      <td>${rowIndex}</td><td>${r.date}</td><td>${r.high}</td><td>${r.low}</td><td>${r.mid.toFixed(2)}</td><td>${r.analysis5||''}</td><td>${r.analysis30||''}</td>
-      <td class="action-col">
-        <button class="icon-btn edit-btn" data-idx="${originalIdx}">✏️</button>
-        <button class="icon-btn del-btn" data-idx="${originalIdx}">❌</button>
-        <button class="icon-btn move-btn" data-idx="${originalIdx}">🔀</button>
-      </td>
-    </tr>`;
-  }
-  table += `</tbody></table></div>`;
-  out.style.display='block';
-  out.innerHTML = `<div class="small">${summaryHtml}</div>${table}`;
-
-  out.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', () => openEditModal(symName, parseInt(btn.dataset.idx))));
-  out.querySelectorAll('.del-btn').forEach(btn => btn.addEventListener('click', () => {
-    if(!confirm('آیا می‌خواهی این رکورد حذف شود؟')) return;
-    sym.history.splice(parseInt(btn.dataset.idx),1); recomputeAnalysesForSymbol(sym); saveStore(); renderAnalysisForDateRange(symName, startDate, endDate); checkAndAlertIfChange(symName);
-  }));
-  out.querySelectorAll('.move-btn').forEach(btn => btn.addEventListener('click', () => openMoveModal(symName, parseInt(btn.dataset.idx))));
-
-  const chartLabels = filteredHist.map(h=>h.date);
-  const chartMids = filteredHist.map(h=>h.mid);
-  const ctx = document.getElementById('midChart').getContext('2d');
-  if(window._chart) window._chart.destroy();
-  window._chart = new Chart(ctx, {
-    type: 'line',
-    data: { labels: chartLabels, datasets: [{ label: symName + ' — Mid', data: chartMids, fill:false, borderWidth:2, tension:0.2, borderColor: '#0ea5a4' }] },
-    options: { 
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins:{ legend:{ display:false } }, 
-      scales:{ 
-        y: { 
-          beginAtZero:false, 
-          ticks: { color: '#9fb3c8' }, 
-          grid: { color: 'rgba(159, 179, 200, 0.1)' } 
-        }, 
-        x: { 
-          ticks: { color: '#9fb3c8' }, 
-          grid: { color: 'rgba(159, 179, 200, 0.1)' } 
-        } 
-      } 
+  // Allow selection on double-click
+  container.addEventListener('dblclick', (e) => {
+    if (window.getSelection) {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(e.target);
+      selection.removeAllRanges();
+      selection.addRange(range);
     }
   });
 }
@@ -1478,8 +1721,9 @@ document.getElementById('deleteSelectedSymbol').addEventListener('click', ()=>{
   if (idx > -1) store.symbolOrder.splice(idx, 1);
   saveStore();
   refreshSymbolsList();
-  document.getElementById('analysisOut').style.display = 'none';
-  if(window._chart) window._chart.destroy();
+  document.getElementById('summarySection').style.display = 'none';
+  if(window._barChart) window._barChart.destroy();
+  if (window._chart) window._chart.destroy();
 });
 
 document.getElementById('addSymbolBtn').addEventListener('click', ()=>{
@@ -1489,7 +1733,7 @@ document.getElementById('addSymbolBtn').addEventListener('click', ()=>{
   if(sym){
     document.getElementById('selectedSymbol').value = name;
     document.getElementById('selectedSymbol3').value = name;
-    renderAnalysisFor(name);
+    renderSummaryForRange(name, true, 5);
   }
 });
 
@@ -1509,7 +1753,7 @@ document.getElementById('addDayBtn').addEventListener('click', ()=>{
   const date = document.getElementById('inputDate').value || null;
   if(high===null || low===null){ alert('High و Low معتبر وارد کنید'); return; }
   const ok = addDayToSymbol(symName, high, low, date);
-  if(ok){ alert('ثبت شد'); renderAnalysisFor(symName); document.getElementById('inputHigh').value = ''; document.getElementById('inputLow').value = ''; }
+  if(ok){ alert('ثبت شد'); renderSummaryForRange(symName, true, 5); document.getElementById('inputHigh').value = ''; document.getElementById('inputLow').value = ''; }
   else alert('خطا در ثبت');
 });
 
@@ -1543,17 +1787,37 @@ document.getElementById('showDateRangeBtn').addEventListener('click', ()=>{
   if(!startDate || !endDate){ alert('لطفاً تاریخ شروع و پایان را انتخاب کنید'); return; }
   if(new Date(startDate) > new Date(endDate)){ alert('تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد'); return; }
   
-  renderAnalysisForDateRange(symName, startDate, endDate);
+  renderSummaryForRange(symName, false, null, startDate, endDate);
 });
 
 document.getElementById('showHistoryBtn').addEventListener('click', ()=>{
   const symName = document.getElementById('selectedSymbol3').value;
   if(!symName){ alert('یک جفت انتخاب کنید'); return; }
-  renderAnalysisFor(symName);
+  const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+  renderSummaryForRange(symName, true, requestedDays);
 });
 
 document.getElementById('selectedSymbol3').addEventListener('change', () => {
-  renderAnalysisFor(document.getElementById('selectedSymbol3').value);
+  const symName = document.getElementById('selectedSymbol3').value;
+  const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
+  if (isDaysRange) {
+    const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+    renderSummaryForRange(symName, true, requestedDays);
+  } else {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    if (startDate && endDate) {
+      renderSummaryForRange(symName, false, null, startDate, endDate);
+    }
+  }
+});
+
+document.getElementById('analysisDays').addEventListener('change', () => {
+  const symName = document.getElementById('selectedSymbol3').value;
+  if (symName && document.getElementById('daysRangeToggle').classList.contains('active')) {
+    const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+    renderSummaryForRange(symName, true, requestedDays);
+  }
 });
 
 document.getElementById('manualPruneBtn').addEventListener('click', function() {
@@ -1569,7 +1833,17 @@ document.getElementById('manualPruneBtn').addEventListener('click', function() {
       alert(`✅ ${result.totalDeleted} رکورد قدیمی حذف شد.\nجفت‌ارزهای affected: ${result.affectedSymbols.join(', ')}`);
       const currentSymbol = document.getElementById('selectedSymbol3').value;
       if (currentSymbol) {
-        renderAnalysisFor(currentSymbol);
+        const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
+        if (isDaysRange) {
+          const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+          renderSummaryForRange(currentSymbol, true, requestedDays);
+        } else {
+          const startDate = document.getElementById('startDate').value;
+          const endDate = document.getElementById('endDate').value;
+          if (startDate && endDate) {
+            renderSummaryForRange(currentSymbol, false, null, startDate, endDate);
+          }
+        }
       }
     } else {
       alert('ℹ️ هیچ رکورد قدیمی‌ای برای حذف یافت نشد.');
@@ -1652,10 +1926,21 @@ document.getElementById('importFile').addEventListener('change', (e) => {
             if (sel.options.length > 0 && sel.options[0].value) {
                 sel.value = sel.options[0].value;
                 sel3.value = sel.options[0].value;
-                renderAnalysisFor(sel.value);
+                const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
+                if (isDaysRange) {
+                  const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+                  renderSummaryForRange(sel.value, true, requestedDays);
+                } else {
+                  const startDate = document.getElementById('startDate').value;
+                  const endDate = document.getElementById('endDate').value;
+                  if (startDate && endDate) {
+                    renderSummaryForRange(sel.value, false, null, startDate, endDate);
+                  }
+                }
             } else {
-                document.getElementById('analysisOut').style.display = 'none';
-                if(window._chart) window._chart.destroy();
+                document.getElementById('summarySection').style.display = 'none';
+                if(window._barChart) window._barChart.destroy();
+                if (window._chart) window._chart.destroy();
             }
 
             alert('بازیابی اطلاعات با موفقیت انجام شد.');
@@ -1692,7 +1977,18 @@ document.getElementById('saveEditBtn').addEventListener('click', ()=>{
   sym.history[idx].date = d; sym.history[idx].high = h; sym.history[idx].low = l; sym.history[idx].mid = computeMid(h,l);
   recomputeAnalysesForSymbol(sym); saveStore();
   currentEdit = null; document.getElementById('editModal').style.display='none'; document.getElementById('modalBg').style.display='none';
-  renderAnalysisFor(symName); checkAndAlertIfChange(symName);
+  const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
+  if (isDaysRange) {
+    const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+    renderSummaryForRange(symName, true, requestedDays);
+  } else {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    if (startDate && endDate) {
+      renderSummaryForRange(symName, false, null, startDate, endDate);
+    }
+  }
+  checkAndAlertIfChange(symName);
 });
 
 let currentMove = null;
@@ -1716,7 +2012,18 @@ document.getElementById('doMoveBtn').addEventListener('click', ()=>{
   hist.splice(toIndex,0,item);
   recomputeAnalysesForSymbol(sym); saveStore();
   currentMove = null; document.getElementById('moveModal').style.display='none'; document.getElementById('modalBg').style.display='none';
-  renderAnalysisFor(symName); checkAndAlertIfChange(symName);
+  const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
+  if (isDaysRange) {
+    const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+    renderSummaryForRange(symName, true, requestedDays);
+  } else {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    if (startDate && endDate) {
+      renderSummaryForRange(symName, false, null, startDate, endDate);
+    }
+  }
+  checkAndAlertIfChange(symName);
 });
 
 function speakTTS(text){
@@ -1827,8 +2134,20 @@ function showSystemStats() {
 
 // اضافه کردن event listener برای تغییر سایز پنجره
 window.addEventListener('resize', function() {
+  if (window._barChart) {
+    window._barChart.resize();
+  }
   if (window._chart) {
     window._chart.resize();
+  }
+  // Resize خط افقی اگر لازم
+  const lineContainer = document.getElementById('horizontalLineContainer');
+  if (lineContainer.children.length > 0) {
+    const wrapper = lineContainer.children[0];
+    const chartRect = document.getElementById('angleBarChart').getBoundingClientRect();
+    wrapper.style.width = chartRect.width + 'px';
+    const line = wrapper.querySelector('.horizontal-line');
+    line.style.width = chartRect.width + 'px';
   }
 });
 
@@ -1851,6 +2170,11 @@ function setupSectionsDragAndDrop() {
   container.querySelectorAll('.card').forEach(card => {
     card.draggable = true;
     card.addEventListener('dragstart', function(e) {
+      // فقط اگر مستقیم روی card کلیک شده، drag شروع شود
+      if (e.target !== this) {
+        e.preventDefault();
+        return false;
+      }
       draggedItem = this;
       this.classList.add('dragging');
       
@@ -1941,12 +2265,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const sel = document.getElementById('selectedSymbol');
   const sel3 = document.getElementById('selectedSymbol3');
   if(sel.value) { 
-    renderAnalysisFor(sel.value); 
+    const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
+    if (isDaysRange) {
+      const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+      renderSummaryForRange(sel.value, true, requestedDays);
+    } else {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      if (startDate && endDate) {
+        renderSummaryForRange(sel.value, false, null, startDate, endDate);
+      }
+    }
     sel3.value = sel.value;
   }
   sel.addEventListener('change', ()=>{ 
     sel3.value = sel.value;
-    renderAnalysisFor(sel.value); 
+    const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
+    if (isDaysRange) {
+      const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+      renderSummaryForRange(sel.value, true, requestedDays);
+    } else {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      if (startDate && endDate) {
+        renderSummaryForRange(sel.value, false, null, startDate, endDate);
+      }
+    }
   });
   if('speechSynthesis' in window){ window.speechSynthesis.onvoiceschanged = () => {}; }
 
@@ -1964,6 +2308,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   setupSectionsDragAndDrop();
+
+  // اضافه کردن global handlers برای line drag - فقط یکبار
+  initGlobalLineHandlers();
 });
 </script>
 
