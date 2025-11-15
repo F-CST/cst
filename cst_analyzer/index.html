@@ -1411,6 +1411,28 @@ function recomputeAnalysesForSymbol(sym){
   sym.lastSummary = { date: (sym.history[sym.history.length-1]||{}).date || '', last5:last5.verdict, last30:last30.verdict, avgAngle5:last5.avgAbs, avgAngle30:last30.avgAbs };
 }
 
+// تابع بهینه‌شده برای تنظیم عرض خطوط افقی (استخراج‌شده از resize)
+function resizeHorizontalLines() {
+  ['horizontalLineContainerBar', 'horizontalLineContainerLine'].forEach(id => {
+    const lineContainer = document.getElementById(id);
+    if (lineContainer && lineContainer.children.length > 0) {
+      const wrapper = lineContainer.children[0];
+      const chartCont = lineContainer.closest('.chart-container');
+      if (chartCont) {
+        const canvas = chartCont.querySelector('canvas');
+        if (canvas) {
+          const rect = canvas.getBoundingClientRect();
+          wrapper.style.width = rect.width + 'px';
+          const line = wrapper.querySelector('.horizontal-line');
+          if (line) {
+            line.style.width = rect.width + 'px';
+          }
+        }
+      }
+    }
+  });
+}
+
 // ---------- توابع تحلیل و نمایش ----------
 function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, startDate = null, endDate = null) {
   const summaryDiv = document.getElementById('summarySection');
@@ -1576,6 +1598,9 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
     }
   });
 
+  // Force resize after creation
+  window._barChart.resize();
+
   // باکس نمودار هندسی (Line Chart برای Mid)
   const chartLabels = displayHist.map(h => h.date);
   const chartMids = displayHist.map(h => h.mid);
@@ -1602,6 +1627,9 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
     }
   });
 
+  // Force resize after creation
+  window._chart.resize();
+
   // Cleanup و ایجاد خط افقی برای چارت میله‌ای
   cleanupLineHandlers('horizontalLineContainerBar');
   createDraggableHorizontalLine('horizontalLineContainerBar', '.bar-chart-isolated canvas', true);
@@ -1609,6 +1637,9 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
   // Cleanup و ایجاد خط افقی برای چارت خطی (mid)
   cleanupLineHandlers('horizontalLineContainerLine');
   createDraggableHorizontalLine('horizontalLineContainerLine', '#midChart', false);
+
+  // Force initial resize for lines after creation
+  setTimeout(resizeHorizontalLines, 50);
 
   summaryDiv.style.display = 'block';
   setupTableDragScroll(); // تنظیم اسکرول drag
@@ -1636,7 +1667,7 @@ function cleanupLineHandlers(containerId) {
   }
 }
 
-// تابع ایجاد خط افقی draggable (مستقل برای هر چارت) - local state برای هر instance
+// تابع ایجاد خط افقی draggable (بهینه‌شده برای موبایل: تنظیم اولیه عرض با timeout)
 function createDraggableHorizontalLine(containerId, canvasSelector, isBarChart) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -1666,6 +1697,25 @@ function createDraggableHorizontalLine(containerId, canvasSelector, isBarChart) 
 
   wrapper.appendChild(line);
   container.appendChild(wrapper);
+
+  // Set initial width (optimized for mobile: check rect, fallback to timeout)
+  const setInitialWidth = () => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width > 0) {
+      wrapper.style.width = rect.width + 'px';
+      line.style.width = rect.width + 'px';
+    } else {
+      // Fallback for initial render on mobile (width=0)
+      setTimeout(() => {
+        const rect2 = canvas.getBoundingClientRect();
+        if (rect2.width > 0) {
+          wrapper.style.width = rect2.width + 'px';
+          line.style.width = rect2.width + 'px';
+        }
+      }, 50);
+    }
+  };
+  setInitialWidth();
 
   // Local drag state
   let isDragging = false;
@@ -2194,7 +2244,7 @@ function showSystemStats() {
   document.getElementById('statsModal').style.display = 'block';
 }
 
-// اضافه کردن event listener برای تغییر سایز پنجره
+// اضافه کردن event listener برای تغییر سایز پنجره (بهینه‌شده)
 window.addEventListener('resize', function() {
   if (window._barChart) {
     window._barChart.resize();
@@ -2202,17 +2252,7 @@ window.addEventListener('resize', function() {
   if (window._chart) {
     window._chart.resize();
   }
-  // Resize خط افقی‌ها
-  ['horizontalLineContainerBar', 'horizontalLineContainerLine'].forEach(id => {
-    const lineContainer = document.getElementById(id);
-    if (lineContainer && lineContainer.children.length > 0) {
-      const wrapper = lineContainer.children[0];
-      const chartRect = lineContainer.closest('.chart-container').querySelector('canvas').getBoundingClientRect();
-      wrapper.style.width = chartRect.width + 'px';
-      const line = wrapper.querySelector('.horizontal-line');
-      line.style.width = chartRect.width + 'px';
-    }
-  });
+  resizeHorizontalLines(); // استفاده از تابع استخراج‌شده
 });
 
 // تابع toggle برای collapsible sections با ذخیره state
