@@ -739,10 +739,16 @@
             filter: brightness(1);
         }
 
-        .save-btn:hover {
+        .save-btn:hover:not(:disabled) {
             filter: brightness(0.9);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .save-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         /* موبایل: مخفی کردن گزینه‌های اضافی */
@@ -750,6 +756,18 @@
         body.mobile .mobile-only { display: block; }
         body.desktop .desktop-only { display: block; }
         body.mobile .desktop-only { display: none; }
+
+        /* استایل برای پیام هشدار کنتراست */
+        .contrast-warning {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            margin-top: 10px;
+            display: none;
+            text-align: right;
+        }
     </style>
 </head>
 
@@ -872,7 +890,9 @@
                 <p style="color: rgba(255,255,255,0.7);">فقط تغییر رنگ تک‌رنگ در موبایل پشتیبانی می‌شود.</p>
             </div>
 
-            <button class="save-btn" onclick="saveTheme()">ذخیره تغییرات</button>
+            <div class="contrast-warning" id="contrastWarning">⚠️ رنگ انتخابی باعث ناخوانایی متن/دکمه/لینک‌ها می‌شه! لطفاً رنگ دیگه‌ای انتخاب کن تا کنتراست مناسب بشه.</div>
+
+            <button class="save-btn" id="saveThemeBtn" onclick="saveTheme()">ذخیره تغییرات</button>
         </div>
     </div>
 
@@ -939,6 +959,69 @@
             }
         }
 
+        // ==================== CONTRAST CHECK FUNCTIONS ====================
+        // توابع پایه (لومیننس و کنتراست)
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16) / 255,
+                g: parseInt(result[2], 16) / 255,
+                b: parseInt(result[3], 16) / 255
+            } : null;
+        }
+
+        function getLuminance(color) {
+            const rgb = hexToRgb(color);
+            if (!rgb) return 0;
+            const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(c => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+
+        function getContrastRatio(lum1, lum2) {
+            const brighter = Math.max(lum1, lum2);
+            const darker = Math.min(lum1, lum2);
+            return (brighter + 0.05) / (darker + 0.05);
+        }
+
+        // تابع تحلیل عناصر (اسکن متن‌ها، دکمه‌ها، لینک‌ها، تب‌ها و غیره)
+        function analyzeElements(bgColor, textColor) {
+            // عناصر کلیدی برای چک: متن‌ها، عنوان‌ها، دکمه‌ها، تب‌ها، لیبل‌ها
+            const elements = document.querySelectorAll('h1, p, label, button, .tab, .tab-text, .signature, .login-signature, .login-btn, input[type="text"], .settings-section h3');
+            const bgLum = getLuminance(bgColor);
+            const textLum = getLuminance(textColor); // فرض: متن‌ها سفید (white) هستند
+            let hasIssue = false;
+
+            for (let el of elements) {
+                if (el.textContent.trim().length > 0) { // فقط عناصر با متن
+                    const isInteractive = el.tagName === 'BUTTON' || el.classList.contains('tab') || el.classList.contains('login-btn');
+                    const minRatio = isInteractive ? 3 : 4.5;
+                    const ratio = getContrastRatio(bgLum, textLum);
+                    
+                    if (ratio < minRatio) {
+                        hasIssue = true;
+                        break; // اگر یکی مشکل داشته باشه، کافیه
+                    }
+                }
+            }
+            return !hasIssue; // true اگر همه خوانا باشن
+        }
+
+        // تابع چک و آپدیت دکمه ذخیره
+        function validateAndUpdateSaveButton(bgColor, textColor = '#ffffff') { // متن پیش‌فرض سفید
+            const isReadable = analyzeElements(bgColor, textColor);
+            const saveBtn = document.getElementById('saveThemeBtn');
+            const warning = document.getElementById('contrastWarning');
+
+            if (isReadable) {
+                saveBtn.disabled = false;
+                warning.style.display = 'none';
+            } else {
+                saveBtn.disabled = true;
+                warning.style.display = 'block';
+                alert('⚠️ رنگ انتخابی باعث ناخوانایی متن/دکمه/لینک‌ها می‌شه! لطفاً رنگ دیگه‌ای انتخاب کن تا کنتراست مناسب بشه.');
+            }
+        }
+
         // ==================== THEME MANAGEMENT ====================
         const presets = {
             light: { gradient: 'linear-gradient(135deg, #735af2 0%, #5a3fd0 100%)', primary: '#735af2' },
@@ -964,6 +1047,8 @@
                 document.getElementById('hexInput').value = '#735af2';
                 document.getElementById('colorInput').value = '#735af2';
             }
+            // چک اولیه کنتراست بعد از لود
+            setTimeout(() => validateAndUpdateSaveButton(document.documentElement.style.getPropertyValue('--bg-gradient') || '#735af2'), 100);
         }
 
         function applyTheme(settings) {
@@ -1012,6 +1097,9 @@
             document.documentElement.style.setProperty('--primary-color', primary);
             document.documentElement.style.setProperty('--bg-gradient', gradient);
             updateThemeColor();
+
+            // چک کنتراست بعد از پیش‌نمایش
+            validateAndUpdateSaveButton(gradient);
         }
 
         function updateHexFromPreset() {
@@ -1046,6 +1134,13 @@
                 gradient = `linear-gradient(135deg, ${primary} 0%, ${darker} 100%)`;
             }
 
+            // چک نهایی کنتراست قبل از ذخیره
+            const isReadable = analyzeElements(gradient, '#ffffff'); // متن سفید
+            if (!isReadable) {
+                alert('❌ نمی‌تونم ذخیره کنم – رنگ انتخابی ناخواناست! لطفاً رنگ دیگه‌ای انتخاب کن.');
+                return; // ذخیره نکن
+            }
+
             const settings = {
                 preset,
                 primary,
@@ -1057,6 +1152,7 @@
             localStorage.setItem('themeSettings', JSON.stringify(settings));
             applyTheme(settings);
             toggleSettings();
+            alert('✅ تغییرات ذخیره شد! همه چیز خواناست.');
         }
 
         function toggleSettings() {
