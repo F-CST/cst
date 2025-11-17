@@ -2002,7 +2002,7 @@ function startVoiceRecognition(){
     if(numStr && currentField){
       currentField.value = numStr;
       const fieldName = getFieldName(currentField);
-      if(voiceStatus) voiceStatus.textContent = `✅ عدد "${numStr}" در ${fieldName} وارد شد`;
+      if(voiceStatus) voiceStatus.textContent = `✅ عدد "${numStr}" در فیلد مورد نظر وارد شد`;
       const currentIndex = numericFields.indexOf(currentField);
       if(currentIndex < numericFields.length - 1){
         setTimeout(() => {
