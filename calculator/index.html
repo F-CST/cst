@@ -12,6 +12,8 @@
     body {
       font-family: 'Vazirmatn', sans-serif;
       background-color: #111827; /* bg-gray-900 */
+      margin: 0;
+      overflow: hidden;
     }
 
     /* اسکرول بار سفارشی زیبا */
@@ -53,6 +55,14 @@
       box-sizing: border-box;
     }
 
+    /* عنصر مخفی برای فوکوس */
+    #focus-catcher {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      outline: none;
+    }
+
     @media only screen and (max-width: 768px) {
       .signature { font-size: 14px; padding: 15px; }
     }
@@ -61,7 +71,10 @@
     }
   </style>
 </head>
-<body class="min-h-[100dvh] flex flex-col items-center justify-center py-8 px-0">
+<body class="min-h-[100dvh] flex flex-col items-center justify-center py-8 px-0" tabindex="0">
+
+  <!-- عنصر مخفی برای دریافت فوکوس -->
+  <div id="focus-catcher" tabindex="-1"></div>
 
   <div class="bg-gray-800 w-[98%] md:max-w-lg shadow-none rounded-2xl overflow-hidden flex flex-col relative h-auto border border-gray-700">
     
@@ -148,6 +161,7 @@
     const calcHistory = document.getElementById('calcHistory');
     const historyList = document.getElementById('historyList');
     const historyModal = document.getElementById('historyModal');
+    const focusCatcher = document.getElementById('focus-catcher');
 
     function updateDisplay() {
       const formattedInput = currentInput === 'خطا' ? 'خطا' : parseFloat(currentInput).toLocaleString('en-US', { maximumFractionDigits: 10 });
@@ -200,10 +214,11 @@
         case '+': result = prev + current; break;
         case '-': result = prev - current; break;
         case '*': result = prev * current; break;
-        case '/': result = current === 0 ? 'Error' : prev / current; break;
+        case '/': result = current === 0 ? 'خطا' : prev / current; break;
+        default: return;
       }
 
-      if (result === 'Error') {
+      if (result === 'خطا' || isNaN(result)) {
           currentInput = 'خطا';
       } else {
           result = parseFloat(result.toPrecision(12)); 
@@ -221,12 +236,12 @@
       let res, txt;
       
       if (op === 'sqrt') {
-        if (num < 0) return;
+        if (num < 0) { currentInput = 'خطا'; updateDisplay(); return; }
         res = Math.sqrt(num); txt = `√(${num})`;
       } else if (op === 'square') {
         res = num * num; txt = `sqr(${num})`;
       } else if (op === 'reciprocal') {
-        if (num === 0) return;
+        if (num === 0) { currentInput = 'خطا'; updateDisplay(); return; }
         res = 1 / num; txt = `1/(${num})`;
       }
       
@@ -266,11 +281,49 @@
       });
     });
 
+    // --- کنترل کیبورد ---
+    function handleKeyPress(key) {
+      // تبدیل کلیدهای کیبورد به مقدار مناسب
+      if (key === 'Enter') return '=';
+      if (key === 'Escape') return 'C';
+      if (key === 'Backspace') return 'backspace';
+      if (key === 'Delete') return 'CE';
+      if (key === '%') return 'percent';
+      if (key === ' ') return;
+      if (['0','1','2','3','4','5','6','7','8','9','.'].includes(key)) return key;
+      if (key === '+') return '+';
+      if (key === '-') return '-';
+      if (key === '*') return '*';
+      if (key === '/') return '/';
+      if (key === 's' || key === 'S') return 'sqrt'; // کلید میانبر
+      if (key === 'x' || key === 'X') return 'square';
+      if (key === 'r' || key === 'R') return 'reciprocal';
+      return null;
+    }
+
     document.addEventListener('keydown', (e) => {
-        const map = {'Enter': '=', 'Escape': 'C', 'Backspace': 'backspace'};
-        const key = map[e.key] || e.key;
-        const btn = document.querySelector(`button[data-value="${key}"]`);
-        if(btn) { e.preventDefault(); btn.click(); }
+      const val = handleKeyPress(e.key);
+      if (val) {
+        e.preventDefault();
+        const btn = document.querySelector(`button[data-value="${val}"]`);
+        if (btn) btn.click();
+      }
+    });
+
+    // --- فوکوس خودکار هنگام لود ---
+    window.addEventListener('load', () => {
+      // روش ۱: فوکوس مستقیم روی body
+      document.body.focus();
+      // روش ۲: فوکوس روی عنصر مخفی (برای مرورگرهای سخت‌گیر)
+      setTimeout(() => {
+        focusCatcher.focus();
+        document.body.focus(); // ترجیح بدنه
+      }, 100);
+    });
+
+    // همچنین در صورت کلیک خارج از ماشین‌حساب، دوباره فوکوس شود
+    document.addEventListener('click', () => {
+      document.body.focus();
     });
   </script>
 </body>
