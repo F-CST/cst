@@ -9,18 +9,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ربات CST - ورود با Google Authenticator</title>
     
-    <!-- ========== PWA CONFIGURATION ========== -->
     <link rel="manifest" href="/cst/manifest.json">
     <link rel="icon" type="image/x-icon" href="/cst/icons/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="/cst/icons/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/cst/icons/favicon-32x32.png">
     
-    <!-- برای iOS - فقط از آیکون‌های موجود استفاده کن -->
     <link rel="apple-touch-icon" href="/cst/icons/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="192x192" href="/cst/icons/android-chrome-192x192.png">
     <link rel="apple-touch-icon" sizes="512x512" href="/cst/icons/android-chrome-512x512.png">
     
-    <!-- THEME COLORS -->
     <meta name="theme-color" content="#735af2">
     <meta name="msapplication-TileColor" content="#735af2">
     <meta name="msapplication-navbutton-color" content="#735af2">
@@ -28,7 +25,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ربات CST">
     
-    <!-- FONTS & STYLES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -69,7 +65,6 @@
             transition: background 0.3s ease;
         }
         
-        /* پس‌زمینه ساده فقط برای موبایل‌های کوچک */
         @media (max-width: 480px) {
             body {
                 background: var(--primary-color) !important;
@@ -102,20 +97,19 @@
             transition: all 0.3s ease;
         }
         
-        /* اگر شیشه‌ای غیرفعال باشد */
         :root:not([data-glass="true"]) .login-container,
         :root:not([data-glass="true"]) .tabs-container,
         :root:not([data-glass="true"]) .setup-guide,
         :root:not([data-glass="true"]) .signature,
         :root:not([data-glass="true"]) .login-signature,
-        :root:not([data-glass="true"]) .tab {
+        :root:not([data-glass="true"]) .tab,
+        :root:not([data-glass="true"]) .device-suggestion {
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             background: rgba(0, 0, 0, 0.1) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
         
-        /* استایل برای موبایل */
         @media (max-width: 480px) {
             .login-container {
                 background-color: var(--glass-bg);
@@ -146,66 +140,55 @@
             position: relative;
         }
         
-/* ==== چرخ‌دنده گوشه‌ای بدون مخفی شدن روی هیچ دستگاهی ==== */
-.settings-icon {
-    position: absolute;
-    top: -25px;                /* یه کم بیرون از کادر */
-    right: -16px;              /* کاملاً گوشه گوشه */
-    color: white;
-    font-size: 1.75rem;
-    cursor: pointer;
-    transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 99999;            /* خیلی بالا – از همه چیز بالاتر! */
+        .settings-icon {
+            position: absolute;
+            top: -25px;
+            right: -16px;
+            color: white;
+            font-size: 1.75rem;
+            cursor: pointer;
+            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            transform-origin: center center !important;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            padding: 10px;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
 
-    /* اینا باعث می‌شن هیچ‌وقت جابجا نشه */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
-    height: 56px;
-    transform-origin: center center !important;
+        .settings-icon:hover,
+        .settings-icon:active {
+            transform: rotate(0deg) translateZ(0) !important;
+            background: rgba(255, 255, 255, 0.28);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+        }
 
-    /* افکت شیشه‌ای + سایه قوی */
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    padding: 10px;
+        .header-group,
+        .login-container {
+            overflow: visible !important;
+            position: relative !important;
+        }
 
-    /* این خط طلاییه: حتی اگر پدرش overflow: hidden داشته باشه، اینو نشون می‌ده! */
-    transform: translateZ(0); /* فعال کردن GPU acceleration */
-    -webkit-transform: translateZ(0);
-}
-
-/* هاور */
-.settings-icon:hover,
-.settings-icon:active {
-    transform: rotate(0deg) translateZ(0) !important;
-    background: rgba(255, 255, 255, 0.28);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
-}
-
-/* ==== این قسمت خیلی مهمه – اضافه کن به CSS ==== */
-/* جلوگیری از مخفی شدن چرخ‌دنده وقتی صفحه کوچیک می‌شه */
-.header-group,
-.login-container {
-    overflow: visible !important;   /* این خط همه مشکلات رو حل می‌کنه */
-    position: relative !important;
-}
-
-/* برای موبایل‌های خیلی کوچیک (زیر 380px) یه کم جمع‌ترش کن */
-@media (max-width: 380px) {
-    .settings-icon {
-        top: -18px;
-        right: -10px;
-        width: 40px;
-        height: 40px;
-        font-size: 1.5rem;
-        padding: 8px;
-    }
-}
+        @media (max-width: 380px) {
+            .settings-icon {
+                top: -18px;
+                right: -10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+                padding: 8px;
+            }
+        }
         
         .input-group {
             display: flex;
@@ -271,6 +254,78 @@
             display: none;
             margin-top: 10px;
         }
+
+        /* ========== DEVICE SUGGESTION ALERT ========== */
+        .device-suggestion {
+            display: none; /* پیش‌فرض مخفی است */
+            background: rgba(255, 193, 7, 0.15);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 12px;
+            text-align: right;
+            position: relative;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .ds-icon {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            min-width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .ds-content {
+            flex: 1;
+        }
+
+        .ds-content h4 {
+            color: #ffc107;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .ds-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.8rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .ds-close {
+            position: absolute;
+            top: 5px;
+            left: 8px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 2px 6px;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+
+        .ds-close:hover {
+            color: #fff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* نکته: مدیا کوئری CSS برای نمایش حذف شد. نمایش فقط توسط جاوا اسکریپت کنترل می‌شود */
         
         .setup-guide {
             background: var(--glass-bg);
@@ -411,7 +466,6 @@
             z-index: 2;
         }
         
-        /* وقتی شیشه‌ای غیرفعال، border قرمز رو نازک نگه دار */
         :root:not([data-glass="true"]) .tab.active {
             border: 2px solid #ff4444 !important;
             box-shadow: 0 0 0 1px rgba(255, 68, 68, 0.3) !important;
@@ -425,7 +479,6 @@
         }
         
         /* ========== RESPONSIVE TABS ONLY FOR DESKTOP ========== */
-        /* فقط برای دسکتاپ - حالت فشرده (فقط آیکون) در سایزهای بسیار کوچک */
         body.desktop .tabs-container.icons-only .tab {
             padding: 12px 14px;
             min-width: 55px;
@@ -454,7 +507,6 @@
             transition: all 0.3s ease;
         }
         
-        /* کاهش ارتفاع iframe فقط در موبایل */
         @media (max-width: 480px) {
             .iframe-container {
                 height: 85vh;
@@ -637,12 +689,12 @@
         }
         
         /* ========== FIXES FOR BACKDROP-FILTER ISSUES ========== */
-        /* جلوگیری از خطوط شیشه‌ای ناخواسته */
         .login-container::before,
         .tabs-container::before,
         .setup-guide::before,
         .signature::before,
-        .login-signature::before {
+        .login-signature::before,
+        .device-suggestion::before {
             content: '';
             position: absolute;
             top: 0;
@@ -654,14 +706,14 @@
             z-index: -1;
         }
         
-        /* بهبود عملکرد backdrop-filter در مرورگرهای مختلف */
         @supports not (backdrop-filter: blur(10px)) {
             .login-container,
             .tabs-container,
             .setup-guide,
             .signature,
             .login-signature,
-            .tab {
+            .tab,
+            .device-suggestion {
                 background: rgba(255, 255, 255, 0.2) !important;
             }
         }
@@ -696,11 +748,11 @@
             position: relative;
             transition: all 0.3s ease;
         }
-		.settings-icon,
-.settings-icon:hover,
-.settings-icon:active {
-    box-shadow: none !important;
-}
+        .settings-icon,
+        .settings-icon:hover,
+        .settings-icon:active {
+            box-shadow: none !important;
+        }
 
         .close-settings {
             position: absolute;
@@ -801,13 +853,11 @@
             opacity: 0.6;
         }
 
-        /* موبایل: مخفی کردن گزینه‌های اضافی */
         .mobile-only { display: none; }
         body.mobile .mobile-only { display: block; }
         body.desktop .desktop-only { display: block; }
         body.mobile .desktop-only { display: none; }
 
-        /* استایل برای پیام هشدار کنتراست */
         .contrast-warning {
             color: #ff6b6b;
             background: rgba(255, 107, 107, 0.1);
@@ -818,35 +868,12 @@
             display: none;
             text-align: right;
         }
-		
-		/* ========== BEAUTIFY SETTINGS MODAL SCROLLBAR ========== */
-.settings-content::-webkit-scrollbar {
-    width: 8px; /* عرض اسکرول‌بار */
-}
-
-.settings-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1); /* رنگ پس‌زمینه مسیر اسکرول‌بار */
-    border-radius: 4px;
-}
-
-.settings-content::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3); /* رنگ خود اسکرول‌بار */
-    border-radius: 4px;
-}
-
-.settings-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5); /* رنگ اسکرول‌بار وقتی موس روش میره */
-}
-
-/* برای مرورگر Firefox */
-.settings-content {
-    scrollbar-width: thin; /* میتونه thin یا auto یا none باشه */
-    scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1); /* رنگ اسکرول‌بار و رنگ پس‌زمینه */
-}
-
-.settings-content {
-    border-radius: 5px;
-}
+        
+        .settings-content::-webkit-scrollbar { width: 8px; }
+        .settings-content::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+        .settings-content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
+        .settings-content::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.5); }
+        .settings-content { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1); border-radius: 5px; }
     </style>
 </head>
 
@@ -857,6 +884,17 @@
             <div class="settings-icon" onclick="toggleSettings()">
                 <i class="fas fa-cog"></i>
             </div>
+        </div>
+        
+        <div class="device-suggestion" id="deviceSuggestion">
+            <div class="ds-icon">
+                <i class="fas fa-laptop-code"></i>
+            </div>
+            <div class="ds-content">
+                <h4>💡 پیشنهاد برای تحلیل حرفه‌ای</h4>
+                <p>این ابزار بسیار پیشرفته است. اگرچه در موبایل قابل اجراست، اما برای تسلط کامل بر چارت‌ها پیشنهاد می‌کنیم از <strong>لپ‌تاپ، تبلت یا کامپیوتر</strong> استفاده کنید.</p>
+            </div>
+            <span class="ds-close" onclick="this.parentElement.style.display='none'">&times;</span>
         </div>
         
         <div class="setup-guide">
@@ -929,7 +967,6 @@
 
     <button class="pwa-install-btn" id="pwaInstallButton">📥 نصب برنامه</button>
 
-    <!-- Settings Modal -->
     <div id="settingsModal">
         <div class="settings-content">
             <span class="close-settings" onclick="toggleSettings()">&times;</span>
@@ -976,13 +1013,34 @@
     </div>
 
     <script>
-        // ==================== DETECT DEVICE TYPE ====================
+        // ==================== DETECT DEVICE & OS FOR SUGGESTION ====================
+        function showMobileSuggestion() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            
+            // 1. تشخیص سیستم عامل (اندروید یا iOS)
+            const isAndroid = /android/i.test(ua);
+            // تشخیص آیفون/آیپاد (معمولاً آیپدها را از این هشدار مستثنی می‌کنیم چون صفحه بزرگ دارند)
+            const isIOSPhone = /iPhone|iPod/.test(ua) && !window.MSStream;
+            
+            // 2. تشخیص سایز صفحه (برای اطمینان که تبلت‌های بزرگ را نگیرد)
+            // تبلت‌ها معمولاً عرض بیشتر از 768 دارند. موبایل‌ها کمتر هستند.
+            const isSmallScreen = window.innerWidth < 768;
+
+            // شرط: (سیستم عامل موبایل باشد) وَ (صفحه کوچک باشد)
+            if ((isAndroid || isIOSPhone) && isSmallScreen) {
+                 const suggestionBox = document.getElementById('deviceSuggestion');
+                 if (suggestionBox) {
+                     suggestionBox.style.display = 'flex';
+                 }
+            }
+        }
+
+        // ==================== DETECT DEVICE TYPE (GENERAL) ====================
         function isMobileDevice() {
             return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
         function detectDeviceType() {
-            // اگر موبایل یا تبلت باشد، هیچ تغییری اعمال نمی‌شود
             if (isMobileDevice()) {
                 document.body.classList.add('mobile');
                 document.body.classList.remove('desktop');
@@ -997,12 +1055,8 @@
             const tabsContainer = document.getElementById('tabsContainer');
             const windowWidth = window.innerWidth;
             
-            // فقط برای دسکتاپ
             if (document.body.classList.contains('desktop')) {
-                // حذف کلاس قبلی
                 tabsContainer.classList.remove('icons-only');
-                
-                // فقط در سایزهای بسیار کوچک دسکتاپ (600px و پایین‌تر) حالت آیکون فعال شود
                 if (windowWidth <= 600) {
                     tabsContainer.classList.add('icons-only');
                 }
@@ -1018,11 +1072,9 @@
                 document.head.appendChild(meta);
             }
             meta.content = color;
-
             document.querySelectorAll('meta[name="msapplication-TileColor"]').forEach(el => {
                 el.content = color;
             });
-            
             document.querySelectorAll('meta[name="msapplication-navbutton-color"]').forEach(el => {
                 el.content = color;
             });
@@ -1032,14 +1084,12 @@
             if (window.innerWidth <= 480) {
                 setThemeColor(getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim());
             } else {
-                // برای دسکتاپ، از رنگ اول گرادیان استفاده کن
                 const gradient = getComputedStyle(document.documentElement).getPropertyValue('--bg-gradient').trim();
                 setThemeColor(gradient.match(/#[\da-fA-F]{6}/)?.[0] || '#735af2');
             }
         }
 
         // ==================== CONTRAST CHECK FUNCTIONS ====================
-        // توابع پایه (لومیننس و کنتراست)
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             return result ? {
@@ -1062,31 +1112,26 @@
             return (brighter + 0.05) / (darker + 0.05);
         }
 
-        // تابع تحلیل عناصر (اسکن متن‌ها، دکمه‌ها، لینک‌ها، تب‌ها و غیره)
         function analyzeElements(bgColor, textColor) {
-            // عناصر کلیدی برای چک: متن‌ها، عنوان‌ها، دکمه‌ها، تب‌ها، لیبل‌ها
             const elements = document.querySelectorAll('h1, p, label, button, .tab, .tab-text, .signature, .login-signature, .login-btn, input[type="text"], .settings-section h3');
             const bgLum = getLuminance(bgColor);
-            const textLum = getLuminance(textColor); // فرض: متن‌ها سفید (white) هستند
+            const textLum = getLuminance(textColor);
             let hasIssue = false;
-
             for (let el of elements) {
-                if (el.textContent.trim().length > 0) { // فقط عناصر با متن
+                if (el.textContent.trim().length > 0) {
                     const isInteractive = el.tagName === 'BUTTON' || el.classList.contains('tab') || el.classList.contains('login-btn');
                     const minRatio = isInteractive ? 3 : 4.5;
                     const ratio = getContrastRatio(bgLum, textLum);
-                    
                     if (ratio < minRatio) {
                         hasIssue = true;
-                        break; // اگر یکی مشکل داشته باشه، کافیه
+                        break;
                     }
                 }
             }
-            return !hasIssue; // true اگر همه خوانا باشن
+            return !hasIssue;
         }
 
-        // تابع چک و آپدیت دکمه ذخیره
-        function validateAndUpdateSaveButton(bgColor, textColor = '#ffffff') { // متن پیش‌فرض سفید
+        function validateAndUpdateSaveButton(bgColor, textColor = '#ffffff') {
             const isReadable = analyzeElements(bgColor, textColor);
             const saveBtn = document.getElementById('saveThemeBtn');
             const warning = document.getElementById('contrastWarning');
@@ -1106,13 +1151,11 @@
             light: { gradient: 'linear-gradient(135deg, #735af2 0%, #5a3fd0 100%)', primary: '#735af2' },
             dark: { gradient: 'linear-gradient(135deg, #1e1e1e 0%, #333 100%)', primary: '#333' }
         };
-
         function loadTheme() {
             const saved = localStorage.getItem('themeSettings');
             if (saved) {
                 const settings = JSON.parse(saved);
                 applyTheme(settings);
-                // آپدیت UI
                 document.getElementById('presetSelect').value = settings.preset || 'light';
                 document.getElementById('hexInput').value = settings.primary;
                 document.getElementById('colorInput').value = settings.primary;
@@ -1121,12 +1164,10 @@
                 }
                 document.getElementById('glassSwitch').checked = settings.glass;
             } else {
-                // پیش‌فرض روشن
                 document.getElementById('presetSelect').value = 'light';
                 document.getElementById('hexInput').value = '#735af2';
                 document.getElementById('colorInput').value = '#735af2';
             }
-            // چک اولیه کنتراست بعد از لود
             setTimeout(() => validateAndUpdateSaveButton(document.documentElement.style.getPropertyValue('--bg-gradient') || '#735af2'), 100);
         }
 
@@ -1168,7 +1209,6 @@
             let gradient = primary;
 
             if (isGradient && !isMobileDevice()) {
-                // ساده‌سازی: از primary به عنوان رنگ اول و تیره‌تر برای دوم
                 const darker = shadeColor(primary, -20);
                 gradient = `linear-gradient(135deg, ${primary} 0%, ${darker} 100%)`;
             }
@@ -1177,7 +1217,6 @@
             document.documentElement.style.setProperty('--bg-gradient', gradient);
             updateThemeColor();
 
-            // چک کنتراست بعد از پیش‌نمایش
             validateAndUpdateSaveButton(gradient);
         }
 
@@ -1213,11 +1252,10 @@
                 gradient = `linear-gradient(135deg, ${primary} 0%, ${darker} 100%)`;
             }
 
-            // چک نهایی کنتراست قبل از ذخیره
-            const isReadable = analyzeElements(gradient, '#ffffff'); // متن سفید
+            const isReadable = analyzeElements(gradient, '#ffffff');
             if (!isReadable) {
                 alert('❌ نمی‌تونم ذخیره کنم – رنگ انتخابی ناخواناست! لطفاً رنگ دیگه‌ای انتخاب کن.');
-                return; // ذخیره نکن
+                return;
             }
 
             const settings = {
@@ -1227,7 +1265,6 @@
                 colorType,
                 glass
             };
-
             localStorage.setItem('themeSettings', JSON.stringify(settings));
             applyTheme(settings);
             toggleSettings();
@@ -1239,22 +1276,17 @@
             modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        // بستن modal با کلیک خارج
         document.getElementById('settingsModal').addEventListener('click', function(e) {
             if (e.target === this) toggleSettings();
         });
 
         // ==================== VISUAL FIXES FOR GLASS EFFECT ====================
         function applyVisualFixes() {
-            // این تابع مشکلات بصری backdrop-filter را رفع می‌کند
             const elements = document.querySelectorAll('.login-container, .tabs-container, .setup-guide, .signature, .login-signature, .tab');
-            
             elements.forEach(element => {
-                // اطمینان از اینکه border-radius به درستی اعمال شده
                 const computedStyle = window.getComputedStyle(element);
                 const borderRadius = computedStyle.borderRadius;
                 
-                // اگر border-radius مشکل دارد، آن را تنظیم کن
                 if (borderRadius === '0px' && element.classList.contains('login-container')) {
                     element.style.borderRadius = '20px';
                 }
@@ -1269,14 +1301,12 @@
         const loginPage = document.getElementById('loginPage');
         const mainContent = document.getElementById('mainContent');
 
-        // تبدیل Base32 به Hex
         function base32ToHex(base32) {
             const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
             let bits = '';
             let hex = '';
             
             base32 = base32.toUpperCase().replace(/=+$/, '');
-            
             for (let i = 0; i < base32.length; i++) {
                 const val = base32Chars.indexOf(base32.charAt(i));
                 if (val === -1) throw new Error('Invalid Base32 character');
@@ -1291,22 +1321,18 @@
             return hex;
         }
 
-        // تولید کد TOTP
         function generateTOTP() {
             try {
                 const time = Math.floor(Date.now() / 1000 / 30);
                 const timeHex = CryptoJS.enc.Hex.parse(
                     ('0000000000000000' + time.toString(16)).slice(-16)
                 );
-                
                 const keyHex = base32ToHex(secretKey);
                 const key = CryptoJS.enc.Hex.parse(keyHex);
                 const hmac = CryptoJS.HmacSHA1(timeHex, key);
                 const hmacHex = hmac.toString(CryptoJS.enc.Hex);
-                
                 const offset = (parseInt(hmacHex.substr(-1), 16)) & 0xf;
                 const code = parseInt(hmacHex.substr(offset * 2, 8), 16) & 0x7fffffff;
-                
                 return (code % 1000000).toString().padStart(6, '0');
             } catch (error) {
                 console.error('Error generating TOTP:', error);
@@ -1314,7 +1340,6 @@
             }
         }
 
-        // بررسی کد وارد شده
         function verifyOTP(enteredOtp) {
             for (let i = -1; i <= 1; i++) {
                 const testTime = Math.floor(Date.now() / 1000 / 30) + i;
@@ -1326,21 +1351,17 @@
             return false;
         }
 
-        // تولید کد با زمان مشخص
         function generateTOTPWithTime(timeValue) {
             try {
                 const timeHex = CryptoJS.enc.Hex.parse(
                     ('0000000000000000' + timeValue.toString(16)).slice(-16)
                 );
-                
                 const keyHex = base32ToHex(secretKey);
                 const key = CryptoJS.enc.Hex.parse(keyHex);
                 const hmac = CryptoJS.HmacSHA1(timeHex, key);
                 const hmacHex = hmac.toString(CryptoJS.enc.Hex);
-                
                 const offset = (parseInt(hmacHex.substr(-1), 16)) & 0xf;
                 const code = parseInt(hmacHex.substr(offset * 2, 8), 16) & 0x7fffffff;
-                
                 return (code % 1000000).toString().padStart(6, '0');
             } catch (error) {
                 console.error('Error generating TOTP with time:', error);
@@ -1348,7 +1369,6 @@
             }
         }
 
-        // رویداد کلیک برای ورود
         verifyOtpBtn.addEventListener('click', function() {
             const enteredOtp = otpInput.value.trim();
             
@@ -1364,7 +1384,6 @@
                 sessionStorage.setItem('cst_authenticated', 'true');
                 sessionStorage.setItem('cst_login_time', new Date().getTime());
                 
-                // فعال کردن اسکرول موس برای تب‌ها بعد از لاگین
                 initMouseWheelScroll();
             } else {
                 verifyError.textContent = 'کد نامعتبر است. لطفاً کد جدید را از اپلیکیشن دریافت کنید.';
@@ -1378,25 +1397,21 @@
             }
         });
 
-        // اجازه ورود با Enter
         otpInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 verifyOtpBtn.click();
             }
         });
 
-        // بررسی اگر کاربر قبلاً در این session وارد شده
         if (sessionStorage.getItem('cst_authenticated') === 'true') {
             loginPage.style.display = 'none';
             mainContent.style.display = 'flex';
-            // فعال کردن اسکرول موس برای تب‌ها
             setTimeout(initMouseWheelScroll, 100);
         } else {
             loginPage.style.display = 'block';
             mainContent.style.display = 'none';
         }
 
-        // تمرکز روی فیلد کد
         window.addEventListener('load', () => {
             if (loginPage.style.display !== 'none') {
                  setTimeout(() => {
@@ -1422,18 +1437,15 @@
             
             if (!tabsScrollContainer || !tabs) return;
             
-            // اسکرول با چرخ موس
             tabsScrollContainer.addEventListener('wheel', function(e) {
                 e.preventDefault();
                 this.scrollLeft += e.deltaY;
             });
-            
-            // اسکرول با کلیک و درگ روی هر قسمتی از تب‌ها
+
             let isDragging = false;
             let startX;
             let scrollLeft;
             
-            // برای کل کانتینر تب‌ها
             tabsScrollContainer.addEventListener('mousedown', function(e) {
                 isDragging = true;
                 startX = e.pageX - this.offsetLeft;
@@ -1441,8 +1453,7 @@
                 this.style.cursor = 'grabbing';
                 this.style.userSelect = 'none';
             });
-            
-            // برای خود تب‌ها (اگر کاربر روی تب کلیک کرد)
+
             tabs.addEventListener('mousedown', function(e) {
                 isDragging = true;
                 startX = e.pageX - tabsScrollContainer.offsetLeft;
@@ -1450,13 +1461,13 @@
                 tabsScrollContainer.style.cursor = 'grabbing';
                 tabsScrollContainer.style.userSelect = 'none';
             });
-            
+
             document.addEventListener('mouseup', function() {
                 isDragging = false;
                 tabsScrollContainer.style.cursor = 'grab';
                 tabsScrollContainer.style.userSelect = 'auto';
             });
-            
+
             document.addEventListener('mousemove', function(e) {
                 if (!isDragging) return;
                 e.preventDefault();
@@ -1464,21 +1475,17 @@
                 const walk = (x - startX) * 2;
                 tabsScrollContainer.scrollLeft = scrollLeft - walk;
             });
-            
-            // برای تاچ دیوایس‌ها
+
             let touchStartX;
             let touchScrollLeft;
-            
             tabsScrollContainer.addEventListener('touchstart', function(e) {
                 touchStartX = e.touches[0].pageX;
                 touchScrollLeft = this.scrollLeft;
             });
-            
             tabs.addEventListener('touchstart', function(e) {
                 touchStartX = e.touches[0].pageX;
                 touchScrollLeft = tabsScrollContainer.scrollLeft;
             });
-            
             tabsScrollContainer.addEventListener('touchmove', function(e) {
                 if (!touchStartX) return;
                 e.preventDefault();
@@ -1486,7 +1493,6 @@
                 const walk = (x - touchStartX) * 2;
                 this.scrollLeft = touchScrollLeft - walk;
             });
-            
             tabsScrollContainer.addEventListener('touchend', function() {
                 touchStartX = null;
             });
@@ -1499,7 +1505,6 @@
 
         function showInstallButton() {
             pwaInstallButton.style.display = 'block';
-            
             if (installPromptTimeout) {
                 clearTimeout(installPromptTimeout);
             }
@@ -1538,7 +1543,6 @@
             deferredPrompt = null;
         });
 
-        // ثبت Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/cst/sw.js')
@@ -1558,17 +1562,17 @@
             updateThemeColor();
             handleDesktopResponsiveTabs();
             
-            // اعمال فیکس‌های بصری برای جلوگیری از خطوط شیشه‌ای
+            // فراخوانی تابع تشخیص موبایل برای نمایش هشدار
+            showMobileSuggestion();
+
             setTimeout(applyVisualFixes, 100);
         });
 
-        // اعمال در تغییر سایز صفحه
         window.addEventListener('resize', () => {
             updateThemeColor();
             handleDesktopResponsiveTabs();
             applyVisualFixes();
         });
-
     </script>
 </body>
 </html>
