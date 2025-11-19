@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator Pro Formula 4</title>
     <style>
+        /* تمام استایل‌های CSS شما بدون تغییر باقی مانده است */
         :root {
             --bg-color: #f5f5f5;
             --container-bg: white;
@@ -89,7 +90,8 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
             position: relative;
-            min-height: 60px; /* ارتفاع ثابت برای هدر */
+            min-height: 60px;
+            /* ارتفاع ثابت برای هدر */
         }
         h1, h2, h3 {
             color: var(--header-color);
@@ -403,7 +405,8 @@
         .table-container {
             overflow-x: auto;
             overflow-y: auto; /* تغییر از hidden به auto برای فعال کردن اسکرول عمودی */
-            max-height: 60vh; /* محدود کردن ارتفاع برای ایجاد اسکرول عمودی در صورت نیاز */
+            max-height: 60vh;
+            /* محدود کردن ارتفاع برای ایجاد اسکرول عمودی در صورت نیاز */
             margin: 20px 0;
             cursor: grab;
             scroll-behavior: smooth;
@@ -431,7 +434,8 @@
             cursor: grabbing;
         }
         table {
-            width: 200%; /* افزایش عرض برای ایجاد اسکرول افقی واقعی */
+            width: 200%;
+            /* افزایش عرض برای ایجاد اسکرول افقی واقعی */
             border-collapse: collapse;
             margin: 10px 0;
             min-width: 1200px; /* حداقل عرض برای ستون‌های زیاد */
@@ -441,7 +445,8 @@
             text-align: right;
             border-bottom: 1px solid var(--input-border);
             white-space: nowrap;
-            user-select: text; /* فعال کردن انتخاب متن */
+            user-select: text;
+            /* فعال کردن انتخاب متن */
         }
         th {
             background-color: var(--table-header);
@@ -834,8 +839,10 @@
                 flex-direction: row;
                 align-items: center;
                 padding-left: 45px; /* کاهش فاصله برای دکمه تاریک/روشن */
-                padding-right: 45px; /* کاهش فاصله برای منوی همبرگری */
-                min-height: 50px; /* ارتفاع کمتر در موبایل */
+                padding-right: 45px;
+                /* کاهش فاصله برای منوی همبرگری */
+                min-height: 50px;
+                /* ارتفاع کمتر در موبایل */
             }
             .input-row {
                 flex-direction: column;
@@ -868,7 +875,8 @@
                 min-width: 100%;
             }
             h1 {
-                font-size: 18px; /* کاهش سایز فونت برای موبایل */
+                font-size: 18px;
+                /* کاهش سایز فونت برای موبایل */
                 text-align: center;
                 flex: 1;
                 margin: 0 5px;
@@ -945,7 +953,8 @@
             }
             /* تنظیم موقعیت دکمه تاریک/روشن در موبایل */
             .theme-toggle {
-                left: 0; /* چسباندن به لبه */
+                left: 0;
+                /* چسباندن به لبه */
                 padding: 8px 10px;
             }
         }
@@ -969,7 +978,8 @@
                 min-height: 45px;
             }
             h1 {
-                font-size: 16px; /* کاهش بیشتر سایز فونت */
+                font-size: 16px;
+                /* کاهش بیشتر سایز فونت */
                 margin: 0 2px;
                 padding: 0 5px;
             }
@@ -998,7 +1008,8 @@
                 width: 2rem;
             }
             .theme-toggle {
-                font-size: 20px; /* کاهش سایز آیکون */
+                font-size: 20px;
+                /* کاهش سایز آیکون */
                 padding: 6px 8px;
             }
         }
@@ -1121,7 +1132,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <!-- دکمه همبرگر با سه span -->
             <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="منو">
                 <span></span>
                 <span></span>
@@ -1132,7 +1142,6 @@
         </div>
                        <HR>
         <BR>
-        <!-- منوی همبرگری برای موبایل -->
         <div class="mobile-tabs" id="mobileTabs">
             <div class="mobile-tab active" data-tab="calculator">ماشین حساب</div>
             <div class="mobile-tab" data-tab="history">تاریخچه محاسبات</div>
@@ -1141,7 +1150,6 @@
             <div class="mobile-tab" data-tab="backup">پشتیبان‌گیری</div>
             <div class="mobile-tab" data-tab="delete-records">حذف رکورد</div>
         </div>
-        <!-- تب‌های اصلی -->
         <div class="tabs" id="tabs">
             <div class="tab active" data-tab="calculator">ماشین حساب</div>
             <div class="tab" data-tab="history">تاریخچه محاسبات</div>
@@ -1150,7 +1158,6 @@
             <div class="tab" data-tab="backup">پشتیبان‌گیری</div>
             <div class="tab" data-tab="delete-records">حذف رکورد</div>
         </div>
-        <!-- تب ماشین حساب -->
         <div class="tab-content active" id="calculator-tab">
             <h2>محاسبه فرمول‌ها</h2>
             <div class="form-group">
@@ -1164,7 +1171,6 @@
                 <input type="date" id="calculationDate">
             </div>
             <div class="input-group">
-                <!-- چیدمان دسکتاپ (جدید) -->
                 <div class="input-row desktop-input-order">
                     <div class="input-container">
                         <label for="input_y1">عدد سقف:</label>
@@ -1183,7 +1189,6 @@
                         <input type="text" id="input_current_low" placeholder="عدد فعلی کف را وارد کنید">
                     </div>
                 </div>
-                <!-- چیدمان موبایل -->
                 <div class="input-row mobile-input-order">
                     <div class="input-container">
                         <label for="input_y1_mobile">عدد سقف:</label>
@@ -1208,9 +1213,9 @@
                 <button id="resetBtn">ریست</button>
             </div>
             <div class="results-grid" id="results_list">
-                <!-- نتایج اینجا نمایش داده می‌شوند -->
-            </div>
-            <div id="error_message" class="error" style="display: none; margin-top: 10px; padding: 10px; border-radius: 4px;"></div>
+                </div>
+            <div id="error_message" class="error" style="display: none;
+ margin-top: 10px; padding: 10px; border-radius: 4px;"></div>
             <div class="instructions">
                 <p><strong>راهنما:</strong></p>
                 <ul>
@@ -1222,7 +1227,6 @@
                 </ul>
             </div>
         </div>
-        <!-- تب تاریخچه محاسبات -->
         <div class="tab-content" id="history-tab">
             <h2>تاریخچه محاسبات</h2>
             <div class="filter-container">
@@ -1237,7 +1241,6 @@
                     <input type="date" id="filterDate">
                 </div>
             </div>
-            <!-- جدول برای دسکتاپ -->
             <div class="table-container">
                 <table id="calculationsTable">
                     <thead>
@@ -1256,19 +1259,16 @@
                         </tr>
                     </thead>
                     <tbody id="calculationsTableBody">
-                        <!-- داده‌ها اینجا نمایش داده می‌شوند -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
-            <!-- کارت‌ها برای موبایل -->
             <div class="mobile-cards-container" id="mobileCardsContainer">
-                <!-- کارت‌ها اینجا نمایش داده می‌شوند -->
-            </div>
-            <div id="noDataMessage" style="text-align: center; padding: 20px; display: none;">
+                </div>
+            <div id="noDataMessage" style="text-align: center;
+ padding: 20px; display: none;">
                 هیچ داده‌ای یافت نشد.
             </div>
         </div>
-        <!-- تب مقایسه داده‌ها -->
         <div class="tab-content" id="comparison-tab">
             <h2>مقایسه داده‌ها</h2>
             <div class="form-group">
@@ -1294,21 +1294,17 @@
                 <button id="clearComparisonBtn" class="danger">پاک کردن</button>
             </div>
             <div id="comparisonResults" class="comparison-container">
-                <!-- نتایج مقایسه اینجا نمایش داده می‌شوند -->
-            </div>
+                </div>
         </div>
-        <!-- تب مدیریت جفت ارزها -->
         <div class="tab-content" id="currency-pairs-tab">
             <h2>مدیریت جفت ارزها و دسته‌بندی‌ها</h2>
             <BR>
-            <!-- بخش افزودن دسته‌بندی جدید -->
             <div class="form-group">
                 <h3><li>افزودن دسته‌بندی جدید</li></h3>
                 <label for="newCategoryName">نام دسته‌بندی:</label>
                 <input type="text" id="newCategoryName" placeholder="مثلاً: فارکس، ارز دیجیتال">
                 <button id="addCategoryBtn" class="success" style="margin-top: 5px;">افزودن دسته‌بندی</button>
             </div>
-            <!-- بخش افزودن جفت ارز جدید -->
             <div class="form-group">
                 <h3><li>افزودن جفت ارز جدید</li></h3>
                 <label for="newCurrencyPair">جفت ارز جدید:</label>
@@ -1324,13 +1320,10 @@
                 <button id="addCurrencyPairBtn" class="success">افزودن جفت ارز</button>
             </div>
             <BR>
-            <!-- بخش نمایش دسته‌بندی‌ها و جفت ارزها -->
             <h3><li>دسته‌بندی‌ها و جفت ارزهای موجود</li></h3>
             <div id="currencyPairsList">
-                <!-- لیست دسته‌بندی‌ها و جفت ارزها اینجا نمایش داده می‌شوند -->
-            </div>
+                </div>
         </div>
-        <!-- تب پشتیبان‌گیری -->
         <div class="tab-content" id="backup-tab">
             <h2>پشتیبان‌گیری و بازیابی</h2>
             <div class="instructions">
@@ -1345,7 +1338,6 @@
                 <p><strong>توجه:</strong> فایل پشتیبان شامل تمام جفت ارزها، تاریخچه محاسبات و تنظیمات شما خواهد بود.</p>
             </div>
         </div>
-        <!-- تب حذف رکورد -->
         <div class="tab-content" id="delete-records-tab">
             <h2>حذف رکوردها</h2>
             <div class="instructions">
@@ -1365,14 +1357,14 @@
                 <button id="deleteByDaysBtn" class="danger" style="margin-top: 10px;">حذف داده‌های قدیمی</button>
             </div>
             <div class="instructions" style="margin-top: 20px;">
-                <p><strong>هشدار:</strong> عملیات حذف قابل بازگشت نیست. قبل از حذف از داده‌های خود پشتیبان بگیرید.</p>
+                <p><strong>هشدار:</strong> عملیات حذف قابل بازگشت نیست.
+قبل از حذف از داده‌های خود پشتیبان بگیرید.</p>
             </div>
         </div>
         <div class="signature">
             طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
         </div>
     </div>
-    <!-- مودال برای ویرایش جفت ارز -->
     <div class="modal" id="editCurrencyPairModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1395,7 +1387,6 @@
             </div>
         </div>
     </div>
-    <!-- مودال برای ویرایش دسته‌بندی -->
     <div class="modal" id="editCategoryModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1412,7 +1403,6 @@
             </div>
         </div>
     </div>
-    <!-- مودال برای ویرایش محاسبه -->
     <div class="modal" id="editCalculationModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1449,7 +1439,6 @@
             </div>
         </div>
     </div>
-    <!-- مودال برای تأیید حذف -->
     <div class="modal" id="confirmDeleteModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1463,7 +1452,6 @@
             </div>
         </div>
     </div>
-    <!-- مودال برای حذف دسته‌بندی -->
     <div class="modal" id="deleteCategoryModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1553,7 +1541,8 @@
         function handleWheel(e) {
             if (!isDesktopOrTablet) return;
             e.preventDefault();
-            const delta = e.deltaY > 0 ? 50 : -50; // سرعت اسکرول
+            const delta = e.deltaY > 0 ? 50 : -50;
+            // سرعت اسکرول
             tabs.scrollLeft += delta;
         }
         // Drag functions برای تب‌ها
@@ -1569,7 +1558,8 @@
             if (!isDragging) return;
             e.preventDefault();
             const x = e.pageX - tabs.offsetLeft;
-            const walk = (x - startX) * 2; // سرعت drag
+            const walk = (x - startX) * 2;
+            // سرعت drag
             tabs.scrollLeft = scrollLeft - walk;
         }
         function endDrag() {
@@ -2018,7 +2008,7 @@
                         </div>
                     </div>
                     <div class="category-pairs" id="category-${category.id}">
-                        ${categoryPairs.length === 0 ? 
+                        ${categoryPairs.length === 0 ?
                             '<p style="text-align: center; color: #666; padding: 10px; margin: 0;">هیچ جفت ارزی در این دسته‌بندی وجود ندارد</p>' : 
                             ''}
                     </div>
@@ -2169,11 +2159,13 @@
                 const currentIndex = currencyPairs.findIndex(p => p.id === id);
                 if (currentIndex === -1) return;
                 if (direction === 'up' && currentIndex > 0) {
-                    const tempOrder = currencyPairs[currentIndex].order || currentIndex;
+                    const tempOrder = currencyPairs[currentIndex].order ||
+                        currentIndex;
                     currencyPairs[currentIndex].order = currencyPairs[currentIndex - 1].order || currentIndex - 1;
                     currencyPairs[currentIndex - 1].order = tempOrder;
                 } else if (direction === 'down' && currentIndex < currencyPairs.length - 1) {
-                    const tempOrder = currencyPairs[currentIndex].order || currentIndex;
+                    const tempOrder = currencyPairs[currentIndex].order ||
+                        currentIndex;
                     currencyPairs[currentIndex].order = currencyPairs[currentIndex + 1].order || currentIndex + 1;
                     currencyPairs[currentIndex + 1].order = tempOrder;
                 } else {
@@ -2923,10 +2915,10 @@
             const themeToggle = document.getElementById('themeToggle');
             if (document.body.classList.contains('dark-mode')) {
                 themeToggle.textContent = '☀️';
-                localStorage.setItem('theme', 'dark');
+                localStorage.setItem('theme_2', 'dark');
             } else {
                 themeToggle.textContent = '🌙';
-                localStorage.setItem('theme', 'light');
+                localStorage.setItem('theme_2', 'light');
             }
         }
         // تابع تغییر تب
@@ -3057,7 +3049,7 @@
             document.getElementById('themeToggle').addEventListener('click', toggleTheme);
         }
         // بارگذاری حالت ذخیره شده
-        if (localStorage.getItem('theme') === 'dark') {
+        if (localStorage.getItem('theme_2') === 'dark') {
             document.body.classList.add('dark-mode');
             document.getElementById('themeToggle').textContent = '☀️';
         }
