@@ -6,7 +6,6 @@
 <title>CST Geometry Analyzer</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  /* استایل‌ها بدون تغییر */
   :root {
     --bg-primary: #071020;
     --bg-secondary: #0b1220;
@@ -30,18 +29,21 @@
     padding: 12px;
     margin: 0;
     line-height: 1.5;
+    /* جلوگیری از رفتار کشسانی در iOS برای اسکرول بهتر */
+    overscroll-behavior-y: none;
   }
   
   .container {
     max-width: 1150px;
     margin: 0 auto;
+    padding-bottom: 50px; /* فضای خالی پایین صفحه برای راحتی اسکرول */
   }
   
   #sectionsContainer {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 20px; /* اضافه کردن فاصله برای جداسازی از باکس یادداشت‌ها */
+    margin-bottom: 20px;
   }
   
   .card {
@@ -53,16 +55,17 @@
     cursor: default;
   }
   
-  /* استایل collapsible برای هر card */
+  /* استایل collapsible */
   .collapsible-card {
-    max-height: 60px; /* ارتفاع پیش‌فرض برای عنوان */
+    max-height: 60px; /* ارتفاع در حالت بسته */
     overflow: hidden;
-    transition: max-height 0.3s ease-out;
+    transition: max-height 0.4s ease-out; /* انیمیشن نرم */
   }
   
   .collapsible-card.open {
-    max-height: 2000px; /* ارتفاع کافی برای محتوای باز */
-    transition: max-height 0.3s ease-in;
+    /* --- تغییر مهم: افزایش ارتفاع به مقدار خیلی زیاد تا محتوا کامل جا شود --- */
+    max-height: 9999px; 
+    transition: max-height 0.6s ease-in;
   }
   
   .collapsible-header {
@@ -95,8 +98,10 @@
   
   .collapsible-content {
     padding: 0 16px 16px;
-    max-height: 800px; /* اضافه کردن max-height برای اسکرول عمودی */
-    overflow-y: auto; /* اسکرول عمودی */
+    /* --- تغییر مهم: حذف اسکرول داخلی --- */
+    /* max-height حذف شد */
+    /* overflow-y: auto حذف شد */
+    overflow: visible; 
   }
   
   h1, h2, h3 {
@@ -172,29 +177,11 @@
     transform: translateY(-1px);
   }
   
-  .btn-full {
-    width: 100%;
-  }
-  
-  .btn-danger {
-    background: var(--danger-color);
-    color: white;
-  }
-  
-  .btn-success {
-    background: var(--success-color);
-    color: white;
-  }
-  
-  .btn-small {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-    min-width: 100px;
-  }
-  
-  .btn-auto {
-    width: auto;
-  }
+  .btn-full { width: 100%; }
+  .btn-danger { background: var(--danger-color); color: white; }
+  .btn-success { background: var(--success-color); color: white; }
+  .btn-small { padding: 8px 12px; font-size: 0.85rem; min-width: 100px; }
+  .btn-auto { width: auto; }
   
   .btn-group {
     display: flex;
@@ -214,7 +201,7 @@
     border-bottom: 1px solid var(--bg-tertiary);
     text-align: center;
     white-space: nowrap;
-    user-select: text; /* اجازه سلکت و کپی متن */
+    user-select: text;
   }
   
   th {
@@ -307,15 +294,9 @@
     transition: opacity 0.3s ease;
   }
   
-  .chip:hover .chip-overlay {
-    opacity: 1;
-  }
+  .chip:hover .chip-overlay { opacity: 1; }
   
-  .controls {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; }
   
   pre {
     background: #041219;
@@ -340,17 +321,8 @@
     min-width: auto;
   }
   
-  .action-col {
-    white-space: nowrap;
-    user-select: none; /* جلوگیری از سلکت در ستون عملیات */
-  }
-  
-  .action-col button {
-    width: auto;
-    display: inline-block;
-    margin: 0 2px;
-    min-width: auto;
-  }
+  .action-col { white-space: nowrap; user-select: none; }
+  .action-col button { width: auto; display: inline-block; margin: 0 2px; min-width: auto; }
   
   #alertModal, #statsModal, #editModal, #moveModal, #guideModal {
     position: fixed;
@@ -371,10 +343,7 @@
   
   .modal-bg {
     position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    left: 0; top: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.45);
     z-index: 9998;
     display: none;
@@ -392,10 +361,7 @@
     min-width: auto;
   }
   
-  .date-range-toggle.active {
-    background: var(--accent-color);
-    color: #021;
-  }
+  .date-range-toggle.active { background: var(--accent-color); color: #021; }
   
   .danger-zone {
     background: #7f1d1d;
@@ -405,49 +371,17 @@
     margin-top: 16px;
   }
   
-  .text-center {
-    text-align: center;
-  }
-  
-  .mb-2 {
-    margin-bottom: 8px;
-  }
-  
-  .mt-2 {
-    margin-top: 8px;
-  }
-  
-  .w-full {
-    width: 100%;
-  }
-  
-  .flex {
-    display: flex;
-  }
-  
-  .flex-1 {
-    flex: 1;
-  }
-  
-  .items-center {
-    align-items: center;
-  }
-  
-  .gap-2 {
-    gap: 8px;
-  }
-  
-  .block {
-    display: block;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  .form-group {
-    margin-bottom: 12px;
-  }
+  .text-center { text-align: center; }
+  .mb-2 { margin-bottom: 8px; }
+  .mt-2 { margin-top: 8px; }
+  .w-full { width: 100%; }
+  .flex { display: flex; }
+  .flex-1 { flex: 1; }
+  .items-center { align-items: center; }
+  .gap-2 { gap: 8px; }
+  .block { display: block; }
+  .hidden { display: none; }
+  .form-group { margin-bottom: 12px; }
   
   .chart-wrapper {
     position: relative;
@@ -464,43 +398,36 @@
     width: 100%;
     height: 400px;
   }
-
-  /* استایل جدید برای جداسازی چارت میله‌ای */
+  
   .bar-chart-isolated {
     position: relative;
-    z-index: 100; /* بالاتر از drag sections */
-    pointer-events: auto; /* اجازه interaction مستقل */
+    z-index: 100;
+    pointer-events: auto;
   }
   
-  /* استایل برای خط افقی روی چارت - بدون تغییر ظاهری */
   .horizontal-line {
     position: absolute;
-    border-top: 1px solid #9fb3c8; /* نازک و رنگ روشن */
-    pointer-events: none; /* خط خودش interact نکنه، wrapper handle کنه */
-    z-index: 101; /* بالاتر از چارت */
+    border-top: 1px solid #9fb3c8;
+    pointer-events: none;
+    z-index: 101;
     width: 100%;
     left: 0;
   }
   
-  .horizontal-line:hover {
-    border-top-color: var(--accent-color); /* تغییر رنگ هنگام hover */
-  }
+  .horizontal-line:hover { border-top-color: var(--accent-color); }
   
-  /* wrapper جدید برای hit area بزرگ‌تر */
   .horizontal-line-wrapper {
     position: absolute;
     width: 100%;
     left: 0;
-    height: 20px; /* ارتفاع hit area: 20px (10px بالا و پایین خط) */
-    cursor: ns-resize; /* نشانگر برای drag عمودی */
-    z-index: 102; /* بالاتر از خط */
-    pointer-events: auto; /* فقط wrapper interact کنه */
-    background: transparent; /* نامرئی */
+    height: 20px;
+    cursor: ns-resize;
+    z-index: 102;
+    pointer-events: auto;
+    background: transparent;
   }
   
-  .horizontal-line-wrapper:hover {
-    background: rgba(14, 165, 164, 0.05); /* highlight ملایم هنگام hover */
-  }
+  .horizontal-line-wrapper:hover { background: rgba(14, 165, 164, 0.05); }
   
   .line-guide {
     position: absolute;
@@ -519,85 +446,67 @@
     pointer-events: none;
   }
   
-  .horizontal-line-wrapper:hover .line-guide {
-    opacity: 1;
-  }
+  .horizontal-line-wrapper:hover .line-guide { opacity: 1; }
   
-  /* جلوگیری از تداخل drag با چارت */
-  .collapsible-card {
-    touch-action: none; /* جلوگیری از touch drag تداخل در موبایل */
-  }
-  
-  .card[draggable="true"] .chart-wrapper .chart-container {
-    pointer-events: auto; /* چارت مستقل */
-  }
+  /* فیکس تداخل تاچ در موبایل */
+  .collapsible-card { touch-action: auto; }
+  .card[draggable="true"] .chart-wrapper .chart-container { pointer-events: auto; }
 
-  /* استایل فیکس‌شده برای آیکون راهنما: دایره‌ای کامل، responsive با rem، بدون کشیدگی، و بدون تداخل با متن */
   .guide-icon {
     position: absolute !important;
-    top: 1rem !important; /* 16px (padding chart-wrapper) + کمی حاشیه */
+    top: 1rem !important;
     right: 1rem !important;
-
-    width: 2.125rem !important; /* 34px به rem */
-    height: 2.125rem !important; /* 34px به rem */
-    min-width: 2.125rem !important; /* جلوگیری از کوچک شدن ناخواسته */
-    max-width: 2.125rem !important; /* جلوگیری از کشیدگی در flex عریض */
-    aspect-ratio: 1/1 !important; /* همیشه مربعی/دایره‌ای */
-
+    width: 2.125rem !important;
+    height: 2.125rem !important;
+    min-width: 2.125rem !important;
+    max-width: 2.125rem !important;
+    aspect-ratio: 1/1 !important;
     background: var(--accent-color) !important;
     color: #021 !important;
     font-size: 1.1rem !important;
     font-weight: bold !important;
-
-    border-radius: 50% !important; /* دایره کامل */
+    border-radius: 50% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-
-    flex-shrink: 0 !important; /* بدون کوچک شدن در flex */
-    flex-grow: 0 !important; /* بدون بزرگ شدن در flex */
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
     flex-basis: auto !important;
-
     z-index: 9999 !important;
     cursor: pointer !important;
-    border: none !important; /* بدون border اضافی */
-    padding: 0 !important; /* بدون padding برای کنترل دقیق */
-
-    /* فیکس تداخل: margin-bottom برای متن زیر دکمه */
-    margin-bottom: 2.5rem !important; /* ارتفاع دکمه + حاشیه */
+    border: none !important;
+    padding: 0 !important;
+    margin-bottom: 2.5rem !important;
   }
-
+  
   .guide-icon:hover {
     transform: scale(1.10);
     background: #0d9488;
   }
 
-  /* Responsive: اندازه‌ها با rem برای مقیاس‌پذیری بهتر، بدون کشیدگی و تداخل */
   @media (max-width: 768px) {
     .guide-icon {
-      width: 1.75rem !important; /* 28px */
+      width: 1.75rem !important;
       height: 1.75rem !important;
       min-width: 1.75rem !important;
       max-width: 1.75rem !important;
       font-size: 1rem !important;
       top: 0.75rem !important;
       right: 0.75rem !important;
-      margin-bottom: 2rem !important; /* تنظیم برای موبایل */
+      margin-bottom: 2rem !important;
     }
-
-    /* فیکس متن: wrap و کوچک‌تر در عرض کم */
     .chart-wrapper .small {
       font-size: 0.75rem !important;
       line-height: 1.3 !important;
       word-break: break-word !important;
       overflow-wrap: break-word !important;
-      padding-right: 3rem !important; /* فضای خالی برای دکمه */
+      padding-right: 3rem !important;
     }
   }
-
+  
   @media (max-width: 480px) {
     .guide-icon {
-      width: 1.5rem !important; /* 24px */
+      width: 1.5rem !important;
       height: 1.5rem !important;
       min-width: 1.5rem !important;
       max-width: 1.5rem !important;
@@ -606,17 +515,15 @@
       right: 0.5rem !important;
       margin-bottom: 1.75rem !important;
     }
-
     .chart-wrapper .small {
       font-size: 0.7rem !important;
       padding-right: 2.5rem !important;
     }
   }
 
-  /* برای صفحات خیلی عریض (دسکتاپ): محدود کردن به اندازه ثابت، بدون کشیدگی */
   @media (min-width: 1200px) {
     .guide-icon {
-      width: 2.25rem !important; /* کمی بزرگ‌تر: 36px */
+      width: 2.25rem !important;
       height: 2.25rem !important;
       min-width: 2.25rem !important;
       max-width: 2.25rem !important;
@@ -625,7 +532,6 @@
     }
   }
 
-  /* فیکس کلی برای متن توضیح: همیشه فضای کافی برای دکمه */
   .chart-wrapper .small[style*="text-align: center"] {
     padding-right: 3rem !important;
     margin-bottom: 1rem !important;
@@ -634,152 +540,59 @@
   }
   
   @media (max-width: 768px) {
-    body {
-      padding: 8px;
-    }
-    
-    .card {
-      margin-bottom: 0;
-    }
-    
-    .collapsible-header {
-      padding: 12px;
-    }
-    
-    h1 {
-      font-size: 1.3rem;
-    }
-    
-    h3 {
-      font-size: 1.1rem;
-    }
-    
-    .row {
-      flex-direction: column;
-      gap: 8px;
-    }
-    
-    .col {
-      width: 100%;
-    }
-    
-    button {
-      padding: 12px;
-      font-size: 1rem;
-      width: 100%;
-      min-width: auto;
-    }
-    
-    .btn-group {
-      flex-direction: column;
-    }
-    
-    .btn-group button {
-      width: 100%;
-    }
-    
-    .chart-container {
-      height: 300px;
-    }
-    
-    .chart-wrapper {
-      padding: 12px;
-    }
-    
-    .symbols-grid {
-      padding: 8px;
-      gap: 6px;
-    }
-    
-    .chip {
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      min-width: 70px;
-    }
-    
-    table {
-      font-size: 0.75rem;
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-    
-    th, td {
-      padding: 6px 4px;
-    }
-    
-    .icon-btn {
-      padding: 4px 6px;
-      font-size: 0.7rem;
-    }
-    
-    input, select, textarea {
-      padding: 12px;
-    }
+    body { padding: 8px; }
+    .card { margin-bottom: 0; }
+    .collapsible-header { padding: 12px; }
+    h1 { font-size: 1.3rem; }
+    h3 { font-size: 1.1rem; }
+    .row { flex-direction: column; gap: 8px; }
+    .col { width: 100%; }
+    button { padding: 12px; font-size: 1rem; width: 100%; min-width: auto; }
+    .btn-group { flex-direction: column; }
+    .btn-group button { width: 100%; }
+    .chart-container { height: 300px; }
+    .chart-wrapper { padding: 12px; }
+    .symbols-grid { padding: 8px; gap: 6px; }
+    .chip { padding: 8px 12px; font-size: 0.8rem; min-width: 70px; }
+    table { font-size: 0.75rem; display: block; overflow-x: auto; white-space: nowrap; }
+    th, td { padding: 6px 4px; }
+    .icon-btn { padding: 4px 6px; font-size: 0.7rem; }
+    input, select, textarea { padding: 12px; }
     
     .collapsible-content {
-      max-height: 600px; /* تنظیم برای موبایل */
+      /* --- تغییر مهم: حذف محدودیت ارتفاع در موبایل --- */
+      max-height: none !important;
     }
   }
   
   @media (max-width: 480px) {
-    body {
-      padding: 6px;
-    }
-    
-    .card {
-      margin-bottom: 0;
-    }
-    
-    h1 {
-      font-size: 1.2rem;
-    }
-    
-    .chart-container {
-      height: 250px;
-    }
-    
-    .symbols-grid {
-      padding: 6px;
-      gap: 4px;
-    }
-    
-    .chip {
-      padding: 6px 10px;
-      font-size: 0.75rem;
-      min-width: 60px;
-    }
-    
-    table {
-      font-size: 0.7rem;
-    }
-    
-    th, td {
-      padding: 4px 2px;
-    }
+    body { padding: 6px; }
+    .card { margin-bottom: 0; }
+    h1 { font-size: 1.2rem; }
+    .chart-container { height: 250px; }
+    .symbols-grid { padding: 6px; gap: 4px; }
+    .chip { padding: 6px 10px; font-size: 0.75rem; min-width: 60px; }
+    table { font-size: 0.7rem; }
+    th, td { padding: 4px 2px; }
     
     .collapsible-content {
-      max-height: 500px; /* تنظیم برای موبایل کوچک */
+       /* --- تغییر مهم: اطمینان از عدم محدودیت در سایزهای کوچک --- */
+      max-height: none !important;
     }
   }
   
   .history-table-container {
-    overflow-x: auto; /* اسکرول افقی فعال */
+    overflow-x: auto;
     margin-top: 12px;
     border: 1px solid var(--border-color);
     border-radius: 6px;
-    -webkit-overflow-scrolling: touch; /* اسکرول روان در iOS */
-    user-select: text; /* اجازه سلکت و کپی */
+    -webkit-overflow-scrolling: touch;
+    user-select: text;
     cursor: grab;
   }
   
-  .history-table-container table {
-    min-width: 800px; /* حداقل عرض برای فعال کردن اسکرول افقی */
-  }
-  
-  .history-table-container.dragging {
-    cursor: grabbing;
-  }
+  .history-table-container table { min-width: 800px; }
+  .history-table-container.dragging { cursor: grabbing; }
   
   .history-card {
     background: var(--bg-tertiary);
@@ -797,29 +610,10 @@
     padding-bottom: 6px;
   }
   
-  .history-card .row:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-  
-  .history-card .label {
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-  }
-  
-  .history-card .value {
-    color: var(--text-primary);
-    font-size: 0.9rem;
-    text-align: left;
-  }
-  
-  .history-card .actions {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 8px;
-  }
+  .history-card .row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .history-card .label { color: var(--text-secondary); font-size: 0.8rem; }
+  .history-card .value { color: var(--text-primary); font-size: 0.9rem; text-align: left; }
+  .history-card .actions { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
   
   .footer {
     color: white;
@@ -838,7 +632,6 @@
     max-width: 90%;
   }
 
-  /* استایل برای اعلان دانلود (toast) */
   .toast {
     position: fixed;
     top: 20px;
@@ -857,24 +650,13 @@
     font-weight: 500;
   }
   
-  .toast.show {
-    transform: translateX(0);
-  }
-  
-  .toast.error {
-    background: var(--danger-color);
-  }
+  .toast.show { transform: translateX(0); }
+  .toast.error { background: var(--danger-color); }
 
   @media (max-width: 768px) {
-    .toast {
-      right: 10px;
-      left: 10px;
-      min-width: auto;
-      top: 10px;
-    }
+    .toast { right: 10px; left: 10px; min-width: auto; top: 10px; }
   }
 
-  /* استایل برای drag & drop بخش‌ها */
   .section-chip {
     display: inline-flex;
     padding: 10px 16px;
@@ -916,7 +698,6 @@
   <h1>CST Geometry Analyzer — پیشرفته</h1>
 
   <div id="sectionsContainer">
-    <!-- بخش ۱: وارد کردن / ثبت روز جدید -->
     <div class="card collapsible-card" data-section="1">
       <div class="collapsible-header" onclick="toggleSection('1')">
         <h3>۱) وارد کردن / ثبت روز جدید</h3>
@@ -956,14 +737,12 @@
       </div>
     </div>
 
-    <!-- بخش ۲: نمایش تاریخچه و تحلیل -->
     <div class="card collapsible-card" data-section="2">
       <div class="collapsible-header" onclick="toggleSection('2')">
         <h3>۲) نمایش تاریخچه و تحلیل</h3>
         <span class="toggle-icon">▼</span>
       </div>
       <div class="collapsible-content">
-        <!-- اول: کادر انتخاب جفت ارز -->
         <div class="row">
           <div class="col">
             <label>جفت انتخاب‌شده برای تحلیل</label>
@@ -971,29 +750,24 @@
           </div>
         </div>
 
-        <!-- دوم: نمایش خلاصه بازه انتخابی از جدیدترین روز + باکس نمایش تاریخچه + نمودار میله‌ای + نمودار هندسی -->
         <div id="summarySection" style="margin-top:12px;display:none">
           <div class="small">
             <strong>خلاصه بازه انتخابی (از جدیدترین روز):</strong>
             <div id="summaryText"></div>
           </div>
-          <!-- باکس نمایش اطلاعات بصورت اعداد (جدول) -->
           <div class="history-table-container" id="tableContainer">
             <table id="summaryTable"><thead><tr>
-              <th>ردیف</th><th>تاریخ</th><th>High</th><th>Low</th><th>Mid</th><th>زاویه</th><th>تحلیل ۵‌روزه</th><th>عملیات</th>
+               <th>ردیف</th><th>تاریخ</th><th>High</th><th>Low</th><th>Mid</th><th>زاویه</th><th>تحلیل ۵‌روزه</th><th>عملیات</th>
             </tr></thead><tbody></tbody></table>
           </div>
-          <!-- باکس نمودار میله‌ای -->
           <div class="chart-wrapper">
             <div class="small" style="margin-bottom: 8px; text-align: center; color: var(--text-secondary);">💡 برای تنظیم سطح، خط افقی را می‌توانید جابجا کنید (بالا/پایین بکشید) — نمودار میله‌ای: هر روز یک میله بر اساس تفاوت زاویه نسبت به روز قبل (بالا=بیشتر، پایین=کمتر)</div>
-            <!-- حذف div flex - حالا دکمه مستقیم absolute نسبت به chart-wrapper -->
             <button class="guide-icon" onclick="openGuideModal()" title="راهنمای چارت میله‌ای">❓</button>
             <div class="chart-container bar-chart-isolated">
               <canvas id="angleBarChart"></canvas>
               <div id="horizontalLineContainerBar" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5;"></div>
             </div>
           </div>
-          <!-- باکس نمودار هندسی (Mid Chart) -->
           <div class="chart-wrapper">
             <div class="small" style="margin-bottom: 8px; text-align: center; color: var(--text-secondary);">💡 خط افقی با همون دقت برای مقایسه Midها</div>
             <div class="chart-container">
@@ -1003,7 +777,6 @@
           </div>
         </div>
 
-        <!-- سوم: نمایش نوع بازه تحلیل -->
         <div style="margin-top:12px">
           <label>نوع بازه تحلیل</label>
           <div class="btn-group">
@@ -1015,7 +788,7 @@
         <div id="daysRangeSection">
           <div class="form-group">
             <label>بازهٔ تحلیل (تعداد روز از جدیدترین)</label>
-            <input id="analysisDays" type="number" min="2" max="3650" value="5"> <!-- افزایش max به 3650 برای پشتیبانی ماهانه/سالانه -->
+            <input id="analysisDays" type="number" min="2" max="3650" value="5"> 
             <div class="small">پیش‌فرض = 5 روز. برای مثال 30 (ماهیانه) یا 365 (سالانه) وارد کن و سپس «نمایش تاریخچه و تحلیل» را بزن.</div>
           </div>
           
@@ -1045,7 +818,6 @@
       </div>
     </div>
 
-    <!-- بخش ۳: مدیریت جفت‌ارزها -->
     <div class="card collapsible-card" data-section="3">
       <div class="collapsible-header" onclick="toggleSection('3')">
         <h3>۳) مدیریت جفت‌ارزها</h3>
@@ -1062,7 +834,6 @@
         </div>
 
         <div class="small">لیست جفت‌ارزها (برای انتخاب کلیک کنید / برای جابجایی کاملاً آزاد بکشید و رها کنید):</div>
-        
         <div id="symbolsList" class="symbols-grid">
         </div>
         
@@ -1076,7 +847,6 @@
       </div>
     </div>
 
-    <!-- بخش ۴: هشدارها و مدیریت پیشرفته داده‌ها -->
     <div class="card collapsible-card" data-section="4">
       <div class="collapsible-header" onclick="toggleSection('4')">
         <h3>۴) هشدارها و مدیریت پیشرفته داده‌ها</h3>
@@ -1205,7 +975,6 @@ function parseNum(v){
   v = v.replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));
   v = v.replace(/,/g, '.');
   v = v.replace(/\./g, '');
-  
   const n = Number(v);
   return isNaN(n)?null:n;
 }
@@ -1217,19 +986,17 @@ let store = { symbols: {}, symbolOrder: [] };
 let sectionsOrder = [1, 2, 3, 4]; // ترتیب پیش‌فرض
 let lastAlertShownAt = 0;
 const ALERT_THROTTLE_MS = 3000;
-
 // متن راهنما
 const GUIDE_TEXT = `### راهنمای سریع چارت میله‌ای زاویه روند (CST Analyzer)
 
-**چی نشون می‌ده؟** هر میله یک "روز" رو نمایش می‌ده و ارتفاعش **تفاوت زاویه شیب قیمت (Mid)** نسبت به روز قبله. زاویه بر اساس ΔMid (تفاوت میانگین High/Low) محاسبه می‌شه: مثبت=صعودی، منفی=نزولی.
-
+**چی نشون می‌ده؟** هر میله یک "روز" رو نمایش می‌ده و ارتفاعش **تفاوت زاویه شیب قیمت (Mid)** نسبت به روز قبله.
+زاویه بر اساس ΔMid (تفاوت میانگین High/Low) محاسبه می‌شه: مثبت=صعودی، منفی=نزولی.
 **رنگ و معنی:**
 - **سبز بلند:** زاویه قوی‌تر شده (روند شتاب گرفته، مثل breakout صعودی) → فرصت خرید؟
 - **قرمز بلند:** زاویه ضعیف‌تر یا معکوس (اصلاح/تغییر روند) → هشدار فروش یا صبر.
 - **صفر/کوچک (خاکستری):** روند ثابت یا فشردگی → منتظر شکست باش.
-
-**نکات استفاده:** Hover کن تا "تفاوت" و "زاویه امروز" رو ببینی. خط افقی رو بکش برای مقایسه سطوح. اگر میله‌های قرمز/سبز بزرگ دیدی، چک کن تحلیل ۵‌روزه رو – احتمال تغییر روند زیاده! 🚀`;
-
+**نکات استفاده:** Hover کن تا "تفاوت" و "زاویه امروز" رو ببینی. خط افقی رو بکش برای مقایسه سطوح.
+اگر میله‌های قرمز/سبز بزرگ دیدی، چک کن تحلیل ۵‌روزه رو – احتمال تغییر روند زیاده! 🚀`;
 // ---------- Drag & Drop برای جفت‌ارزها ----------
 function refreshSymbolsList(){
   const container = document.getElementById('symbolsList');
@@ -1240,7 +1007,6 @@ function refreshSymbolsList(){
   container.innerHTML = ''; 
   sel.innerHTML = '';
   sel3.innerHTML = '';
-  
   const names = store.symbolOrder || [];
   if(names.length === 0){
     container.innerHTML = '<div class="small" style="width:100%; text-align:center; padding:20px;">هیچ جفت‌ارزی ثبت نشده. یک نام وارد کن و «افزودن» بزن.</div>';
@@ -1256,7 +1022,6 @@ function refreshSymbolsList(){
     const chip = createSymbolChip(name, index);
     container.appendChild(chip);
   });
-
   names.forEach(name => {
     const opt = document.createElement('option');
     opt.value = name;
@@ -1264,7 +1029,6 @@ function refreshSymbolsList(){
     sel.appendChild(opt);
     sel3.appendChild(opt.cloneNode(true));
   });
-  
   if (currentSelected && names.includes(currentSelected)) {
     sel.value = currentSelected;
     sel3.value = currentSelected;
@@ -1288,7 +1052,6 @@ function createSymbolChip(name, index) {
   overlay.className = 'chip-overlay';
   overlay.textContent = '⇅';
   chip.appendChild(overlay);
-  
   chip.onclick = () => { 
     document.getElementById('selectedSymbol').value = name; 
     document.getElementById('selectedSymbol3').value = name;
@@ -1301,7 +1064,6 @@ function createSymbolChip(name, index) {
 function setupFreeDragAndDrop(container) {
   let draggedItem = null;
   let placeholder = null;
-
   container.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('dragstart', function(e) {
       draggedItem = this;
@@ -1328,7 +1090,6 @@ function setupFreeDragAndDrop(container) {
       updateSymbolOrderFromFreeDOM();
     });
   });
-
   container.addEventListener('dragover', function(e) {
     e.preventDefault();
     if (!draggedItem) return;
@@ -1341,7 +1102,6 @@ function setupFreeDragAndDrop(container) {
       container.insertBefore(placeholder, afterElement);
     }
   });
-
   container.addEventListener('drop', function(e) {
     e.preventDefault();
     if (!draggedItem) return;
@@ -1361,7 +1121,6 @@ function setupFreeDragAndDrop(container) {
 
 function getFreeDragAfterElement(container, x, y) {
   const draggableElements = [...container.querySelectorAll('.chip:not(.dragging)')];
-  
   return draggableElements.reduce((closest, child) => {
     const box = child.getBoundingClientRect();
     const offsetX = x - box.left - box.width / 2;
@@ -1402,7 +1161,6 @@ function refreshSymbolDropdown() {
     sel.appendChild(opt);
     sel3.appendChild(opt.cloneNode(true));
   });
-  
   if (currentSelected && store.symbolOrder.includes(currentSelected)) {
     sel.value = currentSelected;
     sel3.value = currentSelected;
@@ -1462,10 +1220,12 @@ function analyzeAnglesFor(midArray, windows=5){
 
 function addDayToSymbol(symName, high, low, dateStr=null){
   const sym = store.symbols[symName]; if(!sym) return false;
-  const h = parseFloat(high); const l = parseFloat(low);
+  const h = parseFloat(high);
+  const l = parseFloat(low);
   if(isNaN(h) || isNaN(l)) return false;
   const mid = computeMid(h,l);
-  const rec = { date: dateStr || new Date().toISOString().slice(0,10), high:h, low:l, mid };
+  const rec = { date: dateStr ||
+    new Date().toISOString().slice(0,10), high:h, low:l, mid };
   sym.history.push(rec);
   
   recomputeAnalysesForSymbol(sym);
@@ -1482,7 +1242,8 @@ function recomputeAnalysesForSymbol(sym){
   const mids = sym.history.map(r=>r.mid);
   const last5 = analyzeAnglesFor(mids, Math.min(5,mids.length));
   const last30 = analyzeAnglesFor(mids, Math.min(30,mids.length));
-  sym.lastSummary = { date: (sym.history[sym.history.length-1]||{}).date || '', last5:last5.verdict, last30:last30.verdict, avgAngle5:last5.avgAbs, avgAngle30:last30.avgAbs };
+  sym.lastSummary = { date: (sym.history[sym.history.length-1]||{}).date ||
+    '', last5:last5.verdict, last30:last30.verdict, avgAngle5:last5.avgAbs, avgAngle30:last30.avgAbs };
 }
 
 // تابع بهینه‌شده برای تنظیم عرض خطوط افقی (استخراج‌شده از resize)
@@ -1495,7 +1256,8 @@ function resizeHorizontalLines() {
       if (chartCont) {
         const canvas = chartCont.querySelector('canvas');
         if (canvas) {
-          const rect = canvas.getBoundingClientRect();
+          const rect = 
+            canvas.getBoundingClientRect();
           wrapper.style.width = rect.width + 'px';
           const line = wrapper.querySelector('.horizontal-line');
           if (line) {
@@ -1524,7 +1286,8 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
   let displayHist, angles, analysis;
 
   if (isDaysRange) {
-    displayHist = hist.slice(-requestedDays); // پشتیبانی از بازه‌های بزرگ (مثل 30+ روز)
+    displayHist = hist.slice(-requestedDays);
+    // پشتیبانی از بازه‌های بزرگ (مثل 30+ روز)
     const mids = displayHist.map(h => h.mid);
     analysis = analyzeAnglesFor(mids, requestedDays);
     angles = analysis.angles;
@@ -1550,18 +1313,19 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
   // خلاصه متن
   const rangeText = isDaysRange ? `${requestedDays} روزه` : `تاریخ ${startDate} تا ${endDate}`;
   summaryText.innerHTML = `
-    <div>نتیجه تحلیل: ${analysis.verdict || '-'} <br>
+    <div>نتیجه تحلیل: ${analysis.verdict ||
+    '-'} <br>
     زاویه میانگین: ${analysis.avgAbs.toFixed(2)}° <br>
     (تعداد داده‌ها: ${displayHist.length})</div>
   `;
-
   // باکس نمایش اطلاعات بصورت اعداد (جدول)
   tableBody.innerHTML = '';
   for (let i = displayHist.length - 1; i >= 0; i--) {
     const r = displayHist[i];
     const rowIndex = displayHist.length - i;
     // Find angle for this interval (between i and i+1)
-    const angleIndex = displayHist.length - 1 - i; // Reverse index for angles
+    const angleIndex = displayHist.length - 1 - i;
+    // Reverse index for angles
     const angle = angleIndex < angles.length ? angles[angleIndex] : null;
     // Find original index for operations
     const originalIdx = hist.findIndex(origRec => origRec.date === r.date && origRec.high === r.high && origRec.low === r.low);
@@ -1573,8 +1337,10 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
       <td>${r.high}</td>
       <td>${r.low}</td>
       <td>${r.mid.toFixed(2)}</td>
-      <td>${angle ? angle.toFixed(2) + '°' : '-'}</td>
-      <td>${r.analysis5 || ''}</td>
+      <td>${angle ?
+        angle.toFixed(2) + '°' : '-'}</td>
+      <td>${r.analysis5 ||
+        ''}</td>
       <td class="action-col">
         <button class="icon-btn edit-btn" data-idx="${originalIdx}">✏️</button>
         <button class="icon-btn del-btn" data-idx="${originalIdx}">❌</button>
@@ -1597,7 +1363,8 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
   tableBody.querySelectorAll('.move-btn').forEach(btn => btn.addEventListener('click', () => openMoveModal(symName, parseInt(btn.dataset.idx))));
 
   // باکس نمودار میله‌ای: هر روز یک میله بر اساس تفاوت زاویه نسبت به روز قبل (خام، بدون scaling - مثبت/منفی)
-  const displayDates = displayHist.map(h => h.date).slice(1); // از دومین تاریخ (تعداد میله‌ها = تعداد زاویه‌ها)
+  const displayDates = displayHist.map(h => h.date).slice(1);
+  // از دومین تاریخ (تعداد میله‌ها = تعداد زاویه‌ها)
   
   // محاسبه diffAngles: تفاوت هر زاویه با قبلی (برای هر روز جز اولین)
   const diffAngles = [];
@@ -1618,7 +1385,8 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
   }
 
   // محاسبه maxAbs برای symmetric scale (از -maxAbs تا +maxAbs)
-  const maxAbsDiff = Math.max(...diffAngles.map(Math.abs), 1); // حداقل 1 برای جلوگیری از صفر
+  const maxAbsDiff = Math.max(...diffAngles.map(Math.abs), 1);
+  // حداقل 1 برای جلوگیری از صفر
 
   const ctxBar = document.getElementById('angleBarChart').getContext('2d');
   if (window._barChart) window._barChart.destroy();
@@ -1630,7 +1398,8 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
         label: 'تفاوت زاویه نسبت به روز قبل (درجه)',
         data: diffAngles,
         backgroundColor: diffAngles.map(diff => diff > 0 ? 'rgba(16, 185, 129, 0.6)' : (diff < 0 ? 'rgba(239, 68, 68, 0.6)' : 'rgba(156, 163, 175, 0.6)')),
-        borderColor: diffAngles.map(diff => diff > 0 ? '#10b981' : (diff < 0 ? '#ef4444' : '#9ca3af')),
+        borderColor: diffAngles.map(diff => diff > 0 ? '#10b981' 
+          : (diff < 0 ? '#ef4444' : '#9ca3af')),
         borderWidth: 1
       }]
     },
@@ -1642,12 +1411,14 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
         tooltip: {
           callbacks: {
             label: function(context) {
+ 
               const idx = context.dataIndex;
               const diff = diffAngles[idx];
               const absAngle = absoluteAnglesForTooltip[idx];
               return `تفاوت: ${diff.toFixed(2)}° | زاویه امروز: ${absAngle.toFixed(2)}°`;
             }
           }
+        
         }
       },
       scales: {
@@ -1656,10 +1427,12 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
           min: -maxAbsDiff * 1.1, // symmetric: پایین تا -1.1 * max
           max: maxAbsDiff * 1.1, // بالا تا +1.1 * max
           ticks: { 
+          
             color: '#9fb3c8',
             stepSize: Math.max(0.5, maxAbsDiff / 10), // گام کوچک برای دیدن تفاوت‌های ریز
             callback: function(value) {
-              return value.toFixed(1); // 1 رقم اعشار برای دقت
+              return value.toFixed(1);
+              // 1 رقم اعشار برای دقت
             }
           },
           grid: { color: 'rgba(159, 179, 200, 0.1)' }
@@ -1667,6 +1440,7 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
         x: {
           ticks: { color: '#9fb3c8' },
           grid: { color: 'rgba(159, 179, 200, 0.1)' }
+        
         }
       }
     }
@@ -1674,7 +1448,6 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
 
   // Force resize after creation
   window._barChart.resize();
-
   // باکس نمودار هندسی (Line Chart برای Mid)
   const chartLabels = displayHist.map(h => h.date);
   const chartMids = displayHist.map(h => h.mid);
@@ -1690,6 +1463,7 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
       scales:{ 
         y: { 
           beginAtZero:false, 
+        
           ticks: { color: '#9fb3c8' }, 
           grid: { color: 'rgba(159, 179, 200, 0.1)' } 
         }, 
@@ -1700,7 +1474,6 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
       } 
     }
   });
-
   // Force resize after creation
   window._chart.resize();
 
@@ -1711,12 +1484,12 @@ function renderSummaryForRange(symName, isDaysRange = true, requestedDays = 5, s
   // Cleanup و ایجاد خط افقی برای چارت خطی (mid)
   cleanupLineHandlers('horizontalLineContainerLine');
   createDraggableHorizontalLine('horizontalLineContainerLine', '#midChart', false);
-
   // Force initial resize for lines after creation
   setTimeout(resizeHorizontalLines, 50);
 
   summaryDiv.style.display = 'block';
-  setupTableDragScroll(); // تنظیم اسکرول drag
+  setupTableDragScroll();
+  // تنظیم اسکرول drag
 }
 
 // تابع باز کردن modal راهنما
@@ -1747,7 +1520,8 @@ function createDraggableHorizontalLine(containerId, canvasSelector, isBarChart) 
   if (!container) return;
   const canvas = document.querySelector(canvasSelector);
   if (!canvas) return;
-  const chartCont = canvas.parentElement; // parent container
+  const chartCont = canvas.parentElement;
+  // parent container
   container.innerHTML = ''; // پاک کردن قبلی
 
   // wrapper برای hit area (20px ارتفاع، نامرئی) - unique per chart
@@ -1755,7 +1529,6 @@ function createDraggableHorizontalLine(containerId, canvasSelector, isBarChart) 
   wrapper.className = 'horizontal-line-wrapper'; wrapper.style.pointerEvents = 'auto';
   wrapper.style.top = '50%'; // موقعیت اولیه وسط چارت
   wrapper.style.transform = 'translateY(-50%)';
-
   // خط اصلی داخل wrapper (1px نازک)
   const line = document.createElement('div');
   line.className = 'horizontal-line';
@@ -1766,12 +1539,12 @@ function createDraggableHorizontalLine(containerId, canvasSelector, isBarChart) 
 
   const guide = document.createElement('div');
   guide.className = 'line-guide';
-  guide.textContent = isBarChart ? 'خط میله‌ای: برای تنظیم سطح زاویه' : 'خط Mid: برای مقایسه قیمت';
+  guide.textContent = isBarChart ?
+    'خط میله‌ای: برای تنظیم سطح زاویه' : 'خط Mid: برای مقایسه قیمت';
   line.appendChild(guide);
 
   wrapper.appendChild(line);
   container.appendChild(wrapper);
-
   // Set initial width (optimized for mobile: check rect, fallback to timeout)
   const setInitialWidth = () => {
     const rect = canvas.getBoundingClientRect();
@@ -1822,7 +1595,6 @@ function createDraggableHorizontalLine(containerId, canvasSelector, isBarChart) 
     startTop = parseFloat(wrapper.style.top) || 50;
     document.body.style.userSelect = 'none';
   };
-
   const onPointerMove = (e) => {
     if (!isDragging) return;
     e.stopPropagation();
@@ -1845,7 +1617,6 @@ function createDraggableHorizontalLine(containerId, canvasSelector, isBarChart) 
   wrapper.addEventListener('mousedown', onPointerDown, { passive: false });
   document.addEventListener('mousemove', onPointerMove, { passive: false });
   document.addEventListener('mouseup', onPointerUp, { passive: false });
-
   // Touch events
   wrapper.addEventListener('touchstart', onPointerDown, { passive: false });
   document.addEventListener('touchmove', onPointerMove, { passive: false });
@@ -1863,7 +1634,6 @@ function setupTableDragScroll() {
   let scrollLeft;
   let clickCount = 0;
   let clickTimer = null;
-
   container.addEventListener('mousedown', (e) => {
     clickCount++;
     if (clickTimer) clearTimeout(clickTimer);
@@ -1880,25 +1650,23 @@ function setupTableDragScroll() {
 
     isDragging = true;
     startX = e.pageX - container.offsetLeft;
-    scrollLeft = container.scrollLeft;
+    scrollLeft = 
+      container.scrollLeft;
     container.classList.add('dragging');
     e.preventDefault();
   });
-
   container.addEventListener('mouseleave', () => {
     isDragging = false;
     container.classList.remove('dragging');
     container.style.userSelect = 'none';
     container.style.cursor = 'grab';
   });
-
   container.addEventListener('mouseup', () => {
     isDragging = false;
     container.classList.remove('dragging');
     container.style.userSelect = 'none';
     container.style.cursor = 'grab';
   });
-
   container.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     e.preventDefault();
@@ -1906,7 +1674,6 @@ function setupTableDragScroll() {
     const walk = (x - startX) * 2;
     container.scrollLeft = scrollLeft - walk;
   });
-
   container.addEventListener('dblclick', (e) => {
     if (window.getSelection) {
       const selection = window.getSelection();
@@ -1932,7 +1699,6 @@ document.getElementById('deleteSelectedSymbol').addEventListener('click', ()=>{
   if(window._barChart) window._barChart.destroy();
   if (window._chart) window._chart.destroy();
 });
-
 document.getElementById('addSymbolBtn').addEventListener('click', ()=>{
   const name = document.getElementById('newSymbol').value.trim().toUpperCase();
   if(!name){ alert('نام معتبر وارد کنید'); return; }
@@ -1943,7 +1709,6 @@ document.getElementById('addSymbolBtn').addEventListener('click', ()=>{
     renderSummaryForRange(name, true, 5);
   }
 });
-
 document.getElementById('useMidBtn').addEventListener('click', ()=>{
   const h = parseNum(document.getElementById('inputHigh').value);
   const l = parseNum(document.getElementById('inputLow').value);
@@ -1951,7 +1716,6 @@ document.getElementById('useMidBtn').addEventListener('click', ()=>{
   if(h===null) document.getElementById('inputHigh').value = String(l);
   if(l===null) document.getElementById('inputLow').value = String(h);
 });
-
 document.getElementById('addDayBtn').addEventListener('click', ()=>{
   const symName = document.getElementById('selectedSymbol').value;
   if(!symName){ alert('ابتدا یک جفت را انتخاب کنید'); return; }
@@ -1963,14 +1727,12 @@ document.getElementById('addDayBtn').addEventListener('click', ()=>{
   if(ok){ alert('ثبت شد'); renderSummaryForRange(symName, true, 5); document.getElementById('inputHigh').value = ''; document.getElementById('inputLow').value = ''; }
   else alert('خطا در ثبت');
 });
-
 document.getElementById('daysRangeToggle').addEventListener('click', () => {
   document.getElementById('daysRangeSection').style.display = 'block';
   document.getElementById('dateRangeSection').style.display = 'none';
   document.getElementById('daysRangeToggle').classList.add('active');
   document.getElementById('dateRangeToggle').classList.remove('active');
 });
-
 document.getElementById('dateRangeToggle').addEventListener('click', () => {
   document.getElementById('daysRangeSection').style.display = 'none';
   document.getElementById('dateRangeSection').style.display = 'block';
@@ -1984,7 +1746,6 @@ document.getElementById('dateRangeToggle').addEventListener('click', () => {
   document.getElementById('endDate').value = endDate.toISOString().slice(0,10);
   document.getElementById('startDate').value = startDate.toISOString().slice(0,10);
 });
-
 document.getElementById('showDateRangeBtn').addEventListener('click', ()=>{
   const symName = document.getElementById('selectedSymbol3').value;
   if(!symName){ alert('یک جفت انتخاب کنید'); return; }
@@ -1996,14 +1757,12 @@ document.getElementById('showDateRangeBtn').addEventListener('click', ()=>{
   
   renderSummaryForRange(symName, false, null, startDate, endDate);
 });
-
 document.getElementById('showHistoryBtn').addEventListener('click', ()=>{
   const symName = document.getElementById('selectedSymbol3').value;
   if(!symName){ alert('یک جفت انتخاب کنید'); return; }
   const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
   renderSummaryForRange(symName, true, requestedDays);
 });
-
 document.getElementById('selectedSymbol3').addEventListener('change', () => {
   const symName = document.getElementById('selectedSymbol3').value;
   const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
@@ -2018,7 +1777,6 @@ document.getElementById('selectedSymbol3').addEventListener('change', () => {
     }
   }
 });
-
 document.getElementById('analysisDays').addEventListener('change', () => {
   const symName = document.getElementById('selectedSymbol3').value;
   if (symName && document.getElementById('daysRangeToggle').classList.contains('active')) {
@@ -2026,7 +1784,6 @@ document.getElementById('analysisDays').addEventListener('change', () => {
     renderSummaryForRange(symName, true, requestedDays);
   }
 });
-
 document.getElementById('manualPruneBtn').addEventListener('click', function() {
   const days = parseInt(document.getElementById('manualPruneDays').value) || 365;
   if (days < 1) {
@@ -2040,6 +1797,7 @@ document.getElementById('manualPruneBtn').addEventListener('click', function() {
       alert(`✅ ${result.totalDeleted} رکورد قدیمی حذف شد.\nجفت‌ارزهای affected: ${result.affectedSymbols.join(', ')}`);
       const currentSymbol = document.getElementById('selectedSymbol3').value;
       if (currentSymbol) {
+    
         const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
         if (isDaysRange) {
           const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
@@ -2063,7 +1821,6 @@ document.getElementById('closeStatsBtn').addEventListener('click', function() {
   document.getElementById('statsModal').style.display = 'none';
   document.getElementById('modalBg').style.display = 'none';
 });
-
 // تابع اعلان زیبا (toast) برای دانلود
 function showToast(message, type = 'success') {
   let toast = document.getElementById('toast');
@@ -2097,7 +1854,6 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
     showToast('❌ خطا در دانلود فایل پشتیبان: ' + e.message, 'error');
   }
 });
-
 document.getElementById('importFile').addEventListener('change', (e) => {
     const f = e.target.files[0];
     if (!f) return;
@@ -2107,7 +1863,8 @@ document.getElementById('importFile').addEventListener('change', (e) => {
             let importedObj = JSON.parse(reader.result);
             if (!importedObj || !importedObj.symbols) {
                 alert('فایل بک‌آپ معتبر نیست یا ساختار اشتباهی دارد.');
-                return;
+     
+           return;
             }
 
             importedObj = sanitizeAndMigrateStore(importedObj);
@@ -2115,15 +1872,17 @@ document.getElementById('importFile').addEventListener('change', (e) => {
             if (confirm('می‌خواهی داده‌های فایل جایگزین کل داده‌ها شوند (OK) یا به داده‌های فعلی اضافه شوند (Cancel)؟')) {
                 store = importedObj;
             } else {
-                Object.keys(importedObj.symbols || {}).forEach(k => {
+   
+              Object.keys(importedObj.symbols || {}).forEach(k => {
                     store.symbols[k] = importedObj.symbols[k];
                 });
                 importedObj.symbolOrder.forEach(s => {
                     if (!store.symbolOrder.includes(s)) {
-                        store.symbolOrder.push(s);
-                    }
+     
+                   store.symbolOrder.push(s);
+}
                 });
-            }
+}
 
             saveStore();
             refreshSymbolsList();
@@ -2135,14 +1894,15 @@ document.getElementById('importFile').addEventListener('change', (e) => {
                 sel3.value = sel.options[0].value;
                 const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
                 if (isDaysRange) {
-                  const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+                  const requestedDays = parseInt(document.getElementById('analysisDays').value) ||
+5;
                   renderSummaryForRange(sel.value, true, requestedDays);
                 } else {
                   const startDate = document.getElementById('startDate').value;
                   const endDate = document.getElementById('endDate').value;
                   if (startDate && endDate) {
                     renderSummaryForRange(sel.value, false, null, startDate, endDate);
-                  }
+}
                 }
             } else {
                 document.getElementById('summarySection').style.display = 'none';
@@ -2151,11 +1911,11 @@ document.getElementById('importFile').addEventListener('change', (e) => {
             }
 
             alert('بازیابی اطلاعات با موفقیت انجام شد.');
-            e.target.value = '';
+e.target.value = '';
 
         } catch (err) {
             alert('خطا در خواندن فایل: ' + err);
-        }
+}
     };
     reader.readAsText(f);
 });
@@ -2186,7 +1946,8 @@ document.getElementById('saveEditBtn').addEventListener('click', ()=>{
   currentEdit = null; document.getElementById('editModal').style.display='none'; document.getElementById('modalBg').style.display='none';
   const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
   if (isDaysRange) {
-    const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
+    const requestedDays = parseInt(document.getElementById('analysisDays').value) ||
+5;
     renderSummaryForRange(symName, true, requestedDays);
   } else {
     const startDate = document.getElementById('startDate').value;
@@ -2222,7 +1983,8 @@ document.getElementById('doMoveBtn').addEventListener('click', ()=>{
   const isDaysRange = document.getElementById('daysRangeToggle').classList.contains('active');
   if (isDaysRange) {
     const requestedDays = parseInt(document.getElementById('analysisDays').value) || 5;
-    renderSummaryForRange(symName, true, requestedDays);
+    renderSummaryForRange(symName, true, 
+requestedDays);
   } else {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
@@ -2241,12 +2003,13 @@ function speakTTS(text){
 function playBeep(){
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator(); const g = ctx.createGain();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
     o.type = 'sine'; o.frequency.setValueAtTime(880, ctx.currentTime);
     g.gain.setTargetAtTime(0, ctx.currentTime, 0.02);
     o.connect(g); g.connect(ctx.destination); o.start();
     setTimeout(() => o.stop(), 400);
-  } catch(e){}
+} catch(e){}
 }
 function showAlertModal(title, body){
   const now = Date.now();
@@ -2262,14 +2025,13 @@ function showAlertModal(title, body){
 }
 document.getElementById('closeAlert').addEventListener('click', ()=>{ document.getElementById('alertModal').style.display = 'none'; document.getElementById('modalBg').style.display='none'; });
 document.getElementById('testAlertBtn').addEventListener('click', ()=>{ showAlertModal('هشدار آزمایشی','این یک هشدار آزمایشی است'); });
-
 function checkAndAlertIfChange(symName){
   const sym = store.symbols[symName]; if(!sym || !sym.lastSummary) return;
   const keyword = 'احتمال تغییر';
   const v5 = sym.lastSummary.last5 || ''; const v30 = sym.lastSummary.last30 || '';
   if((v5.includes(keyword)) || (v30.includes(keyword))){
     const body = `جفت: ${symName}\nتحلیل ۵ روزه: ${sym.lastSummary.last5}\nتحلیل ۳۰ روزه: ${sym.lastSummary.last30}`;
-    showAlertModal('⚠️ احتمال تغییر روند شناسایی شد', body);
+showAlertModal('⚠️ احتمال تغییر روند شناسایی شد', body);
   }
 }
 
@@ -2279,7 +2041,6 @@ function manualPruneOldEntries(days = 365) {
   
   let totalDeleted = 0;
   let affectedSymbols = [];
-
   Object.keys(store.symbols).forEach(symbolName => {
     const symbol = store.symbols[symbolName];
     const initialLength = symbol.history.length;
@@ -2296,7 +2057,6 @@ function manualPruneOldEntries(days = 365) {
       recomputeAnalysesForSymbol(symbol);
     }
   });
-
   saveStore();
   return { totalDeleted, affectedSymbols };
 }
@@ -2317,14 +2077,15 @@ function showSystemStats() {
       if (!newestRecord || recordDate > newestRecord) newestRecord = recordDate;
     });
   });
-
   const statsHTML = `
     <div style="background:#071826;padding:10px;border-radius:6px;margin-bottom:10px;">
       <div><strong>📊 آمار کلی سیستم:</strong></div>
       <div>• تعداد جفت‌ارزها: ${totalSymbols}</div>
       <div>• تعداد کل رکوردها: ${totalRecords}</div>
-      <div>• قدیمی‌ترین رکورد: ${oldestRecord ? oldestRecord.toLocaleDateString('fa-IR') : '---'}</div>
-      <div>• جدیدترین رکورد: ${newestRecord ? newestRecord.toLocaleDateString('fa-IR') : '---'}</div>
+      <div>• قدیمی‌ترین رکورد: ${oldestRecord ?
+        oldestRecord.toLocaleDateString('fa-IR') : '---'}</div>
+      <div>• جدیدترین رکورد: ${newestRecord ?
+        newestRecord.toLocaleDateString('fa-IR') : '---'}</div>
     </div>
     <div style="background:#071826;padding:10px;border-radius:6px;">
       <div><strong>🔧 وضعیت سیستم:</strong></div>
@@ -2333,7 +2094,6 @@ function showSystemStats() {
       <div>• مدیریت دستی: ✅ فعال</div>
     </div>
   `;
-
   document.getElementById('statsContent').innerHTML = statsHTML;
   document.getElementById('modalBg').style.display = 'block';
   document.getElementById('statsModal').style.display = 'block';
@@ -2349,7 +2109,6 @@ window.addEventListener('resize', function() {
   }
   resizeHorizontalLines(); // استفاده از تابع استخراج‌شده
 });
-
 // تابع toggle برای collapsible sections با ذخیره state (بهینه‌شده برای بخش ۲)
 function toggleSection(sectionId) {
   const card = document.querySelector(`[data-section="${sectionId}"]`);
@@ -2358,7 +2117,6 @@ function toggleSection(sectionId) {
   card.classList.toggle('open');
   content.style.display = isOpen ? 'none' : 'block';
   saveSectionOpenState(sectionId, !isOpen);
-
   // بهینه‌سازی خاص برای بخش ۲: اگر باز می‌شود و summary نمایش داده شده، چارت‌ها و خطوط را بازسازی کن
   if (sectionId === '2' && !isOpen) { // اگر قبلاً بسته بود و حالا باز می‌شود
     const symName = document.getElementById('selectedSymbol3').value;
@@ -2378,7 +2136,6 @@ function toggleSection(sectionId) {
   }
 }
 
-// Drag & Drop برای cardها حذف شد — فقط جفت‌ارزها (chips) دست نخورده‌اند.
 // ---------- init ----------
 document.addEventListener('DOMContentLoaded', () => {
   loadStore();
@@ -2395,6 +2152,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const startDate = document.getElementById('startDate').value;
       const endDate = document.getElementById('endDate').value;
       if (startDate && endDate) {
+        
         renderSummaryForRange(sel.value, false, null, startDate, endDate);
       }
     }
@@ -2414,7 +2172,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-  if('speechSynthesis' in window){ window.speechSynthesis.onvoiceschanged = () => {}; }
+  if('speechSynthesis' in window){ window.speechSynthesis.onvoiceschanged = () => {};
+  }
 
   // لود state باز/بسته بخش‌ها از localStorage (پیش‌فرض بسته)
   document.querySelectorAll('.collapsible-card').forEach(card => {
@@ -2460,7 +2219,8 @@ function loadStore(){
   store = sanitizeAndMigrateStore(s);
 }
 
-function saveStore(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }
+function saveStore(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+}
 
 function loadSectionsOrder() {
   try {
