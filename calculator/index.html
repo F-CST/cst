@@ -13,7 +13,8 @@
       font-family: 'Vazirmatn', sans-serif;
       background-color: #111827; /* bg-gray-900 */
       margin: 0;
-      overflow: hidden;
+      /* اصلاح اسکرول موبایل: تغییر hidden به auto */
+      overflow-y: auto; 
     }
 
     /* اسکرول بار سفارشی زیبا */
@@ -55,7 +56,26 @@
       box-sizing: border-box;
     }
 
-    /* عنصر مخفی برای فوکوس */
+    /* استایل پرده راهنمای فوکوس (فقط دسکتاپ) */
+    #focus-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+    
+    /* مخفی کردن پرده در موبایل و تبلت‌های لمسی */
+    @media (hover: none) {
+      #focus-overlay { display: none !important; }
+    }
+
     #focus-catcher {
       position: absolute;
       opacity: 0;
@@ -73,7 +93,11 @@
 </head>
 <body class="min-h-[100dvh] flex flex-col items-center justify-center py-8 px-0" tabindex="0">
 
-  <!-- عنصر مخفی برای دریافت فوکوس -->
+  <div id="focus-overlay">
+    <i class="fas fa-mouse-pointer text-4xl text-indigo-400 mb-4 animate-bounce"></i>
+    <p class="text-white text-lg font-medium">برای استفاده از کیبورد، کلیک کنید</p>
+  </div>
+
   <div id="focus-catcher" tabindex="-1"></div>
 
   <div class="bg-gray-800 w-[98%] md:max-w-lg shadow-none rounded-2xl overflow-hidden flex flex-col relative h-auto border border-gray-700">
@@ -140,7 +164,7 @@
       </div>
 
       <div id="historyList" class="flex-1 overflow-y-auto p-2 custom-scroll">
-        </div>
+      </div>
 
       <div class="p-3 border-t border-gray-700 bg-gray-800 rounded-b-2xl">
         <button id="clearHistory" class="w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded-lg text-sm transition">
@@ -162,9 +186,26 @@
     const historyList = document.getElementById('historyList');
     const historyModal = document.getElementById('historyModal');
     const focusCatcher = document.getElementById('focus-catcher');
+    const focusOverlay = document.getElementById('focus-overlay');
+
+    // --- مدیریت اورلی فوکوس ---
+    function activateCalculator() {
+        if (focusOverlay) {
+            focusOverlay.style.opacity = '0';
+            setTimeout(() => {
+                focusOverlay.remove();
+            }, 300);
+        }
+        document.body.focus();
+    }
+
+    if (focusOverlay) {
+        focusOverlay.addEventListener('click', activateCalculator);
+    }
 
     function updateDisplay() {
-      const formattedInput = currentInput === 'خطا' ? 'خطا' : parseFloat(currentInput).toLocaleString('en-US', { maximumFractionDigits: 10 });
+      const formattedInput = currentInput === 'خطا' ?
+        'خطا' : parseFloat(currentInput).toLocaleString('en-US', { maximumFractionDigits: 10 });
       calcDisplay.textContent = currentInput.includes('.') ? currentInput : formattedInput;
       calcHistory.textContent = previousInput + (operation ? ` ${getOperationSymbol(operation)}` : '');
     }
@@ -194,6 +235,7 @@
             <span class="text-gray-400 text-xs dir-ltr">${parts[0]}</span>
             <span class="text-indigo-400 font-bold text-lg dir-ltr">${parts[1]}</span>
         `;
+       
         div.onclick = () => {
             currentInput = parts[1].trim();
             resetInput = true;
@@ -226,7 +268,8 @@
           currentInput = result.toString();
       }
       
-      operation = null; previousInput = ''; resetInput = true;
+      operation = null;
+      previousInput = ''; resetInput = true;
       updateDisplay();
     }
 
@@ -239,7 +282,8 @@
         if (num < 0) { currentInput = 'خطا'; updateDisplay(); return; }
         res = Math.sqrt(num); txt = `√(${num})`;
       } else if (op === 'square') {
-        res = num * num; txt = `sqr(${num})`;
+        res = num * num;
+        txt = `sqr(${num})`;
       } else if (op === 'reciprocal') {
         if (num === 0) { currentInput = 'خطا'; updateDisplay(); return; }
         res = 1 / num; txt = `1/(${num})`;
@@ -260,20 +304,24 @@
     document.getElementById('closeHistoryBtn').addEventListener('click', () => toggleModal(false));
     document.getElementById('clearHistory').addEventListener('click', () => { calculationHistory = []; renderHistory(); });
     historyModal.addEventListener('click', (e) => { if(e.target === historyModal) toggleModal(false); });
-
     document.querySelectorAll('button[data-value]').forEach(btn => {
       btn.addEventListener('click', () => {
+        // هر کلیک روی دکمه‌ها نیز فوکوس را برمی‌گرداند و اورلی را حذف می‌کند
+        if (focusOverlay && document.contains(focusOverlay)) activateCalculator();
+        
         const val = btn.getAttribute('data-value');
         if (['sqrt', 'square', 'reciprocal'].includes(val)) scientific(val);
         else if (val === 'C') { currentInput = '0'; previousInput = ''; operation = null; }
         else if (val === 'CE') { currentInput = '0'; }
         else if (val === 'backspace') { currentInput = currentInput.length > 1 ? currentInput.slice(0, -1) : '0'; }
+  
         else if (val === '=') { if (operation) calculate(); }
         else if (['+', '-', '*', '/'].includes(val)) {
           if (operation && previousInput && !resetInput) calculate();
           previousInput = currentInput; operation = val; resetInput = true;
         } else if (val === 'percent') { currentInput = (parseFloat(currentInput) / 100).toString(); }
         else {
+        
           if (resetInput) { currentInput = val; resetInput = false; }
           else { currentInput = currentInput === '0' && val !== '.' ? val : currentInput + val; }
         }
@@ -283,7 +331,6 @@
 
     // --- کنترل کیبورد ---
     function handleKeyPress(key) {
-      // تبدیل کلیدهای کیبورد به مقدار مناسب
       if (key === 'Enter') return '=';
       if (key === 'Escape') return 'C';
       if (key === 'Backspace') return 'backspace';
@@ -295,13 +342,16 @@
       if (key === '-') return '-';
       if (key === '*') return '*';
       if (key === '/') return '/';
-      if (key === 's' || key === 'S') return 'sqrt'; // کلید میانبر
+      if (key === 's' || key === 'S') return 'sqrt';
       if (key === 'x' || key === 'X') return 'square';
       if (key === 'r' || key === 'R') return 'reciprocal';
       return null;
     }
 
     document.addEventListener('keydown', (e) => {
+      // اگر کاربر کلیدی زد، اورلی حذف شود
+      if (focusOverlay && document.contains(focusOverlay)) activateCalculator();
+
       const val = handleKeyPress(e.key);
       if (val) {
         e.preventDefault();
@@ -312,16 +362,14 @@
 
     // --- فوکوس خودکار هنگام لود ---
     window.addEventListener('load', () => {
-      // روش ۱: فوکوس مستقیم روی body
       document.body.focus();
-      // روش ۲: فوکوس روی عنصر مخفی (برای مرورگرهای سخت‌گیر)
       setTimeout(() => {
         focusCatcher.focus();
-        document.body.focus(); // ترجیح بدنه
+        document.body.focus();
       }, 100);
     });
-
-    // همچنین در صورت کلیک خارج از ماشین‌حساب، دوباره فوکوس شود
+    
+    // اطمینان از فوکوس هنگام کلیک در هر جای سند
     document.addEventListener('click', () => {
       document.body.focus();
     });
