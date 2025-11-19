@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Language" content="fa">
     <meta name="language" content="fa">
     <meta name="locale" content="fa_IR">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ربات CST - ورود با Google Authenticator</title>
     
     <link rel="manifest" href="/cst/manifest.json">
@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #735af2 0%, #5a3fd0 100%);
@@ -52,12 +53,42 @@
         
         html, body {
             height: 100%;
-            width: 100%;
+            overflow: hidden; /* جلوگیری از اسکرول کلی صفحه */
+        }
+
+        /* ========== BEAUTIFUL SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            backdrop-filter: blur(2px);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
         }
 
         body {
             background: var(--bg-gradient);
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            min-height: 100vh;
+            /* استفاده از dvh برای موبایل‌ها */
+            min-height: 100dvh; 
             position: relative;
             transition: background 0.3s ease;
         }
@@ -67,7 +98,7 @@
                 background: var(--primary-color) !important;
             }
         }
-        
+
         body.standalone {
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
@@ -75,62 +106,7 @@
             padding-right: env(safe-area-inset-right);
         }
         
-        /* ========== LOGIN PAGE STYLES ========== */
-        #loginPage {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-gradient);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow-y: auto;
-            overflow-x: hidden;
-            z-index: 5000;
-            padding: 20px;
-            gap: 0;
-            scroll-behavior: smooth;
-        }
-
-        #loginPage::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        #loginPage::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-
-        #loginPage::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            transition: background 0.3s ease;
-        }
-
-        #loginPage::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Firefox Scrollbar */
-        #loginPage {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
-        }
-
-        .login-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            min-height: auto;
-            padding: 40px 20px;
-            width: 100%;
-            max-width: 500px;
-        }
-
+        /* ========== LOGIN STYLES ========== */
         .login-container {
             background-color: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
@@ -139,17 +115,25 @@
             padding: 40px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             border: 1px solid var(--glass-border);
-            width: 100%;
+            max-width: 450px;
+            width: 90%;
             text-align: center;
             position: relative;
+            margin: auto; /* مرکز چین شدن */
             overflow: hidden;
             isolation: isolate;
             transition: all 0.3s ease;
+            /* اطمینان از اسکرول شدن محتوای لاگین اگر ارتفاع صفحه کم بود */
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         :root:not([data-glass="true"]) .login-container,
+        :root:not([data-glass="true"]) .tabs-container,
         :root:not([data-glass="true"]) .setup-guide,
+        :root:not([data-glass="true"]) .signature,
         :root:not([data-glass="true"]) .login-signature,
+        :root:not([data-glass="true"]) .tab,
         :root:not([data-glass="true"]) .device-suggestion {
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
@@ -159,19 +143,18 @@
         
         @media (max-width: 480px) {
             .login-container {
+                background-color: var(--glass-bg);
+                margin: 20px auto;
                 padding: 30px 20px;
-            }
-
-            .login-wrapper {
-                padding: 30px 15px;
-                gap: 15px;
+                width: 95%;
+                backdrop-filter: blur(8px) saturate(200%);
+                -webkit-backdrop-filter: blur(8px) saturate(200%);
             }
         }
         
         .header-group {
             position: relative;
-            margin-bottom: 10px;
-            width: 100%;
+            margin-bottom: 30px;
         }
         
         h1 {
@@ -179,7 +162,6 @@
             text-align: center;
             font-size: 2.2rem;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            margin: 0;
         }
         
         .login-form {
@@ -187,13 +169,12 @@
             flex-direction: column;
             gap: 20px;
             position: relative;
-            width: 100%;
         }
         
         .settings-icon {
             position: absolute;
-            top: -40px;
-            right: 0;
+            top: -25px;
+            right: -16px;
             color: white;
             font-size: 1.75rem;
             cursor: pointer;
@@ -223,11 +204,18 @@
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
         }
 
+        .header-group,
+        .login-container {
+            overflow: visible !important;
+            position: relative !important;
+        }
+
         @media (max-width: 380px) {
             .settings-icon {
-                top: -35px;
-                width: 48px;
-                height: 48px;
+                top: -18px;
+                right: -10px;
+                width: 40px;
+                height: 40px;
                 font-size: 1.5rem;
                 padding: 8px;
             }
@@ -271,7 +259,7 @@
         .login-btn {
             padding: 15px;
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: none;
             background: rgba(255, 255, 255, 0.2);
             color: white;
             font-size: 1.2rem;
@@ -279,6 +267,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
         .login-btn:hover {
@@ -304,6 +293,7 @@
             border: 1px solid rgba(255, 193, 7, 0.3);
             border-radius: 14px;
             padding: 12px 14px;
+            margin-bottom: 20px;
             flex-direction: row;
             align-items: flex-start;
             gap: 12px;
@@ -312,7 +302,6 @@
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             animation: fadeIn 0.6s ease-out;
-            width: 100%;
         }
 
         .ds-icon {
@@ -366,17 +355,17 @@
             from { opacity: 0; transform: translateY(-8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
+        
         .setup-guide {
             background: var(--glass-bg);
             padding: 15px;
             border-radius: 10px;
+            margin-bottom: 20px;
             text-align: right;
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
             transition: all 0.3s ease;
-            width: 100%;
         }
         
         .setup-guide h3 {
@@ -389,10 +378,18 @@
             color: white;
             line-height: 1.6;
             margin-bottom: 8px;
-            font-size: 0.95rem;
         }
-
-        .login-signature {
+        
+        .main-content {
+            display: none;
+            flex-direction: column;
+            /* پر کردن کامل ارتفاع صفحه */
+            flex: 1;
+            height: 100%;
+            overflow: hidden; /* جلوگیری از اسکرول اضافه */
+        }
+        
+        .signature, .login-signature {
             color: white;
             text-align: center;
             padding: 16px;
@@ -404,26 +401,12 @@
             border: 1px solid var(--glass-border);
             font-size: 14px;
             font-weight: 500;
-            width: 100%;
-            max-width: 100%;
+            display: block;
+            margin: 30px auto;
+            width: fit-content;
+            max-width: 90%;
             box-sizing: border-box;
             transition: all 0.3s ease;
-            margin-top: 10px;
-            flex-shrink: 0;
-        }
-
-        /* ========== MAIN CONTENT STYLES ========== */
-        #mainContent {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            background: var(--bg-gradient);
-            z-index: 1000;
-            overflow: hidden;
         }
 
         /* ========== TAB STYLES ========== */
@@ -431,23 +414,17 @@
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
-            border-radius: 0;
-            padding: 12px 10px;
+            border-radius: 0 0 20px 20px;
+            padding: 15px 10px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             border: 1px solid var(--glass-border);
-            border-bottom: 2px solid var(--glass-border);
+            border-top: none;
+            margin-bottom: 5px; /* کاهش فاصله برای فضای بیشتر آیفریم */
             position: relative;
             z-index: 1000;
-            flex-shrink: 0;
+            flex-shrink: 0; /* جلوگیری از جمع شدن تب‌ها */
             overflow: hidden;
             transition: all 0.3s ease;
-        }
-        
-        :root:not([data-glass="true"]) .tabs-container {
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            background: rgba(0, 0, 0, 0.1) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
         
         .tabs-scroll-container {
@@ -532,6 +509,7 @@
             opacity: 0.9;
         }
         
+        /* ========== RESPONSIVE TABS ONLY FOR DESKTOP ========== */
         body.desktop .tabs-container.icons-only .tab {
             padding: 12px 14px;
             min-width: 55px;
@@ -547,22 +525,40 @@
             margin: 0;
         }
 
-        /* ========== IFRAME CONTAINER ========== */
+        /* ========== IFRAME CONTAINER (Responsive Fix) ========== */
         .iframe-container {
+            /* مهم: این قسمت باعث می‌شود کانتینر تمام فضای خالی باقی‌مانده را بگیرد */
             flex: 1;
+            display: flex; /* برای اینکه آیفریم داخلش کامل پر شود */
+            flex-direction: column;
+            
             position: relative;
-            background: white;
+            background: var(--glass-bg);
+            border-radius: 1px;
             overflow: hidden;
-            min-height: 0;
-            height: 100%;
+            margin: 0 5px 5px 5px;
+            /* ارتفاع به صورت اتوماتیک توسط فلکس باکس تنظیم می‌شود */
+            height: auto; 
+            transition: all 0.3s ease;
+        }
+        
+        /* حذف محدودیت ارتفاع ثابت در موبایل */
+        @media (max-width: 480px) {
+            .iframe-container {
+                /* height: 85vh;  <-- این خط حذف شد تا مشکل ارتفاع حل شود */
+                flex: 1; /* اطمینان از پر کردن فضا در موبایل */
+            }
         }
         
         iframe {
             width: 100%;
             height: 100%;
+            /* اضافه کردن min-height برای اطمینان */
+            min-height: 100%;
             border: none;
             display: none;
             background: white;
+            border-radius: 1px;
         }
         
         iframe.active {
@@ -583,7 +579,7 @@
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            z-index: 2000;
+            z-index: 1000;
             transition: all 0.3s ease;
             font-family: 'Vazirmatn', 'Segoe UI', sans-serif;
             min-width: 180px;
@@ -594,6 +590,7 @@
         .pwa-install-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            background: var(--bg-gradient);
         }
 
         /* ========== RESPONSIVE DESIGN ========== */
@@ -611,7 +608,9 @@
 
         @media (max-width: 768px) {
             .tabs-container {
-                padding: 10px 12px;
+                padding: 12px 15px;
+                border-radius: 0 0 15px 15px;
+                margin-bottom: 12px;
             }
             
             .tab {
@@ -623,15 +622,42 @@
             .tab i {
                 font-size: 1rem;
             }
-
+            
+            .login-container {
+                padding: 30px 20px;
+                margin: 20px auto;
+                width: 95%;
+            }
+            
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
+            }
+            
+            .pwa-install-btn {
+                padding: 14px 22px;
+                font-size: 15px;
+                min-width: 160px;
+                min-height: 50px;
+                bottom: 20px;
+                left: 20px;
+            }
+            
+            .signature, .login-signature {
+                font-size: 14px;
+                padding: 15px;
+            }
+            
+            .iframe-container {
+                margin: 0 4px 8px 4px;
+                border-radius: 1px;
             }
         }
 
         @media (max-width: 480px) {
             .tabs-container {
-                padding: 8px 10px;
+                padding: 10px 12px;
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
             }
             
             .tab {
@@ -639,19 +665,45 @@
                 font-size: 0.7rem;
                 gap: 4px;
                 border-radius: 10px;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
             }
-
+            
             h1 {
-                font-size: 1.5rem;
+                font-size: 1.7rem;
             }
-
-            .login-wrapper {
-                padding: 25px 10px;
+            
+            .login-container {
+                padding: 25px 15px;
+                margin: 15px auto;
             }
-
-            .login-signature {
-                font-size: 12px;
+            
+            .setup-guide {
                 padding: 12px;
+            }
+            
+            .setup-guide h3 {
+                font-size: 1rem;
+            }
+            
+            .setup-guide p {
+                font-size: 0.9rem;
+            }
+            
+            .signature, .login-signature {
+                font-size: 11px;
+                padding: 12px;
+            }
+            
+            .iframe-container {
+                margin: 0 5px 5px 5px;
+                border-radius: 3px;
+            }
+        }
+
+        @media all and (display-mode: standalone) {
+            .tabs-container {
+                padding-top: calc(15px + env(safe-area-inset-top));
             }
         }
 
@@ -664,9 +716,14 @@
             .tab i {
                 font-size: 0.8rem;
             }
-
+            
+            .login-container {
+                padding: 20px 12px;
+                margin: 10px auto;
+            }
+            
             h1 {
-                font-size: 1.3rem;
+                font-size: 1.5rem;
             }
         }
         
@@ -674,6 +731,7 @@
         .login-container::before,
         .tabs-container::before,
         .setup-guide::before,
+        .signature::before,
         .login-signature::before,
         .device-suggestion::before {
             content: '';
@@ -691,6 +749,7 @@
             .login-container,
             .tabs-container,
             .setup-guide,
+            .signature,
             .login-signature,
             .tab,
             .device-suggestion {
@@ -712,7 +771,6 @@
             align-items: center;
             padding: 20px;
             box-sizing: border-box;
-            overflow-y: auto;
         }
 
         .settings-content {
@@ -728,6 +786,11 @@
             color: white;
             position: relative;
             transition: all 0.3s ease;
+        }
+        .settings-icon,
+        .settings-icon:hover,
+        .settings-icon:active {
+            box-shadow: none !important;
         }
 
         .close-settings {
@@ -849,56 +912,52 @@
         .settings-content::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
         .settings-content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
         .settings-content::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.5); }
-        .settings-content { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1); }
+        .settings-content { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1); border-radius: 5px; }
     </style>
-<body>
-    <!-- ========== LOGIN PAGE ========== -->
-    <div id="loginPage">
-        <div class="login-wrapper">
-            <div class="login-container">
-                <div class="header-group">
-                    <h1>ورود به ربات CST</h1>
-                    <div class="settings-icon" onclick="toggleSettings()">
-                        <i class="fas fa-cog"></i>
-                    </div>
-                </div>
-                
-                <div class="device-suggestion" id="deviceSuggestion">
-                    <div class="ds-icon">
-                        <i class="fas fa-laptop-code"></i>
-                    </div>
-                    <div class="ds-content">
-                        <h4>💡 پیشنهاد برای تحلیل حرفه‌ای</h4>
-                        <p>این ابزار بسیار پیشرفته است. اگرچه در موبایل قابل اجراست، اما برای تسلط کامل بر چارت‌ها پیشنهاد می‌کنیم از <strong>لپ‌تاپ، تبلت یا کامپیوتر</strong> استفاده کنید.</p>
-                    </div>
-                    <span class="ds-close" onclick="this.parentElement.style.display='none'">&times;</span>
-                </div>
-                
-                <div class="setup-guide">
-                    <h3>📱 راهنمای ورود</h3>
-                    <p>• اپلیکیشن Google Authenticator را باز کنید</p>
-                    <p>• کد ۶ رقمی مربوط به "CST-Robot" را پیدا کنید</p>
-                    <p>• کد را در فیلد زیر وارد کنید</p>
-                </div>
-                
-                <div class="login-form" id="verifyForm">
-                    <div class="input-group">
-                        <label for="otp">کد ۶ رقمی Google Authenticator:</label>
-                        <input type="text" id="otp" placeholder="کد ۶ رقمی" maxlength="6" required>
-                    </div>
-                    <button type="button" class="login-btn" id="verifyOtpBtn">ورود به سیستم</button>
-                    <div class="error-message" id="verifyError">کد نامعتبر است</div>
-                </div>
-            </div>
+</head>
 
-            <div class="login-signature">
-                طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
+<body>
+    <div class="login-container" id="loginPage">
+        <div class="header-group">
+            <h1>ورود به ربات CST</h1>
+            <div class="settings-icon" onclick="toggleSettings()">
+                <i class="fas fa-cog"></i>
             </div>
+        </div>
+        
+        <div class="device-suggestion" id="deviceSuggestion">
+            <div class="ds-icon">
+                <i class="fas fa-laptop-code"></i>
+            </div>
+            <div class="ds-content">
+                <h4>💡 پیشنهاد برای تحلیل حرفه‌ای</h4>
+                <p>این ابزار بسیار پیشرفته است. اگرچه در موبایل قابل اجراست، اما برای تسلط کامل بر چارت‌ها پیشنهاد می‌کنیم از <strong>لپ‌تاپ، تبلت یا کامپیوتر</strong> استفاده کنید.</p>
+            </div>
+            <span class="ds-close" onclick="this.parentElement.style.display='none'">&times;</span>
+        </div>
+        
+        <div class="setup-guide">
+            <h3>📱 راهنمای ورود</h3>
+            <p>• اپلیکیشن Google Authenticator را باز کنید</p>
+            <p>• کد ۶ رقمی مربوط به "CST-Robot" را پیدا کنید</p>
+            <p>• کد را در فیلد زیر وارد کنید</p>
+        </div>
+        
+        <div class="login-form" id="verifyForm">
+            <div class="input-group">
+                <label for="otp">کد ۶ رقمی Google Authenticator:</label>
+                <input type="text" id="otp" placeholder="کد ۶ رقمی" maxlength="6" required>
+            </div>
+            <button type="button" class="login-btn" id="verifyOtpBtn">ورود به سیستم</button>
+            <div class="error-message" id="verifyError">کد نامعتبر است</div>
+        </div>
+        
+        <div class="login-signature">
+            طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
         </div>
     </div>
 
-    <!-- ========== MAIN CONTENT ========== -->
-    <div id="mainContent">
+    <div class="main-content" id="mainContent">
         <div class="tabs-container" id="tabsContainer">
             <div class="tabs-scroll-container" id="tabsScrollContainer">
                 <div class="tabs" id="tabs">
@@ -996,10 +1055,15 @@
         // ==================== DETECT DEVICE & OS FOR SUGGESTION ====================
         function showMobileSuggestion() {
             const ua = navigator.userAgent || navigator.vendor || window.opera;
+            
+            // 1. تشخیص سیستم عامل (اندروید یا iOS)
             const isAndroid = /android/i.test(ua);
             const isIOSPhone = /iPhone|iPod/.test(ua) && !window.MSStream;
+            
+            // 2. تشخیص سایز صفحه
             const isSmallScreen = window.innerWidth < 768;
 
+            // شرط: (سیستم عامل موبایل باشد) وَ (صفحه کوچک باشد)
             if ((isAndroid || isIOSPhone) && isSmallScreen) {
                  const suggestionBox = document.getElementById('deviceSuggestion');
                  if (suggestionBox) {
@@ -1086,7 +1150,7 @@
         }
 
         function analyzeElements(bgColor, textColor) {
-            const elements = document.querySelectorAll('h1, p, label, button, .tab, .tab-text, .login-signature, .login-btn, input[type="text"], .settings-section h3');
+            const elements = document.querySelectorAll('h1, p, label, button, .tab, .tab-text, .signature, .login-signature, .login-btn, input[type="text"], .settings-section h3');
             const bgLum = getLuminance(bgColor);
             const textLum = getLuminance(textColor);
             let hasIssue = false;
@@ -1124,7 +1188,6 @@
             light: { gradient: 'linear-gradient(135deg, #735af2 0%, #5a3fd0 100%)', primary: '#735af2' },
             dark: { gradient: 'linear-gradient(135deg, #1e1e1e 0%, #333 100%)', primary: '#333' }
         };
-        
         function loadTheme() {
             const saved = localStorage.getItem('themeSettings');
             if (saved) {
@@ -1254,6 +1317,19 @@
             if (e.target === this) toggleSettings();
         });
 
+        // ==================== VISUAL FIXES FOR GLASS EFFECT ====================
+        function applyVisualFixes() {
+            const elements = document.querySelectorAll('.login-container, .tabs-container, .setup-guide, .signature, .login-signature, .tab');
+            elements.forEach(element => {
+                const computedStyle = window.getComputedStyle(element);
+                const borderRadius = computedStyle.borderRadius;
+                
+                if (borderRadius === '0px' && element.classList.contains('login-container')) {
+                    element.style.borderRadius = '20px';
+                }
+            });
+        }
+
         // ==================== AUTHENTICATION ====================
         const secretKey = 'JBSWY3DPEHPK3PXP';
         const verifyOtpBtn = document.getElementById('verifyOtpBtn');
@@ -1282,6 +1358,36 @@
             return hex;
         }
 
+        function generateTOTP() {
+            try {
+                const time = Math.floor(Date.now() / 1000 / 30);
+                const timeHex = CryptoJS.enc.Hex.parse(
+                    ('0000000000000000' + time.toString(16)).slice(-16)
+                );
+                const keyHex = base32ToHex(secretKey);
+                const key = CryptoJS.enc.Hex.parse(keyHex);
+                const hmac = CryptoJS.HmacSHA1(timeHex, key);
+                const hmacHex = hmac.toString(CryptoJS.enc.Hex);
+                const offset = (parseInt(hmacHex.substr(-1), 16)) & 0xf;
+                const code = parseInt(hmacHex.substr(offset * 2, 8), 16) & 0x7fffffff;
+                return (code % 1000000).toString().padStart(6, '0');
+            } catch (error) {
+                console.error('Error generating TOTP:', error);
+                return null;
+            }
+        }
+
+        function verifyOTP(enteredOtp) {
+            for (let i = -1; i <= 1; i++) {
+                const testTime = Math.floor(Date.now() / 1000 / 30) + i;
+                const testOtp = generateTOTPWithTime(testTime);
+                if (enteredOtp === testOtp) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         function generateTOTPWithTime(timeValue) {
             try {
                 const timeHex = CryptoJS.enc.Hex.parse(
@@ -1298,17 +1404,6 @@
                 console.error('Error generating TOTP with time:', error);
                 return null;
             }
-        }
-
-        function verifyOTP(enteredOtp) {
-            for (let i = -1; i <= 1; i++) {
-                const testTime = Math.floor(Date.now() / 1000 / 30) + i;
-                const testOtp = generateTOTPWithTime(testTime);
-                if (enteredOtp === testOtp) {
-                    return true;
-                }
-            }
-            return false;
         }
 
         verifyOtpBtn.addEventListener('click', function() {
@@ -1350,7 +1445,7 @@
             mainContent.style.display = 'flex';
             setTimeout(initMouseWheelScroll, 100);
         } else {
-            loginPage.style.display = 'flex';
+            loginPage.style.display = 'block';
             mainContent.style.display = 'none';
         }
 
@@ -1503,12 +1598,17 @@
             loadTheme();
             updateThemeColor();
             handleDesktopResponsiveTabs();
+            
+            // فراخوانی تابع تشخیص موبایل برای نمایش هشدار
             showMobileSuggestion();
+
+            setTimeout(applyVisualFixes, 100);
         });
 
         window.addEventListener('resize', () => {
             updateThemeColor();
             handleDesktopResponsiveTabs();
+            applyVisualFixes();
         });
     </script>
 </body>
