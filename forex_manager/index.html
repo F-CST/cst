@@ -21,7 +21,6 @@
             --card-bg: #ffffff;
             --header-bg: #ffffff;
         }
-
         .dark-mode {
             --primary-color: #5a8be9;
             --secondary-color: #2d2d2d;
@@ -33,7 +32,6 @@
             --bg-dark: #121212;
             --info-color: #4aa0e6;
         }
-        
         * {
             box-sizing: border-box;
             margin: 0;
@@ -41,7 +39,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
-        
         body {
             background: var(--bg-light);
             color: var(--text-color);
@@ -50,17 +47,13 @@
             line-height: 1.6;
             font-size: 14px;
         }
-
         .dark-mode body {
             background: var(--bg-dark);
         }
-        
         .container {
             max-width: 1400px;
             margin: 0 auto;
         }
-        
-        /* استایل شیشه‌ای برای هدر */
         .header-glass {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
@@ -81,7 +74,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .dark-mode .header-glass {
             background: rgba(30, 30, 30, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -89,7 +81,6 @@
                 0 8px 32px rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
-
         .header-glass::before {
             content: '';
             position: absolute;
@@ -102,22 +93,19 @@
                 rgba(255, 255, 255, 0.05) 100%);
             z-index: -1;
         }
-
         .header-glass h1 {
-    color: var(--primary-color);
-    font-weight: 700;
-    font-size: 2rem;
-    margin: 0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
         .header-controls {
             display: flex;
             gap: 12px;
             align-items: center;
             flex-wrap: wrap;
         }
-
         .glass-btn {
             background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(10px);
@@ -137,7 +125,6 @@
                 0 4px 15px rgba(31, 38, 135, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
-
         .glass-btn:hover {
             background: rgba(255, 255, 255, 0.4);
             transform: translateY(-2px);
@@ -145,21 +132,17 @@
                 0 6px 20px rgba(31, 38, 135, 0.15),
                 inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
-
         .dark-mode .glass-btn {
             background: rgba(255, 255, 255, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
-
         .dark-mode .glass-btn:hover {
             background: rgba(255, 255, 255, 0.4);
         }
-        
         header {
             text-align: center;
             color: var(--text-color);
         }
-        
         .tabs {
             display: flex;
             background: var(--header-bg);
@@ -168,7 +151,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             position: relative;
         }
-        
         .tab {
             padding: 12px 15px;
             cursor: pointer;
@@ -180,12 +162,10 @@
             color: var(--text-color);
             font-size: 0.9rem;
         }
-        
         .tab.active {
             background: var(--primary-color);
             color: white;
         }
-        
         .tab.active::after {
             content: '';
             position: absolute;
@@ -195,41 +175,34 @@
             height: 3px;
             background: white;
         }
-        
         .hamburger-menu {
             display: none;
         }
-        
-.mobile-tabs {
-    display: none;
-    flex-direction: column;
-    background: var(--header-bg);
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    margin-top: 5px;
-    border-radius: 0; /* تغییر از 8px به 0 */
-}
-
-.mobile-tab {
-    padding: 10px 15px;
-    cursor: pointer;
-    font-weight: 600;
-    border-bottom: 1px solid var(--border-color);
-    color: var(--text-color);
-    font-size: 0.9rem;
-    border-radius: 0; /* اضافه کردن این خط */
-}
-
-
-    .mobile-tab:last-child {
-    border-bottom: none; /* حذف border از آخرین آیتم */
-}
-
+        .mobile-tabs {
+            display: none;
+            flex-direction: column;
+            background: var(--header-bg);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 5px;
+            border-radius: 0;
+        }
+        .mobile-tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            border-radius: 0;
+        }
+        .mobile-tab:last-child {
+            border-bottom: none;
+        }
         .mobile-tab.active {
             background: var(--primary-color);
             color: white;
         }
-        
         .tab-content {
             display: none;
             background: var(--card-bg);
@@ -239,15 +212,12 @@
             min-height: 500px;
             color: var(--text-color);
         }
-        
         .tab-content.active {
             display: block;
         }
-        
         .categories-management {
             margin-bottom: 25px;
         }
-        
         .section-title {
             font-size: 1.2rem;
             margin-bottom: 12px;
@@ -255,14 +225,12 @@
             border-bottom: 2px solid var(--primary-color);
             padding-bottom: 6px;
         }
-        
         .action-buttons {
             display: flex;
             gap: 8px;
             margin-bottom: 15px;
             flex-wrap: wrap;
         }
-        
         .btn {
             padding: 8px 12px;
             border: none;
@@ -275,107 +243,86 @@
             gap: 6px;
             font-size: 0.85rem;
         }
-        
         .btn-primary {
             background: var(--primary-color);
             color: white;
         }
-        
         .btn-primary:hover {
             background: var(--secondary-color);
             color: white;
         }
-        
         .dark-mode .btn-primary {
             background: #2a5298;
             color: white;
         }
-        
         .dark-mode .btn-primary:hover {
             background: #1e3c72;
             color: white;
         }
-        
         .btn-success {
             background: var(--success-color);
             color: white;
         }
-        
         .btn-success:hover {
             background: #219653;
             color: white;
         }
-        
         .dark-mode .btn-success {
             background: #27ae60;
             color: white;
         }
-        
         .dark-mode .btn-success:hover {
             background: #219653;
             color: white;
         }
-        
         .btn-danger {
             background: var(--danger-color);
             color: white;
         }
-        
         .btn-danger:hover {
             background: #c0392b;
             color: white;
         }
-        
         .dark-mode .btn-danger {
             background: #e74c3c;
             color: white;
         }
-        
         .dark-mode .btn-danger:hover {
             background: #c0392b;
             color: white;
         }
-        
         .btn-warning {
             background: var(--warning-color);
             color: white;
         }
-        
         .btn-warning:hover {
             background: #e67e22;
             color: white;
         }
-        
         .dark-mode .btn-warning {
             background: #f39c12;
             color: white;
         }
-        
         .dark-mode .btn-warning:hover {
             background: #e67e22;
             color: white;
         }
-        
         .btn-info {
             background: var(--info-color);
             color: white;
         }
-        
         .btn-info:hover {
             background: #2980b9;
             color: white;
         }
-        
         .dark-mode .btn-info {
             background: #3498db;
             color: white;
         }
-        
         .dark-mode .btn-info:hover {
             background: #2980b9;
             color: white;
         }
-        
         .currency-category {
             margin-bottom: 12px;
             border: 1px solid var(--border-color);
@@ -384,7 +331,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             background: var(--card-bg);
         }
-        
         .category-header {
             display: flex;
             justify-content: space-between;
@@ -394,7 +340,6 @@
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
         }
-        
         .category-title {
             font-weight: 700;
             color: var(--primary-color);
@@ -403,21 +348,17 @@
             align-items: center;
             gap: 8px;
         }
-        
         .category-title i {
             transition: transform 0.3s;
             font-size: 0.9rem;
         }
-        
         .category-title.collapsed i {
             transform: rotate(-90deg);
         }
-        
         .category-actions {
             display: flex;
             gap: 6px;
         }
-        
         .category-action-btn {
             background: transparent;
             border: none;
@@ -428,23 +369,18 @@
             transition: all 0.3s;
             color: var(--text-color);
         }
-        
         .edit-btn {
             color: var(--primary-color);
         }
-        
         .edit-btn:hover {
             background: rgba(42, 82, 152, 0.1);
         }
-        
         .delete-btn {
             color: var(--danger-color);
         }
-        
         .delete-btn:hover {
             background: rgba(231, 76, 60, 0.1);
         }
-        
         .currency-list {
             padding: 8px;
             display: grid;
@@ -452,17 +388,14 @@
             gap: 6px;
             min-height: 45px;
         }
-
         .currency-list.collapsed {
             display: none;
         }
-
         .currency-list.drag-over {
             background: rgba(42, 82, 152, 0.1);
             border: 2px dashed var(--primary-color);
             border-radius: 6px;
         }
-        
         .currency-card {
             display: flex;
             align-items: center;
@@ -476,36 +409,30 @@
             position: relative;
             cursor: grab;
         }
-        
         .currency-card:active {
             cursor: grabbing;
         }
-        
         .currency-card.dragging {
             opacity: 0.5;
             transform: scale(0.95);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        
         .currency-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-color: var(--primary-color);
         }
-        
         .currency-name {
             font-weight: 700;
             color: var(--text-color);
             font-size: 0.9rem;
             min-width: 70px;
         }
-        
         .currency-actions {
             display: flex;
             gap: 4px;
             margin-left: 8px;
         }
-        
         .currency-action-btn {
             background: transparent;
             border: none;
@@ -516,30 +443,24 @@
             transition: all 0.3s;
             color: var(--text-color);
         }
-        
         .currency-action-btn:hover {
             background: rgba(0, 0, 0, 0.05);
         }
-        
         .move-btn {
             cursor: move;
         }
-        
         .calculator {
             max-width: 800px;
             margin: 0 auto;
         }
-        
         .calculator-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
-        
         .input-group {
             margin-bottom: 15px;
         }
-        
         label {
             display: block;
             margin-bottom: 6px;
@@ -547,7 +468,6 @@
             color: var(--text-color);
             font-size: 0.9rem;
         }
-        
         input, select, textarea {
             width: 100%;
             padding: 10px 12px;
@@ -558,25 +478,21 @@
             background: var(--card-bg);
             color: var(--text-color);
         }
-        
         textarea {
             min-height: 80px;
             resize: vertical;
         }
-        
         input:focus, select:focus, textarea:focus {
             border-color: var(--primary-color);
             outline: none;
             box-shadow: 0 0 0 2px rgba(42, 82, 152, 0.2);
         }
-        
         .buttons {
             display: flex;
             gap: 8px;
             margin-top: 20px;
             grid-column: 1 / -1;
         }
-        
         .result {
             margin-top: 20px;
             padding: 15px;
@@ -585,13 +501,11 @@
             border-right: 4px solid var(--primary-color);
             grid-column: 1 / -1;
         }
-        
         .result h3 {
             margin-bottom: 12px;
             color: var(--primary-color);
             font-size: 1.1rem;
         }
-        
         .result-item {
             display: flex;
             justify-content: space-between;
@@ -600,20 +514,17 @@
             border-bottom: 1px solid var(--border-color);
             font-size: 0.9rem;
         }
-        
         .history-filters {
             display: flex;
             gap: 12px;
             margin-bottom: 15px;
             flex-wrap: wrap;
         }
-        
         .history-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 12px;
         }
-        
         .history-item {
             background: var(--bg-light);
             border-radius: 6px;
@@ -621,12 +532,10 @@
             border: 1px solid var(--border-color);
             transition: all 0.3s;
         }
-        
         .history-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        
         .history-header {
             display: flex;
             justify-content: space-between;
@@ -634,37 +543,31 @@
             padding-bottom: 8px;
             border-bottom: 1px solid var(--border-color);
         }
-        
         .history-currency {
             font-weight: bold;
             color: var(--primary-color);
             font-size: 0.95rem;
         }
-        
         .history-date {
             color: var(--text-color);
             font-size: 0.85rem;
         }
-        
         .history-details {
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
-        
         .history-detail {
             display: flex;
             justify-content: space-between;
             font-size: 0.85rem;
         }
-        
         .history-actions {
             display: flex;
             justify-content: flex-end;
             margin-top: 8px;
             gap: 8px;
         }
-        
         .delete-options {
             display: flex;
             flex-direction: column;
@@ -672,45 +575,37 @@
             max-width: 500px;
             margin: 0 auto;
         }
-        
         .delete-option {
             background: var(--bg-light);
             padding: 15px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
         }
-        
         .delete-option h3 {
             margin-bottom: 12px;
             color: var(--primary-color);
             font-size: 1.1rem;
         }
-        
         .delete-actions {
             display: flex;
             gap: 8px;
             margin-top: 12px;
         }
-        
         .data-management {
             max-width: 600px;
             margin: 0 auto;
         }
-        
         .data-actions {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-        
         .data-action {
             background: var(--bg-light);
             padding: 15px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
         }
-        
-        /* === FIX FOR RESTORE DATA BUTTON === */
         #restore-data {
             background: var(--primary-color);
             color: white;
@@ -726,26 +621,22 @@
             font-size: 0.85rem;
             margin-top: 10px;
         }
-        
         #restore-data:hover {
             background: var(--secondary-color);
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
         }
-        
         .dark-mode #restore-data {
             background: #2a5298;
             color: white;
         }
-        
         .dark-mode #restore-data:hover {
             background: #1e3c72;
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
         }
-        
         .modal {
             display: none;
             position: fixed;
@@ -759,7 +650,6 @@
             justify-content: center;
             padding: 15px;
         }
-        
         .modal-content {
             background: var(--card-bg);
             padding: 20px;
@@ -771,7 +661,6 @@
             max-height: 90vh;
             overflow-y: auto;
         }
-        
         .modal h2 {
             margin-bottom: 12px;
             color: var(--text-color);
@@ -779,34 +668,28 @@
             padding-bottom: 8px;
             font-size: 1.2rem;
         }
-        
         .modal-actions {
             display: flex;
             gap: 8px;
             margin-top: 15px;
             justify-content: flex-end;
         }
-        
         .form-group {
             margin-bottom: 12px;
         }
-        
         .form-group label {
             display: block;
             margin-bottom: 4px;
             font-weight: 600;
             font-size: 0.9rem;
         }
-        
         .form-row {
             display: flex;
             gap: 12px;
         }
-        
         .form-row .form-group {
             flex: 1;
         }
-        
         .quick-lot-btn {
             padding: 6px 12px;
             background: var(--info-color);
@@ -817,269 +700,213 @@
             font-size: 0.8rem;
             transition: all 0.3s;
         }
-
         .quick-lot-btn:hover {
             background: var(--primary-color);
             transform: translateY(-2px);
         }
-        
         .dark-mode .quick-lot-btn {
             background: #4aa0e6;
             color: white;
         }
-
         .dark-mode .quick-lot-btn:hover {
             background: #5a8be9;
             transform: translateY(-2px);
         }
-        
         @media (max-width: 1200px) {
             .currency-list {
                 grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             }
-            
             .history-list {
                 grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             }
         }
-        
         @media (max-width: 992px) and (min-width: 769px) {
             .calculator-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 12px;
             }
-            
             .currency-list {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
-            
             .history-list {
                 grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             }
         }
-        
         @media (max-width: 768px) {
             body {
                 padding: 10px;
                 font-size: 13px;
             }
-            
             .header-glass {
                 padding: 20px 25px;
                 flex-direction: column;
                 text-align: center;
                 gap: 15px;
             }
-            
             .header-glass h1 {
                 font-size: 1.6rem;
             }
-            
             .header-controls {
                 width: 100%;
                 justify-content: center;
             }
-            
             .glass-btn {
                 padding: 10px 16px;
                 font-size: 0.9rem;
             }
-            
             .tabs {
                 display: none;
             }
-            
             .hamburger-menu {
                 display: block;
             }
-            
             .mobile-tabs.active {
                 display: flex;
             }
-            
             .currency-list {
                 grid-template-columns: 1fr;
             }
-            
             .currency-card {
                 padding: 6px 8px;
                 align-items: center;
                 gap: 6px;
             }
-            
             .action-buttons {
                 flex-direction: column;
             }
-            
             .btn {
                 justify-content: center;
                 width: 100%;
             }
-            
             .form-row {
                 flex-direction: column;
                 gap: 0;
             }
-            
             .calculator-grid {
                 grid-template-columns: 1fr;
             }
-            
             .history-list {
                 grid-template-columns: 1fr;
             }
-            
             .history-filters {
                 flex-direction: column;
             }
-            
             .history-actions {
                 justify-content: center;
             }
-            
             .modal-content {
                 padding: 15px;
                 margin: 10px;
             }
-            
             .section-title {
                 font-size: 1.1rem;
             }
         }
-        
         @media (max-width: 576px) {
             body {
                 padding: 8px;
                 font-size: 12px;
             }
-            
             .header-glass {
                 padding: 15px 20px;
                 border-radius: 16px;
             }
-            
             .header-glass h1 {
                 font-size: 1.4rem;
             }
-            
             .glass-btn {
                 padding: 8px 14px;
                 font-size: 0.85rem;
             }
-            
             .category-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
             }
-            
             .category-actions {
                 width: 100%;
                 justify-content: flex-end;
             }
-            
             .buttons {
                 flex-direction: column;
             }
-            
             .tab-content {
                 padding: 15px;
             }
-            
             .history-item {
                 padding: 10px;
             }
-            
             .history-detail {
                 flex-direction: column;
                 gap: 2px;
             }
-            
             .modal-content {
                 padding: 12px;
             }
-            
             .pip-calculator-grid {
                 grid-template-columns: 1fr;
             }
-            
             .quick-lot-buttons {
                 justify-content: center;
             }
         }
-        
         @media (max-width: 480px) {
             .currency-name {
                 min-width: 60px;
                 font-size: 0.85rem;
             }
-            
             .currency-actions {
                 margin-left: 5px;
             }
-            
             .history-header {
                 flex-direction: column;
                 gap: 5px;
             }
-            
             .history-actions {
                 flex-direction: column;
             }
-            
             .history-actions .btn {
                 width: 100%;
             }
         }
-        
         @media (max-width: 360px) {
             body {
                 padding: 5px;
             }
-            
             .header-glass {
                 padding: 12px 15px;
             }
-            
             .header-glass h1 {
                 font-size: 1.2rem;
             }
-            
             .tab-content {
                 padding: 10px;
             }
-            
             .category-header {
                 padding: 8px 10px;
             }
-            
             .currency-card {
                 padding: 5px 8px;
             }
-            
             .btn {
                 padding: 6px 10px;
                 font-size: 0.8rem;
             }
-            
             .glass-btn {
                 padding: 6px 10px;
                 font-size: 0.8rem;
             }
         }
-
         .empty-state {
             text-align: center;
             padding: 25px;
             color: var(--text-color);
         }
-        
         .empty-state i {
             font-size: 2.5rem;
             margin-bottom: 12px;
             color: var(--border-color);
         }
-        
         .info-badge {
             background: var(--info-color);
             color: white;
@@ -1088,28 +915,23 @@
             font-size: 0.65rem;
             margin-right: 4px;
         }
-
         .profit {
             color: var(--success-color);
             font-weight: bold;
         }
-        
         .loss {
             color: var(--danger-color);
             font-weight: bold;
         }
-
         .notes-section {
             margin-top: 15px;
             grid-column: 1 / -1;
         }
-
         .pip-value-info {
             font-size: 0.8rem;
             color: var(--info-color);
             margin-top: 4px;
         }
-
         .currency-type-badge {
             background: var(--warning-color);
             color: white;
@@ -1118,7 +940,6 @@
             font-size: 0.65rem;
             margin-right: 4px;
         }
-
         .pip-calculator-container {
             background: var(--bg-light);
             padding: 15px;
@@ -1127,7 +948,6 @@
             border: 1px solid var(--border-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
         .pip-calculator-header {
             display: flex;
             justify-content: space-between;
@@ -1138,20 +958,17 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
         .pip-calculator-title {
             font-size: 1.3rem;
             color: var(--primary-color);
             font-weight: bold;
         }
-
         .pip-calculator-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 12px;
             margin-bottom: 15px;
         }
-
         .pip-result-card {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
@@ -1160,25 +977,21 @@
             text-align: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-
         .pip-result-value {
             font-size: 1.5rem;
             font-weight: bold;
             margin: 8px 0;
         }
-
         .pip-result-label {
             font-size: 0.85rem;
             opacity: 0.9;
         }
-
         .quick-lot-buttons {
             display: flex;
             gap: 8px;
             margin-top: 8px;
             flex-wrap: wrap;
         }
-
         .pip-explanation {
             margin-top: 15px;
             padding: 12px;
@@ -1187,13 +1000,11 @@
             border-right: 4px solid var(--info-color);
             font-size: 0.85rem;
         }
-
         .pip-explanation h4 {
             color: var(--info-color);
             margin-bottom: 8px;
             font-size: 0.95rem;
         }
-
         .auto-alert {
             position: fixed;
             top: 15px;
@@ -1212,19 +1023,15 @@
             max-width: 300px;
             font-size: 0.9rem;
         }
-
         .auto-alert.show {
             transform: translateX(0);
         }
-
         .auto-alert.error {
             background: var(--danger-color);
         }
-
         .auto-alert.warning {
             background: var(--warning-color);
         }
-        
         .signature {
             text-align: center;
             padding: 10px 20px;
@@ -1240,7 +1047,6 @@
             width: fit-content;
             color: var(--text-color);
         }
-        
         .dark-mode .signature {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1263,7 +1069,6 @@
         </div>
     </div>
 </header>
-        
         <div class="tabs">
             <div class="tab active" data-tab="calculator">ماشین حساب فارکس</div>
             <div class="tab" data-tab="history">تاریخچه معاملات</div>
@@ -1271,7 +1076,6 @@
             <div class="tab" data-tab="delete-records">حذف رکوردها</div>
             <div class="tab" data-tab="data-management">مدیریت داده</div>
         </div>
-        
         <div class="mobile-tabs" id="mobileTabs">
             <div class="mobile-tab active" data-tab="calculator">ماشین حساب فارکس</div>
             <div class="mobile-tab" data-tab="history">تاریخچه معاملات</div>
@@ -1279,7 +1083,6 @@
             <div class="mobile-tab" data-tab="delete-records">حذف رکوردها</div>
             <div class="mobile-tab" data-tab="data-management">مدیریت داده</div>
         </div>
-        
         <div class="tab-content active" id="calculator">
             <!-- ماشین حساب اصلی -->
             <div class="calculator">
@@ -1323,14 +1126,12 @@
                             <option value="sell">فروش (Short)</option>
                         </select>
                     </div>
-                    
                     <div class="notes-section">
                         <div class="input-group">
                             <label for="trade-notes">یادداشت معامله (ژورنال نویسی)</label>
                             <textarea id="trade-notes" placeholder="دلیل سود یا ضرر، تحلیل بازار، احساسات و..."></textarea>
                         </div>
                     </div>
-                    
                     <div class="buttons">
                         <button class="btn btn-primary" id="calculate">
                             <i class="fas fa-calculator"></i> محاسبه و ذخیره
@@ -1339,7 +1140,6 @@
                             <i class="fas fa-redo"></i> ریست
                         </button>
                     </div>
-                    
                     <div class="result" id="result" style="display: none;">
                         <h3>نتایج محاسبه</h3>
                         <div class="result-item">
@@ -1357,7 +1157,6 @@
                     </div>
                 </div>				
             </div>
-
             <!-- ماشین حساب ارزش پیپ -->
             <div class="pip-calculator-container">
                 <div class="pip-calculator-header">
@@ -1368,7 +1167,6 @@
                         ارزش پیپ بر اساس جفت ارز و حجم معامله محاسبه می‌شود
                     </div>
                 </div>
-
                 <div class="pip-calculator-grid">
                     <div class="input-group">
                         <label for="pip-currency">جفت ارز</label>
@@ -1376,7 +1174,6 @@
                             <option value="">انتخاب جفت ارز</option>
                         </select>
                     </div>
-                    
                     <div class="input-group">
                         <label for="pip-lot-size">حجم معامله (لات)</label>
                         <input type="number" id="pip-lot-size" step="0.01" placeholder="مثال: 0.1" value="0.1">
@@ -1388,12 +1185,10 @@
                             <button class="quick-lot-btn" data-lot="2">2</button>
                         </div>
                     </div>
-                    
                     <div class="input-group">
                         <label for="pip-price">قیمت جفت ارز</label>
                         <input type="number" id="pip-price" step="0.00001" placeholder="مثال: 1.1250">
                     </div>
-                    
                     <div class="input-group">
                         <label for="account-currency">ارز حساب</label>
                         <select id="account-currency">
@@ -1406,7 +1201,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="buttons">
                     <button class="btn btn-info" id="calculate-pip-value">
                         <i class="fas fa-calculator"></i> محاسبه ارزش پیپ
@@ -1415,7 +1209,6 @@
                         <i class="fas fa-redo"></i> ریست
                     </button>
                 </div>
-
                 <div class="result" id="pip-result" style="display: none;">
                     <h3>نتایج محاسبه ارزش پیپ</h3>
                     <div class="pip-calculator-grid">
@@ -1424,13 +1217,11 @@
                             <div class="pip-result-value" id="calculated-pip-value">0</div>
                             <div class="pip-result-label" id="pip-currency-display">USD</div>
                         </div>
-                        
                         <div class="pip-result-card">
                             <div class="pip-result-label">ارزش 10 پیپ</div>
                             <div class="pip-result-value" id="calculated-10pip-value">0</div>
                             <div class="pip-result-label" id="pip10-currency-display">USD</div>
                         </div>
-                        
                         <div class="pip-result-card">
                             <div class="pip-result-label">ارزش 50 پیپ</div>
                             <div class="pip-result-value" id="calculated-50pip-value">0</div>
@@ -1438,7 +1229,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="pip-explanation">
                     <h4><i class="fas fa-info-circle"></i> نحوه محاسبه ارزش پیپ:</h4>
                     <p>• برای جفت ارزهای استاندارد (EURUSD, GBPUSD و ...): ارزش پیپ = 0.0001 × حجم معامله × 100,000</p>
@@ -1447,10 +1237,8 @@
                 </div>
             </div>
         </div>
-        
         <div class="tab-content" id="history">
             <h2 class="section-title">تاریخچه معاملات</h2>
-            
             <div class="history-filters">
                 <div class="input-group">
                     <label for="filter-currency">فیلتر بر اساس جفت ارز</label>
@@ -1458,12 +1246,10 @@
                         <option value="all">همه جفت ارزها</option>
                     </select>
                 </div>
-                
                 <div class="input-group">
                     <label for="filter-date">فیلتر بر اساس تاریخ</label>
                     <input type="date" id="filter-date">
                 </div>
-                
                 <div class="input-group">
                     <label for="filter-result">فیلتر بر اساس نتیجه</label>
                     <select id="filter-result">
@@ -1473,7 +1259,6 @@
                         <option value="pending">در انتظار</option>
                     </select>
                 </div>
-                
                 <div class="history-actions">
                     <button class="btn btn-primary" id="apply-filter">
                         <i class="fas fa-filter"></i> اعمال فیلتر
@@ -1483,15 +1268,12 @@
                     </button>
                 </div>
             </div>
-            
             <div class="history-list" id="history-list">
                 <!-- تاریخچه معاملات به صورت داینامیک لود می‌شود -->
             </div>
         </div>
-        
         <div class="tab-content" id="currency-management">
             <h2 class="section-title">مدیریت جفت ارزها</h2>
-            
             <div class="action-buttons">
                 <button class="btn btn-primary" id="add-category">
                     <i class="fas fa-plus"></i> افزودن دسته جدید
@@ -1503,15 +1285,12 @@
                     <i class="fas fa-save"></i> ذخیره تغییرات
                 </button>
             </div>
-            
             <div class="categories-management" id="categories-management">
                 <!-- دسته‌بندی‌ها و جفت ارزها به صورت داینامیک لود می‌شوند -->
             </div>
         </div>
-        
         <div class="tab-content" id="delete-records">
             <h2 class="section-title">حذف رکوردها</h2>
-            
             <div class="delete-options">
                 <div class="delete-option">
                     <h3><i class="fas fa-trash-alt"></i> حذف تاریخچه معاملات</h3>
@@ -1522,7 +1301,6 @@
                         </button>
                     </div>
                 </div>
-                
                 <div class="delete-option">
                     <h3><i class="fas fa-trash-alt"></i> حذف جفت ارزها</h3>
                     <p>با این عمل تمام جفت ارزها و دسته‌بندی‌ها حذف خواهند شد.</p>
@@ -1532,7 +1310,6 @@
                         </button>
                     </div>
                 </div>
-                
                 <div class="delete-option">
                     <h3><i class="fas fa-trash-alt"></i> حذف همه داده‌ها</h3>
                     <p>با این عمل تمام داده‌های سیستم (تاریخچه، جفت ارزها و تنظیمات) حذف خواهند شد.</p>
@@ -1544,10 +1321,8 @@
                 </div>
             </div>
         </div>
-        
         <div class="tab-content" id="data-management">
             <h2 class="section-title">مدیریت داده</h2>
-            
             <div class="data-management">
                 <div class="data-actions">
                     <div class="data-action">
@@ -1557,7 +1332,6 @@
                             <i class="fas fa-download"></i> دانلود فایل پشتیبان
                         </button>
                     </div>
-                    
                     <div class="data-action">
                         <h3><i class="fas fa-upload"></i> بازیابی داده‌ها</h3>
                         <p>داده‌های سیستم را از یک فایل پشتیبان قبلی بازیابی کنید.</p>
@@ -1569,7 +1343,6 @@
                             <i class="fas fa-upload"></i> بازیابی داده‌ها
                         </button>
                     </div>
-                    
                     <div class="data-action">
                         <h3><i class="fas fa-chart-bar"></i> آمار و گزارشات</h3>
                         <p>مشاهده آمار و گزارشات از عملکرد معاملاتی شما.</p>
@@ -1581,7 +1354,6 @@
             </div>
         </div>
     </div>
-    
     <!-- مودال‌ها -->
     <div class="modal" id="categoryModal">
         <div class="modal-content">
@@ -1596,7 +1368,6 @@
             </div>
         </div>
     </div>
-    
     <div class="modal" id="currencyModal">
         <div class="modal-content">
             <h2 id="currencyModalTitle">افزودن جفت ارز جدید</h2>
@@ -1621,7 +1392,6 @@
             </div>
         </div>
     </div>
-    
     <div class="modal" id="deleteCategoryModal">
         <div class="modal-content">
             <h2>حذف دسته‌بندی</h2>
@@ -1638,7 +1408,6 @@
             </div>
         </div>
     </div>
-    
     <div class="modal" id="editCurrencyModal">
         <div class="modal-content">
             <h2>ویرایش جفت ارز</h2>
@@ -1663,7 +1432,6 @@
             </div>
         </div>
     </div>
-    
     <div class="modal" id="statsModal">
         <div class="modal-content">
             <h2>آمار و گزارشات معاملاتی</h2>
@@ -1673,31 +1441,25 @@
             </div>
         </div>
     </div>
-    
     <!-- اعلان خودکار -->
     <div class="auto-alert" id="autoAlert">
         <i class="fas fa-check-circle"></i>
         <span id="alertMessage">عملیات با موفقیت انجام شد</span>
     </div>
-
     <!-- امضا -->
     <div class="signature">
         طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
     </div>
-
     <script>
         // مدیریت حالت تاریک
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
-
         if (localStorage.getItem('darkMode') === 'enabled') {
             body.classList.add('dark-mode');
             themeToggle.innerHTML = '<i class="fas fa-sun"></i> ';
         }
-
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
-            
             if (body.classList.contains('dark-mode')) {
                 localStorage.setItem('darkMode', 'enabled');
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i> ';
@@ -1712,34 +1474,37 @@
         const tabContents = document.querySelectorAll('.tab-content');
         const hamburgerMenu = document.getElementById('hamburgerMenu');
         const mobileTabs = document.getElementById('mobileTabs');
-
         let selectedCurrencyHistory = "all";
         let selectedCurrencyCalculator = localStorage.getItem('selectedCurrencyCalculator') || "";
+
+        // ✅ تابع بستن منوی موبایل و بازگرداندن آیکون
+        function closeMobileMenu() {
+            mobileTabs.classList.remove('active');
+            const icon = hamburgerMenu.querySelector('.hamburger-icon');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
 
         function switchTab(tabName) {
             tabs.forEach(tab => tab.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
-            
             const selectedTab = document.querySelector(`[data-tab="${tabName}"]`);
             const selectedContent = document.getElementById(tabName);
-            
             if (selectedTab && selectedContent) {
                 selectedTab.classList.add('active');
                 selectedContent.classList.add('active');
             }
-            
-            mobileTabs.classList.remove('active');
-            
+            // ✅ بستن منوی موبایل هنگام تغییر تب
+            closeMobileMenu();
+
             if (tabName === 'history') {
                 document.getElementById('filter-currency').value = selectedCurrencyHistory;
                 loadHistory();
             }
-            
             if (tabName === 'calculator') {
                 document.getElementById('currency-pair-calc').value = selectedCurrencyCalculator;
                 loadCurrencyPairs();
             }
-            
             if (tabName === 'currency-management') {
                 loadCategories();
             }
@@ -1755,8 +1520,6 @@
         hamburgerMenu.addEventListener('click', () => {
             const icon = hamburgerMenu.querySelector('.hamburger-icon');
             mobileTabs.classList.toggle('active');
-            
-            // Toggle the icon class
             if (mobileTabs.classList.contains('active')) {
                 icon.classList.remove('fa-bars');
                 icon.classList.add('fa-times');
@@ -1768,43 +1531,32 @@
 
         document.addEventListener('click', (e) => {
             if (!hamburgerMenu.contains(e.target) && !mobileTabs.contains(e.target)) {
-                mobileTabs.classList.remove('active');
-                const icon = hamburgerMenu.querySelector('.hamburger-icon');
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
+                closeMobileMenu();
             }
         });
 
-        // مدیریت اعلان خودکار
+        // === بقیه کدها بدون تغییر ===
         function showAlert(message, type = 'success') {
             const alert = document.getElementById('autoAlert');
             const alertMessage = document.getElementById('alertMessage');
-            
             alertMessage.textContent = message;
             alert.className = 'auto-alert';
-            
             if (type === 'error') alert.classList.add('error');
             else if (type === 'warning') alert.classList.add('warning');
-            
             alert.classList.add('show');
-            
             setTimeout(() => {
                 alert.classList.remove('show');
             }, 3000);
         }
 
-        // بارگذاری جفت ارزها در ماشین حساب
         function loadCurrencyPairs() {
             const currencyPairs = document.getElementById('currency-pair-calc');
             const pipCurrency = document.getElementById('pip-currency');
             const filterCurrency = document.getElementById('filter-currency');
-            
             currencyPairs.innerHTML = '<option value="">انتخاب جفت ارز</option>';
             pipCurrency.innerHTML = '<option value="">انتخاب جفت ارز</option>';
             filterCurrency.innerHTML = '<option value="all">همه جفت ارزها</option>';
-            
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
-            
             categories.forEach(category => {
                 category.currencies.forEach(currency => {
                     const option1 = document.createElement('option');
@@ -1812,27 +1564,22 @@
                     option1.textContent = currency.name;
                     if (currency.name === selectedCurrencyCalculator) option1.selected = true;
                     currencyPairs.appendChild(option1);
-                    
                     const option2 = document.createElement('option');
                     option2.value = currency.name;
                     option2.textContent = currency.name;
                     pipCurrency.appendChild(option2);
-                    
                     const option3 = document.createElement('option');
                     option3.value = currency.name;
                     option3.textContent = currency.name;
                     filterCurrency.appendChild(option3);
                 });
             });
-            
             currencyPairs.addEventListener('change', function() {
                 selectedCurrencyCalculator = this.value;
                 localStorage.setItem('selectedCurrencyCalculator', selectedCurrencyCalculator);
                 updateCurrencyTypeInfo();
             });
-            
             pipCurrency.addEventListener('change', updatePipCurrencyInfo);
-            
             updateCurrencyTypeInfo();
             updatePipCurrencyInfo();
         }
@@ -1840,15 +1587,12 @@
         function updateCurrencyTypeInfo() {
             const currencyPair = document.getElementById('currency-pair-calc').value;
             const infoElement = document.getElementById('currency-type-info');
-            
             if (!currencyPair) {
                 infoElement.innerHTML = '';
                 return;
             }
-            
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
             let currencyType = 'standard';
-            
             for (const category of categories) {
                 const currency = category.currencies.find(c => c.name === currencyPair);
                 if (currency) {
@@ -1856,7 +1600,6 @@
                     break;
                 }
             }
-            
             if (currencyType === 'jpy') {
                 infoElement.innerHTML = '<i class="fas fa-info-circle"></i> این جفت ارز دارای ین ژاپن است (2 رقم اعشار)';
             } else {
@@ -1867,12 +1610,9 @@
         function updatePipCurrencyInfo() {
             const currencyPair = document.getElementById('pip-currency').value;
             const infoElement = document.querySelector('.pip-value-info');
-            
             if (!currencyPair) return;
-            
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
             let currencyType = 'standard';
-            
             for (const category of categories) {
                 const currency = category.currencies.find(c => c.name === currencyPair);
                 if (currency) {
@@ -1880,7 +1620,6 @@
                     break;
                 }
             }
-            
             if (currencyType === 'jpy') {
                 infoElement.innerHTML = '<i class="fas fa-info-circle"></i> این جفت ارز دارای ین ژاپن است (ارزش پیپ: 0.01)';
             } else {
@@ -1888,34 +1627,23 @@
             }
         }
 
-        // بارگذاری تاریخچه معاملات - اصلاح شده
         function loadHistory() {
             const historyList = document.getElementById('history-list');
             const filterCurrency = document.getElementById('filter-currency').value;
             const filterDate = document.getElementById('filter-date').value;
             const filterResult = document.getElementById('filter-result').value;
-            
             selectedCurrencyHistory = filterCurrency;
-            
             historyList.innerHTML = '';
-            
             const history = JSON.parse(localStorage.getItem('history')) || [];
-            
-            // فیلتر کردن تاریخچه - اصلاح شده
             let filteredHistory = history;
-            
             if (filterCurrency !== 'all') {
                 filteredHistory = filteredHistory.filter(item => item.currency === filterCurrency);
             }
-            
-            // **اصلاح مهم: اگر تاریخ مشخص شده، فقط معاملات آن تاریخ نمایش داده شود**
             if (filterDate) {
                 filteredHistory = filteredHistory.filter(item => item.date === filterDate);
             } else {
-                // **اگر تاریخ مشخص نشده، هیچ معامله‌ای نمایش داده نشود**
                 filteredHistory = [];
             }
-            
             if (filterResult !== 'all') {
                 if (filterResult === 'profit') {
                     filteredHistory = filteredHistory.filter(item => item.profit > 0);
@@ -1925,7 +1653,6 @@
                     filteredHistory = filteredHistory.filter(item => !item.profit);
                 }
             }
-            
             if (filteredHistory.length === 0) {
                 let message = 'هیچ معامله‌ای یافت نشد';
                 if (filterDate) {
@@ -1933,7 +1660,6 @@
                 } else {
                     message = 'لطفاً تاریخ مورد نظر را انتخاب کنید';
                 }
-                
                 historyList.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-history"></i>
@@ -1943,14 +1669,11 @@
                 `;
                 return;
             }
-            
             filteredHistory.forEach(item => {
                 const historyItem = document.createElement('div');
                 historyItem.className = 'history-item';
-                
                 const profitClass = item.profit > 0 ? 'profit' : (item.profit < 0 ? 'loss' : '');
                 const profitText = item.profit > 0 ? `+${item.profit}` : (item.profit < 0 ? item.profit : 'در انتظار');
-                
                 historyItem.innerHTML = `
                     <div class="history-header">
                         <div class="history-currency">${item.currency}</div>
@@ -2002,17 +1725,14 @@
                         </button>
                     </div>
                 `;
-                
                 historyList.appendChild(historyItem);
             });
-            
             document.querySelectorAll('.edit-history').forEach(button => {
                 button.addEventListener('click', function() {
                     const id = this.getAttribute('data-id');
                     editHistoryItem(id);
                 });
             });
-            
             document.querySelectorAll('.delete-history').forEach(button => {
                 button.addEventListener('click', function() {
                     const id = this.getAttribute('data-id');
@@ -2024,9 +1744,7 @@
         function editHistoryItem(id) {
             const history = JSON.parse(localStorage.getItem('history')) || [];
             const item = history.find(item => item.id == id);
-            
             if (!item) return;
-            
             document.getElementById('currency-pair-calc').value = item.currency;
             document.getElementById('trade-date').value = item.date;
             document.getElementById('lot-size').value = item.lotSize;
@@ -2036,25 +1754,19 @@
             document.getElementById('exit-price').value = item.exitPrice || '';
             document.getElementById('position-type').value = item.positionType;
             document.getElementById('trade-notes').value = item.notes || '';
-            
             switchTab('calculator');
-            
             showAlert('اطلاعات معامله برای ویرایش بارگذاری شد', 'info');
         }
 
         function deleteHistoryItem(id) {
             if (!confirm('آیا از حذف این معامله اطمینان دارید؟ این عمل قابل بازگشت نیست.')) return;
-            
             let history = JSON.parse(localStorage.getItem('history')) || [];
             history = history.filter(item => item.id != id);
-            
             localStorage.setItem('history', JSON.stringify(history));
             loadHistory();
-            
             showAlert('معامله با موفقیت حذف شد');
         }
 
-        // محاسبه سود/ضرر
         document.getElementById('calculate').addEventListener('click', function() {
             const currencyPair = document.getElementById('currency-pair-calc').value;
             const tradeDate = document.getElementById('trade-date').value;
@@ -2065,37 +1777,29 @@
             const exitPrice = document.getElementById('exit-price').value ? parseFloat(document.getElementById('exit-price').value) : null;
             const positionType = document.getElementById('position-type').value;
             const notes = document.getElementById('trade-notes').value;
-            
             if (!currencyPair || !tradeDate || !lotSize || !entryPrice || !takeProfit || !stopLoss) {
                 showAlert('لطفاً تمام فیلدهای ضروری را پر کنید', 'error');
                 return;
             }
-            
             let targetPips, stopPips, profit = null;
-            
             if (positionType === 'buy') {
                 targetPips = (takeProfit - entryPrice) * 10000;
                 stopPips = (entryPrice - stopLoss) * 10000;
-                
                 if (exitPrice) {
                     profit = (exitPrice - entryPrice) * 10000 * lotSize * 10;
                 }
             } else {
                 targetPips = (entryPrice - takeProfit) * 10000;
                 stopPips = (stopLoss - entryPrice) * 10000;
-                
                 if (exitPrice) {
                     profit = (entryPrice - exitPrice) * 10000 * lotSize * 10;
                 }
             }
-            
             const riskReward = targetPips / stopPips;
-            
             document.getElementById('target-pips').textContent = targetPips.toFixed(2);
             document.getElementById('stop-pips').textContent = stopPips.toFixed(2);
             document.getElementById('risk-reward').textContent = riskReward.toFixed(2);
             document.getElementById('result').style.display = 'block';
-            
             const historyItem = {
                 id: Date.now(),
                 currency: currencyPair,
@@ -2109,23 +1813,17 @@
                 notes: notes,
                 profit: profit
             };
-            
             let history = JSON.parse(localStorage.getItem('history')) || [];
             history.push(historyItem);
             localStorage.setItem('history', JSON.stringify(history));
-            
             showAlert('محاسبه انجام و در تاریخچه ذخیره شد');
         });
 
-        // ریست ماشین حساب اصلی - فقط فیلدهای عددی
         document.getElementById('reset').addEventListener('click', function() {
-            // لیست IDهای فیلدهایی که باید ریست شوند
             const fieldsToReset = [
                 'lot-size', 'entry-price', 'take-profit', 
                 'stop-loss', 'exit-price', 'trade-notes'
             ];
-            
-            // مقدار پیش‌فرض برای هر فیلد
             const defaultValues = {
                 'lot-size': '0.1',
                 'entry-price': '',
@@ -2134,36 +1832,27 @@
                 'exit-price': '',
                 'trade-notes': ''
             };
-            
-            // ریست فیلدهای مشخص شده
             fieldsToReset.forEach(fieldId => {
                 const element = document.getElementById(fieldId);
                 if (element) {
                     element.value = defaultValues[fieldId] || '';
                 }
             });
-            
-            // مخفی کردن نتایج
             document.getElementById('result').style.display = 'none';
-            
             showAlert('فیلدهای ورودی با موفقیت ریست شدند', 'info');
         });
 
-        // محاسبه ارزش پیپ
         document.getElementById('calculate-pip-value').addEventListener('click', function() {
             const currencyPair = document.getElementById('pip-currency').value;
             const lotSize = parseFloat(document.getElementById('pip-lot-size').value);
             const price = parseFloat(document.getElementById('pip-price').value);
             const accountCurrency = document.getElementById('account-currency').value;
-            
             if (!currencyPair || !lotSize || !price) {
                 showAlert('لطفاً تمام فیلدهای ضروری را پر کنید', 'error');
                 return;
             }
-            
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
             let currencyType = 'standard';
-            
             for (const category of categories) {
                 const currency = category.currencies.find(c => c.name === currencyPair);
                 if (currency) {
@@ -2171,48 +1860,34 @@
                     break;
                 }
             }
-            
             let pipValue;
-            
             if (currencyType === 'jpy') {
                 pipValue = (0.01 / price) * lotSize * 100000;
             } else {
                 pipValue = 0.0001 * lotSize * 100000;
             }
-            
             document.getElementById('calculated-pip-value').textContent = pipValue.toFixed(2);
             document.getElementById('calculated-10pip-value').textContent = (pipValue * 10).toFixed(2);
             document.getElementById('calculated-50pip-value').textContent = (pipValue * 50).toFixed(2);
-            
             document.getElementById('pip-currency-display').textContent = accountCurrency;
             document.getElementById('pip10-currency-display').textContent = accountCurrency;
             document.getElementById('pip50-currency-display').textContent = accountCurrency;
-            
             document.getElementById('pip-result').style.display = 'block';
         });
 
-        // ریست ماشین حساب ارزش پیپ - فقط فیلدهای عددی
         document.getElementById('reset-pip-calculator').addEventListener('click', function() {
-            // لیست IDهای فیلدهایی که باید ریست شوند
             const fieldsToReset = ['pip-lot-size', 'pip-price'];
-            
-            // مقدار پیش‌فرض برای هر فیلد
             const defaultValues = {
                 'pip-lot-size': '0.1',
                 'pip-price': ''
             };
-            
-            // ریست فیلدهای مشخص شده
             fieldsToReset.forEach(fieldId => {
                 const element = document.getElementById(fieldId);
                 if (element) {
                     element.value = defaultValues[fieldId] || '';
                 }
             });
-            
-            // مخفی کردن نتایج
             document.getElementById('pip-result').style.display = 'none';
-            
             showAlert('فیلدهای ماشین حساب ارزش پیپ ریست شدند', 'info');
         });
 
@@ -2224,40 +1899,31 @@
         });
 
         document.getElementById('apply-filter').addEventListener('click', loadHistory);
-
         document.getElementById('clear-filter').addEventListener('click', function() {
             document.getElementById('filter-currency').value = 'all';
             document.getElementById('filter-date').value = '';
             document.getElementById('filter-result').value = 'all';
             loadHistory();
-            
             showAlert('فیلترها حذف شدند', 'info');
         });
 
-        // بارگذاری اولیه
         document.addEventListener('DOMContentLoaded', function() {
             loadCurrencyPairs();
             loadHistory();
             loadCategories();
-            
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('trade-date').value = today;
-            
             switchTab('calculator');
         });
 
-        // بارگذاری دسته‌بندی‌ها
         function loadCategories() {
             const categoriesContainer = document.getElementById('categories-management');
             const currencyCategorySelect = document.getElementById('currency-category');
             const editCurrencyCategorySelect = document.getElementById('edit-currency-category');
-            
             categoriesContainer.innerHTML = '';
             currencyCategorySelect.innerHTML = '';
             editCurrencyCategorySelect.innerHTML = '';
-            
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
-            
             if (categories.length === 0) {
                 categoriesContainer.innerHTML = `
                     <div class="empty-state">
@@ -2268,24 +1934,19 @@
                 `;
                 return;
             }
-            
             categories.forEach(category => {
                 const option = document.createElement('option');
                 option.value = category.id;
                 option.textContent = category.name;
                 currencyCategorySelect.appendChild(option);
-                
                 const editOption = document.createElement('option');
                 editOption.value = category.id;
                 editOption.textContent = category.name;
                 editCurrencyCategorySelect.appendChild(editOption);
-                
                 const categoryElement = document.createElement('div');
                 categoryElement.className = 'currency-category';
                 categoryElement.setAttribute('data-category-id', category.id);
-                
                 let currenciesHTML = '';
-                
                 if (category.currencies.length === 0) {
                     currenciesHTML = `
                         <div class="empty-state">
@@ -2298,7 +1959,6 @@
                         const currencyTypeBadge = currency.type === 'jpy' ? 
                             '<span class="currency-type-badge">JPY</span>' : 
                             '<span class="currency-type-badge">STD</span>';
-                        
                         currenciesHTML += `
                             <div class="currency-card" draggable="true" data-currency-id="${currency.id}">
                                 <div class="currency-name">
@@ -2319,7 +1979,6 @@
                         `;
                     });
                 }
-                
                 categoryElement.innerHTML = `
                     <div class="category-header">
                         <div class="category-title">
@@ -2340,46 +1999,38 @@
                         ${currenciesHTML}
                     </div>
                 `;
-                
                 categoriesContainer.appendChild(categoryElement);
             });
-            
             setupDragAndDrop();
-            
             document.querySelectorAll('.edit-category').forEach(button => {
                 button.addEventListener('click', function() {
                     const categoryId = this.getAttribute('data-category-id');
                     editCategory(categoryId);
                 });
             });
-            
             document.querySelectorAll('.delete-category').forEach(button => {
                 button.addEventListener('click', function() {
                     const categoryId = this.getAttribute('data-category-id');
                     deleteCategory(categoryId);
                 });
             });
-            
             document.querySelectorAll('.edit-currency').forEach(button => {
                 button.addEventListener('click', function() {
                     const currencyId = this.getAttribute('data-currency-id');
                     editCurrency(currencyId);
                 });
             });
-            
             document.querySelectorAll('.delete-currency').forEach(button => {
                 button.addEventListener('click', function() {
                     const currencyId = this.getAttribute('data-currency-id');
                     deleteCurrency(currencyId);
                 });
             });
-            
             document.querySelectorAll('.category-header').forEach(header => {
                 header.addEventListener('click', function() {
                     const categoryId = this.querySelector('.edit-category').getAttribute('data-category-id');
                     const currencyList = document.querySelector(`.currency-list[data-category-id="${categoryId}"]`);
                     const categoryTitle = this.querySelector('.category-title');
-                    
                     currencyList.classList.toggle('collapsed');
                     categoryTitle.classList.toggle('collapsed');
                 });
@@ -2389,17 +2040,14 @@
         function setupDragAndDrop() {
             const currencyCards = document.querySelectorAll('.currency-card');
             const currencyLists = document.querySelectorAll('.currency-list');
-            
             let draggedItem = null;
             let sourceCategory = null;
-            
             currencyCards.forEach(card => {
                 card.addEventListener('dragstart', function(e) {
                     draggedItem = this;
                     sourceCategory = this.closest('.currency-list').getAttribute('data-category-id');
                     setTimeout(() => this.classList.add('dragging'), 0);
                 });
-                
                 card.addEventListener('dragend', function() {
                     this.classList.remove('dragging');
                     draggedItem = null;
@@ -2407,21 +2055,17 @@
                     saveCategoryChanges();
                 });
             });
-            
             currencyLists.forEach(list => {
                 list.addEventListener('dragover', function(e) {
                     e.preventDefault();
                     this.classList.add('drag-over');
                 });
-                
                 list.addEventListener('dragleave', function() {
                     this.classList.remove('drag-over');
                 });
-                
                 list.addEventListener('drop', function(e) {
                     e.preventDefault();
                     this.classList.remove('drag-over');
-                    
                     if (draggedItem && this !== draggedItem.parentNode) {
                         const targetCategory = this.getAttribute('data-category-id');
                         moveCurrency(draggedItem.getAttribute('data-currency-id'), sourceCategory, targetCategory);
@@ -2435,16 +2079,12 @@
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
             const sourceCategory = categories.find(c => c.id == sourceCategoryId);
             const targetCategory = categories.find(c => c.id == targetCategoryId);
-            
             if (!sourceCategory || !targetCategory) return;
-            
             const currencyIndex = sourceCategory.currencies.findIndex(c => c.id == currencyId);
             if (currencyIndex === -1) return;
-            
             const currency = sourceCategory.currencies[currencyIndex];
             sourceCategory.currencies.splice(currencyIndex, 1);
             targetCategory.currencies.push(currency);
-            
             localStorage.setItem('categories', JSON.stringify(categories));
             showAlert(`جفت ارز ${currency.name} به دسته‌بندی ${targetCategory.name} منتقل شد`);
         }
@@ -2452,39 +2092,30 @@
         function saveCategoryChanges() {
             const categoriesContainer = document.getElementById('categories-management');
             const categories = [];
-            
             const categoryElements = categoriesContainer.querySelectorAll('.currency-category');
-            
             categoryElements.forEach(categoryElement => {
                 const categoryId = categoryElement.getAttribute('data-category-id');
                 const categoryName = categoryElement.querySelector('.category-title').textContent.replace(/[\d\s]+جفت ارز/, '').trim();
-                
                 const currencies = [];
                 const currencyElements = categoryElement.querySelectorAll('.currency-card');
-                
                 currencyElements.forEach(currencyElement => {
                     const currencyId = currencyElement.getAttribute('data-currency-id');
                     const currencyName = currencyElement.querySelector('.currency-name').textContent.trim();
-                    
                     let currencyType = 'standard';
                     if (currencyName.includes('JPY')) currencyType = 'jpy';
-                    
                     const cleanName = currencyName.replace('JPY', '').replace('STD', '').trim();
-                    
                     currencies.push({
                         id: parseInt(currencyId),
                         name: cleanName,
                         type: currencyType
                     });
                 });
-                
                 categories.push({
                     id: parseInt(categoryId),
                     name: categoryName,
                     currencies: currencies
                 });
             });
-            
             localStorage.setItem('categories', JSON.stringify(categories));
             loadCurrencyPairs();
             showAlert('تغییرات دسته‌بندی‌ها ذخیره شد');
@@ -2498,25 +2129,20 @@
 
         document.getElementById('saveCategory').addEventListener('click', function() {
             const categoryName = document.getElementById('category-name').value.trim();
-            
             if (!categoryName) {
                 showAlert('لطفاً نام دسته را وارد کنید', 'error');
                 return;
             }
-            
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
             const newCategory = {
                 id: Date.now(),
                 name: categoryName,
                 currencies: []
             };
-            
             categories.push(newCategory);
             localStorage.setItem('categories', JSON.stringify(categories));
-            
             document.getElementById('categoryModal').style.display = 'none';
             loadCategories();
-            
             showAlert('دسته جدید با موفقیت ایجاد شد');
         });
 
@@ -2527,30 +2153,22 @@
         function editCategory(categoryId) {
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
             const category = categories.find(c => c.id == categoryId);
-            
             if (!category) return;
-            
             document.getElementById('categoryModalTitle').textContent = 'ویرایش دسته';
             document.getElementById('category-name').value = category.name;
             document.getElementById('categoryModal').style.display = 'flex';
-            
             const saveButton = document.getElementById('saveCategory');
             const originalHandler = saveButton.onclick;
-            
             saveButton.onclick = function() {
                 const categoryName = document.getElementById('category-name').value.trim();
-                
                 if (!categoryName) {
                     showAlert('لطفاً نام دسته را وارد کنید', 'error');
                     return;
                 }
-                
                 category.name = categoryName;
                 localStorage.setItem('categories', JSON.stringify(categories));
-                
                 document.getElementById('categoryModal').style.display = 'none';
                 loadCategories();
-                
                 showAlert('دسته با موفقیت ویرایش شد');
                 saveButton.onclick = originalHandler;
             };
@@ -2559,19 +2177,14 @@
         function deleteCategory(categoryId) {
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
             const category = categories.find(c => c.id == categoryId);
-            
             if (!category) return;
-            
             if (category.currencies.length > 0) {
                 document.getElementById('delete-category-message').textContent = 
                     `دسته‌بندی "${category.name}" دارای ${category.currencies.length} جفت ارز است. می‌خواهید چه عملی انجام دهید؟`;
-                
                 const moveSection = document.getElementById('move-currencies-section');
                 moveSection.style.display = 'block';
-                
                 const moveToSelect = document.getElementById('move-to-category');
                 moveToSelect.innerHTML = '';
-                
                 categories.forEach(cat => {
                     if (cat.id != categoryId) {
                         const option = document.createElement('option');
@@ -2580,17 +2193,13 @@
                         moveToSelect.appendChild(option);
                     }
                 });
-                
                 const deleteOption = document.createElement('option');
                 deleteOption.value = 'delete';
                 deleteOption.textContent = 'حذف همه جفت ارزها';
                 moveToSelect.appendChild(deleteOption);
-                
                 document.getElementById('deleteCategoryModal').style.display = 'flex';
-                
                 document.getElementById('confirmDeleteCategory').onclick = function() {
                     const action = moveToSelect.value;
-                    
                     if (action === 'delete') {
                         categories.splice(categories.indexOf(category), 1);
                     } else {
@@ -2600,12 +2209,10 @@
                             categories.splice(categories.indexOf(category), 1);
                         }
                     }
-                    
                     localStorage.setItem('categories', JSON.stringify(categories));
                     document.getElementById('deleteCategoryModal').style.display = 'none';
                     loadCategories();
                     loadCurrencyPairs();
-                    
                     showAlert('دسته‌بندی با موفقیت حذف شد');
                 };
             } else {
@@ -2613,7 +2220,6 @@
                     categories.splice(categories.indexOf(category), 1);
                     localStorage.setItem('categories', JSON.stringify(categories));
                     loadCategories();
-                    
                     showAlert('دسته‌بندی با موفقیت حذف شد');
                 }
             }
@@ -2634,44 +2240,35 @@
             const currencyName = document.getElementById('currency-name').value.trim().toUpperCase();
             const categoryId = document.getElementById('currency-category').value;
             const currencyType = document.getElementById('currency-type').value;
-            
             if (!currencyName) {
                 showAlert('لطفاً نام جفت ارز را وارد کنید', 'error');
                 return;
             }
-            
             if (!categoryId) {
                 showAlert('لطفاً یک دسته‌بندی انتخاب کنید', 'error');
                 return;
             }
-            
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
             const category = categories.find(c => c.id == categoryId);
-            
             if (!category) {
                 showAlert('دسته‌بندی انتخاب شده معتبر نیست', 'error');
                 return;
             }
-            
             const existingCurrency = category.currencies.find(c => c.name === currencyName);
             if (existingCurrency) {
                 showAlert('این جفت ارز قبلاً در این دسته اضافه شده است', 'error');
                 return;
             }
-            
             const newCurrency = {
                 id: Date.now(),
                 name: currencyName,
                 type: currencyType
             };
-            
             category.currencies.push(newCurrency);
             localStorage.setItem('categories', JSON.stringify(categories));
-            
             document.getElementById('currencyModal').style.display = 'none';
             loadCategories();
             loadCurrencyPairs();
-            
             showAlert('جفت ارز جدید با موفقیت اضافه شد');
         });
 
@@ -2683,7 +2280,6 @@
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
             let currency = null;
             let category = null;
-            
             for (const cat of categories) {
                 currency = cat.currencies.find(c => c.id == currencyId);
                 if (currency) {
@@ -2691,35 +2287,28 @@
                     break;
                 }
             }
-            
             if (!currency || !category) return;
-            
             document.getElementById('edit-currency-name').value = currency.name;
             document.getElementById('edit-currency-type').value = currency.type;
             document.getElementById('edit-currency-category').value = category.id;
             document.getElementById('editCurrencyModal').style.display = 'flex';
-            
             document.getElementById('saveEditCurrency').onclick = function() {
                 const currencyName = document.getElementById('edit-currency-name').value.trim().toUpperCase();
                 const newCategoryId = document.getElementById('edit-currency-category').value;
                 const currencyType = document.getElementById('edit-currency-type').value;
-                
                 if (!currencyName) {
                     showAlert('لطفاً نام جفت ارز را وارد کنید', 'error');
                     return;
                 }
-                
                 if (!newCategoryId) {
                     showAlert('لطفاً یک دسته‌بندی انتخاب کنید', 'error');
                     return;
                 }
-                
                 const newCategory = categories.find(c => c.id == newCategoryId);
                 if (!newCategory) {
                     showAlert('دسته‌بندی انتخاب شده معتبر نیست', 'error');
                     return;
                 }
-                
                 if (category.id != newCategoryId) {
                     category.currencies = category.currencies.filter(c => c.id != currencyId);
                     newCategory.currencies.push({
@@ -2731,13 +2320,10 @@
                     currency.name = currencyName;
                     currency.type = currencyType;
                 }
-                
                 localStorage.setItem('categories', JSON.stringify(categories));
-                
                 document.getElementById('editCurrencyModal').style.display = 'none';
                 loadCategories();
                 loadCurrencyPairs();
-                
                 showAlert('جفت ارز با موفقیت ویرایش شد');
             };
         }
@@ -2748,9 +2334,7 @@
 
         function deleteCurrency(currencyId) {
             if (!confirm('آیا از حذف این جفت ارز اطمینان دارید؟')) return;
-            
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
-            
             for (const category of categories) {
                 const currencyIndex = category.currencies.findIndex(c => c.id == currencyId);
                 if (currencyIndex !== -1) {
@@ -2758,43 +2342,34 @@
                     break;
                 }
             }
-            
             localStorage.setItem('categories', JSON.stringify(categories));
             loadCategories();
             loadCurrencyPairs();
-            
             showAlert('جفت ارز با موفقیت حذف شد');
         }
 
         document.getElementById('save-changes').addEventListener('click', saveCategoryChanges);
-
         document.getElementById('delete-history').addEventListener('click', function() {
             if (!confirm('آیا از حذف تمام تاریخچه معاملات اطمینان دارید؟ این عمل قابل بازگشت نیست.')) return;
-            
             localStorage.removeItem('history');
             loadHistory();
-            
             showAlert('تاریخچه معاملات با موفقیت حذف شد');
         });
 
         document.getElementById('delete-currencies').addEventListener('click', function() {
             if (!confirm('آیا از حذف تمام جفت ارزها و دسته‌بندی‌ها اطمینان دارید؟ این عمل قابل بازگشت نیست.')) return;
-            
             localStorage.removeItem('categories');
             loadCategories();
             loadCurrencyPairs();
-            
             showAlert('جفت ارزها و دسته‌بندی‌ها با موفقیت حذف شد');
         });
 
         document.getElementById('delete-all').addEventListener('click', function() {
             if (!confirm('آیا از حذف تمام داده‌های سیستم اطمینان دارید؟ این عمل قابل بازگشت نیست.')) return;
-            
             localStorage.clear();
             loadCategories();
             loadCurrencyPairs();
             loadHistory();
-            
             showAlert('تمام داده‌های سیستم با موفقیت حذف شد');
         });
 
@@ -2807,10 +2382,8 @@
                     selectedCurrencyCalculator: selectedCurrencyCalculator
                 }
             };
-            
             const dataStr = JSON.stringify(data, null, 2);
             const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
             const url = URL.createObjectURL(dataBlob);
             const a = document.createElement('a');
             a.href = url;
@@ -2819,32 +2392,25 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            
             showAlert('فایل پشتیبان با موفقیت دانلود شد');
         });
 
         document.getElementById('restore-data').addEventListener('click', function() {
             const fileInput = document.getElementById('backup-file');
             const file = fileInput.files[0];
-            
             if (!file) {
                 showAlert('لطفاً یک فایل پشتیبان انتخاب کنید', 'error');
                 return;
             }
-            
             const reader = new FileReader();
-            
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    
                     if (data.categories) localStorage.setItem('categories', JSON.stringify(data.categories));
                     if (data.history) localStorage.setItem('history', JSON.stringify(data.history));
-                    
                     if (data.settings) {
                         if (data.settings.darkMode) {
                             localStorage.setItem('darkMode', data.settings.darkMode);
-                            
                             if (data.settings.darkMode === 'enabled') {
                                 body.classList.add('dark-mode');
                                 themeToggle.innerHTML = '<i class="fas fa-sun"></i> ';
@@ -2853,17 +2419,14 @@
                                 themeToggle.innerHTML = '<i class="fas fa-moon"></i> ';
                             }
                         }
-                        
                         if (data.settings.selectedCurrencyCalculator) {
                             selectedCurrencyCalculator = data.settings.selectedCurrencyCalculator;
                             localStorage.setItem('selectedCurrencyCalculator', selectedCurrencyCalculator);
                         }
                     }
-                    
                     loadCategories();
                     loadCurrencyPairs();
                     loadHistory();
-                    
                     showAlert('داده‌ها با موفقیت بازیابی شدند');
                     fileInput.value = '';
                 } catch (error) {
@@ -2871,24 +2434,19 @@
                     console.error(error);
                 }
             };
-            
             reader.readAsText(file);
         });
 
         document.getElementById('show-stats').addEventListener('click', function() {
             const history = JSON.parse(localStorage.getItem('history')) || [];
             const categories = JSON.parse(localStorage.getItem('categories')) || [];
-            
             let totalTrades = history.length;
             let profitableTrades = history.filter(t => t.profit > 0).length;
             let losingTrades = history.filter(t => t.profit < 0).length;
             let pendingTrades = history.filter(t => !t.profit).length;
-            
             let totalProfit = history.reduce((sum, trade) => sum + (trade.profit || 0), 0);
             let averageProfit = totalTrades > 0 ? totalProfit / totalTrades : 0;
-            
             let winRate = totalTrades > 0 ? (profitableTrades / totalTrades) * 100 : 0;
-            
             const statsContent = document.getElementById('stats-content');
             statsContent.innerHTML = `
                 <div class="result">
@@ -2926,7 +2484,6 @@
                     </div>
                 </div>
             `;
-            
             document.getElementById('statsModal').style.display = 'flex';
         });
 
