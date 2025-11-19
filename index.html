@@ -103,7 +103,7 @@
             padding-right: env(safe-area-inset-right);
         }
 
-        /* ========== LOGIN STYLES ========== */
+        /* ========== LOGIN STYLES - اصلاح شده ========== */
         .login-container {
             background-color: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
@@ -116,15 +116,39 @@
             width: 90%;
             text-align: center;
             position: relative;
-            margin: auto;
-            /* ✅ اسکرول هوشمند در موبایل */
-            max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 30px);
+            /* ✅ اصلاح ارتفاع و موقعیت‌یابی */
+            margin: 20px auto;
+            max-height: calc(100vh - 40px);
+            max-height: calc(100dvh - 40px);
             overflow-y: auto;
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
             isolation: isolate;
             transition: all 0.3s ease;
+        }
+
+        /* اصلاح ارتفاع برای موبایل */
+        @media (max-width: 480px) {
+            .login-container {
+                background-color: var(--glass-bg);
+                margin: 10px auto;
+                padding: 25px 20px;
+                width: 95%;
+                max-height: calc(100dvh - 20px);
+                backdrop-filter: blur(8px) saturate(200%);
+                -webkit-backdrop-filter: blur(8px) saturate(200%);
+                border-radius: 15px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .login-container {
+                margin: 5px auto;
+                padding: 20px 15px;
+                max-height: calc(100dvh - 10px);
+                border-radius: 12px;
+            }
         }
 
         /* اسکرول زیبا فقط برای لاگین (Firefox) */
@@ -145,19 +169,10 @@
             background: rgba(0, 0, 0, 0.1) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
-        @media (max-width: 480px) {
-            .login-container {
-                background-color: var(--glass-bg);
-                margin: 20px auto;
-                padding: 30px 20px;
-                width: 95%;
-                backdrop-filter: blur(8px) saturate(200%);
-                -webkit-backdrop-filter: blur(8px) saturate(200%);
-            }
-        }
         .header-group {
             position: relative;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            flex-shrink: 0;
         }
         h1 {
             color: white;
@@ -170,6 +185,7 @@
             flex-direction: column;
             gap: 20px;
             position: relative;
+            flex-shrink: 0;
         }
         .settings-icon {
             position: absolute;
@@ -291,6 +307,7 @@
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             animation: fadeIn 0.6s ease-out;
+            flex-shrink: 0;
         }
         .ds-icon {
             background: rgba(255, 193, 7, 0.2);
@@ -347,6 +364,7 @@
             -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
             transition: all 0.3s ease;
+            flex-shrink: 0;
         }
         .setup-guide h3 {
             color: white;
@@ -378,11 +396,39 @@
             font-size: 14px;
             font-weight: 500;
             display: block;
-            margin: 30px auto;
+            margin: 20px auto 0;
             width: fit-content;
             max-width: 90%;
             box-sizing: border-box;
             transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        /* ✅ تغییرات جدید برای امضای موبایل */
+        @media (max-width: 480px) {
+            .login-signature {
+                background: rgba(0, 0, 0, 0.5) !important;
+                backdrop-filter: blur(15px) saturate(200%) !important;
+                -webkit-backdrop-filter: blur(15px) saturate(200%) !important;
+                border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+                position: relative;
+                z-index: 10;
+                margin-top: 15px;
+                margin-bottom: 5px;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .login-signature {
+                background: rgba(0, 0, 0, 0.6) !important;
+                backdrop-filter: blur(20px) saturate(200%) !important;
+                -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+                border: 1px solid rgba(255, 255, 255, 0.4) !important;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+                padding: 14px;
+                margin-top: 10px;
+            }
         }
 
         /* ========== سایر استایل‌ها بدون تغییر ========== */
@@ -1282,153 +1328,118 @@
             mainContent.style.display = 'flex';
             document.body.classList.add('logged-in'); // ✅ این خط اضافه شد
             setTimeout(initMouseWheelScroll, 100);
-        } else {
-            loginPage.style.display = 'block';
-            mainContent.style.display = 'none';
-            document.body.classList.remove('logged-in');
         }
 
-        window.addEventListener('load', () => {
-            if (loginPage.style.display !== 'none') {
-                 setTimeout(() => {
-                    otpInput.focus();
-                }, 500);
-            }
-        });
-
-        // ==================== TAB MANAGEMENT ====================
-        function openTab(n) {
-            document.querySelectorAll('.tab').forEach((t, i) => {
-                t.classList.toggle('active', i === n);
-            });
-            document.querySelectorAll('iframe').forEach((f, i) => {
-                f.classList.toggle('active', i === n);
-            });
+        // ==================== TABS & IFRAMES ====================
+        const tabs = document.querySelectorAll('.tab');
+        const iframes = document.querySelectorAll('.iframe-container iframe');
+        
+        function openTab(index) {
+            tabs.forEach(tab => tab.classList.remove('active'));
+            iframes.forEach(iframe => iframe.classList.remove('active'));
+            
+            tabs[index].classList.add('active');
+            iframes[index].classList.add('active');
+            
+            // ذخیره تب فعال در localStorage
+            localStorage.setItem('activeTab', index);
         }
-
-        // ==================== ADVANCED SCROLL FOR TABS ====================
+        
+        // بازیابی تب فعال از localStorage
+        const savedTab = localStorage.getItem('activeTab');
+        if (savedTab !== null) {
+            openTab(parseInt(savedTab));
+        }
+        
+        // اسکرول افقی با موس wheell در دسکتاپ
         function initMouseWheelScroll() {
             const tabsScrollContainer = document.getElementById('tabsScrollContainer');
-            const tabs = document.getElementById('tabs');
-            if (!tabsScrollContainer || !tabs) return;
-            tabsScrollContainer.addEventListener('wheel', function(e) {
-                e.preventDefault();
-                this.scrollLeft += e.deltaY;
-            });
-            let isDragging = false;
-            let startX;
-            let scrollLeft;
-            tabsScrollContainer.addEventListener('mousedown', function(e) {
-                isDragging = true;
-                startX = e.pageX - this.offsetLeft;
-                scrollLeft = this.scrollLeft;
-                this.style.cursor = 'grabbing';
-                this.style.userSelect = 'none';
-            });
-            tabs.addEventListener('mousedown', function(e) {
-                isDragging = true;
+            if (!tabsScrollContainer) return;
+            
+            let isScrolling = false;
+            
+            tabsScrollContainer.addEventListener('wheel', (e) => {
+                if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                    e.preventDefault();
+                    tabsScrollContainer.scrollLeft += e.deltaY;
+                }
+            }, { passive: false });
+            
+            // بهبود تجربه کاربری برای لمس در موبایل
+            let startX = 0;
+            let scrollLeft = 0;
+            let isDown = false;
+            
+            tabsScrollContainer.addEventListener('mousedown', (e) => {
+                isDown = true;
                 startX = e.pageX - tabsScrollContainer.offsetLeft;
                 scrollLeft = tabsScrollContainer.scrollLeft;
                 tabsScrollContainer.style.cursor = 'grabbing';
-                tabsScrollContainer.style.userSelect = 'none';
             });
-            document.addEventListener('mouseup', function() {
-                isDragging = false;
+            
+            tabsScrollContainer.addEventListener('mouseleave', () => {
+                isDown = false;
                 tabsScrollContainer.style.cursor = 'grab';
-                tabsScrollContainer.style.userSelect = 'auto';
             });
-            document.addEventListener('mousemove', function(e) {
-                if (!isDragging) return;
+            
+            tabsScrollContainer.addEventListener('mouseup', () => {
+                isDown = false;
+                tabsScrollContainer.style.cursor = 'grab';
+            });
+            
+            tabsScrollContainer.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
                 e.preventDefault();
                 const x = e.pageX - tabsScrollContainer.offsetLeft;
                 const walk = (x - startX) * 2;
                 tabsScrollContainer.scrollLeft = scrollLeft - walk;
             });
-            let touchStartX;
-            let touchScrollLeft;
-            tabsScrollContainer.addEventListener('touchstart', function(e) {
-                touchStartX = e.touches[0].pageX;
-                touchScrollLeft = this.scrollLeft;
-            });
-            tabs.addEventListener('touchstart', function(e) {
-                touchStartX = e.touches[0].pageX;
-                touchScrollLeft = tabsScrollContainer.scrollLeft;
-            });
-            tabsScrollContainer.addEventListener('touchmove', function(e) {
-                if (!touchStartX) return;
-                e.preventDefault();
-                const x = e.touches[0].pageX;
-                const walk = (x - touchStartX) * 2;
-                this.scrollLeft = touchScrollLeft - walk;
-            });
-            tabsScrollContainer.addEventListener('touchend', function() {
-                touchStartX = null;
-            });
         }
-
-        // ==================== PWA INSTALL ====================
+        
+        // ==================== PWA INSTALLATION ====================
         let deferredPrompt;
         const pwaInstallButton = document.getElementById('pwaInstallButton');
-        let installPromptTimeout;
-        function showInstallButton() {
-            pwaInstallButton.style.display = 'block';
-            if (installPromptTimeout) {
-                clearTimeout(installPromptTimeout);
-            }
-            installPromptTimeout = setTimeout(() => {
-                pwaInstallButton.style.display = 'none';
-            }, 120000);
-        }
-        function hideInstallButton() {
-            pwaInstallButton.style.display = 'none';
-            if (installPromptTimeout) {
-                clearTimeout(installPromptTimeout);
-            }
-        }
+        
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            showInstallButton();
+            pwaInstallButton.style.display = 'block';
         });
+        
         pwaInstallButton.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    hideInstallButton();
-                }
+                console.log(`User response to the install prompt: ${outcome}`);
                 deferredPrompt = null;
+                pwaInstallButton.style.display = 'none';
             }
         });
-        window.addEventListener('appinstalled', () => {
-            hideInstallButton();
-            deferredPrompt = null;
-        });
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/cst/sw.js')
-                    .then(function(registration) {
-                        console.log('✅ ServiceWorker ثبت شد: ', registration.scope);
-                    })
-                    .catch(function(error) {
-                        console.log('❌ خطا در ثبت ServiceWorker: ', error);
-                    });
-            });
-        }
-
-        // ==================== INIT ====================
-        document.addEventListener('DOMContentLoaded', () => {
+        
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
             detectDeviceType();
-            loadTheme();
-            updateThemeColor();
-            handleDesktopResponsiveTabs();
             showMobileSuggestion();
-            setTimeout(applyVisualFixes, 100);
-        });
-        window.addEventListener('resize', () => {
-            updateThemeColor();
+            loadTheme();
             handleDesktopResponsiveTabs();
             applyVisualFixes();
+            updateThemeColor();
+            
+            // تنظیم اولیه برای موبایل
+            if (isMobileDevice()) {
+                // اطمینان از اینکه امضا در موبایل مات است
+                const loginSignature = document.querySelector('.login-signature');
+                if (loginSignature) {
+                    loginSignature.style.background = 'rgba(0, 0, 0, 0.5)';
+                    loginSignature.style.backdropFilter = 'blur(15px) saturate(200%)';
+                    loginSignature.style.webkitBackdropFilter = 'blur(15px) saturate(200%)';
+                }
+            }
+        });
+        
+        window.addEventListener('resize', function() {
+            handleDesktopResponsiveTabs();
+            updateThemeColor();
         });
     </script>
 </body>
