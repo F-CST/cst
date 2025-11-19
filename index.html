@@ -1,1617 +1,378 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="Content-Language" content="fa">
-    <meta name="language" content="fa">
-    <meta name="locale" content="fa_IR">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ربات CST - ورود با Google Authenticator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ماشین حساب تخت</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+  <style>
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background-color: #111827; /* bg-gray-900 */
+      margin: 0;
+      /* اصلاح اسکرول موبایل: تغییر hidden به auto */
+      overflow-y: auto; 
+    }
+
+    /* اسکرول بار سفارشی زیبا */
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #1f2937; border-radius: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    .custom-scroll { scrollbar-width: thin; scrollbar-color: #4b5563 #1f2937; }
+
+    /* مخفی کردن اسکرول بار نمایشگر */
+    .display-hide-scroll::-webkit-scrollbar { display: none; }
+    .display-hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* مودال */
+    .modal { display: none; background-color: rgba(0, 0, 0, 0.9); }
+    .modal.show { display: flex; }
+
+    /* جلوگیری از انتخاب متن */
+    .no-select { user-select: none; -webkit-user-select: none; }
     
-    <link rel="manifest" href="/cst/manifest.json">
-    <link rel="icon" type="image/x-icon" href="/cst/icons/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="/cst/icons/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/cst/icons/favicon-32x32.png">
+    /* افکت کلیک */
+    .btn-active:active { opacity: 0.7; transform: scale(0.98); }
+
+    /* امضا */
+    .signature {
+      color: white;
+      text-align: center;
+      padding: 16px;
+      font-family: Vazirmatn, system-ui;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 14px;
+      font-weight: 500;
+      display: block;
+      margin: 30px auto;
+      width: fit-content;
+      max-width: 90%;
+      box-sizing: border-box;
+    }
+
+    /* استایل پرده راهنمای فوکوس (فقط دسکتاپ) */
+    #focus-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
     
-    <link rel="apple-touch-icon" href="/cst/icons/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="/cst/icons/android-chrome-192x192.png">
-    <link rel="apple-touch-icon" sizes="512x512" href="/cst/icons/android-chrome-512x512.png">
-    
-    <meta name="theme-color" content="#735af2">
-    <meta name="msapplication-TileColor" content="#735af2">
-    <meta name="msapplication-navbutton-color" content="#735af2">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="ربات CST">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/sahel-font@v3.4.0/dist/font-face.css" rel="stylesheet" type="text/css" />
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #735af2 0%, #5a3fd0 100%);
-            --primary-color: #735af2;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-blur: blur(5px) saturate(200%);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-enabled: true;
-        }
+    /* مخفی کردن پرده در موبایل و تبلت‌های لمسی */
+    @media (hover: none) {
+      #focus-overlay { display: none !important; }
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Vazirmatn', 'Sahel', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        html, body {
-            height: 100%;
-        }
+    #focus-catcher {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      outline: none;
+    }
 
-        /* ========== BEAUTIFUL SCROLLBAR (طراحی اسکرول بار زیبا) ========== */
-        /* برای مرورگرهای Webkit (Chrome, Safari, Edge) */
-        ::-webkit-scrollbar {
-            width: 6px; /* عرض کم و ظریف */
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent; /* پس‌زمینه کاملاً شفاف */
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2); /* رنگ سفید شیشه‌ای */
-            border-radius: 10px; /* گوشه‌های کاملاً گرد */
-            backdrop-filter: blur(2px);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.4); /* پررنگ‌تر هنگام هاور */
-        }
-
-        /* برای فایرفاکس */
-        html {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-        }
-
-        body {
-            background: var(--bg-gradient);
-            display: flex;
-            flex-direction: column;
-            padding: 0;
-            /* تغییر مهم: در حالت دسکتاپ مخفی باشد، اما در مدیا کوئری موبایل بازنویسی می‌شود */
-            overflow: hidden; 
-            min-height: 100vh;
-            position: relative;
-            transition: background 0.3s ease;
-        }
-        
-        @media (max-width: 480px) {
-            body {
-                background: var(--primary-color) !important;
-            }
-        }
-
-        /* ========== FIX FOR MOBILE SCROLLING (حل مشکل اسکرول موبایل) ========== */
-        @media (max-width: 768px) {
-            body {
-                overflow-y: auto !important; /* فعال کردن اسکرول عمودی در موبایل */
-                height: auto !important;
-                min-height: 100vh;
-            }
-            
-            .login-container {
-                /* اضافه کردن فاصله از بالا و پایین برای اینکه راحت اسکرول شود */
-                margin-top: 40px !important;
-                margin-bottom: 40px !important;
-            }
-        }
-        
-        body.standalone {
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
-        }
-        
-        /* ========== LOGIN STYLES ========== */
-        .login-container {
-            background-color: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--glass-border);
-            max-width: 450px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-            margin: auto;
-            overflow: hidden;
-            isolation: isolate;
-            transition: all 0.3s ease;
-        }
-        
-        :root:not([data-glass="true"]) .login-container,
-        :root:not([data-glass="true"]) .tabs-container,
-        :root:not([data-glass="true"]) .setup-guide,
-        :root:not([data-glass="true"]) .signature,
-        :root:not([data-glass="true"]) .login-signature,
-        :root:not([data-glass="true"]) .tab,
-        :root:not([data-glass="true"]) .device-suggestion {
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            background: rgba(0, 0, 0, 0.1) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        }
-        
-        @media (max-width: 480px) {
-            .login-container {
-                background-color: var(--glass-bg);
-                margin: 20px auto;
-                padding: 30px 20px;
-                width: 95%;
-                backdrop-filter: blur(8px) saturate(200%);
-                -webkit-backdrop-filter: blur(8px) saturate(200%);
-            }
-        }
-        
-        .header-group {
-            position: relative;
-            margin-bottom: 30px;
-        }
-        
-        h1 {
-            color: white;
-            text-align: center;
-            font-size: 2.2rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            position: relative;
-        }
-        
-        .settings-icon {
-            position: absolute;
-            top: -25px;
-            right: -16px;
-            color: white;
-            font-size: 1.75rem;
-            cursor: pointer;
-            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 99999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 56px;
-            height: 56px;
-            transform-origin: center center !important;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-            padding: 10px;
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
-        }
-
-        .settings-icon:hover,
-        .settings-icon:active {
-            transform: rotate(0deg) translateZ(0) !important;
-            background: rgba(255, 255, 255, 0.28);
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
-        }
-
-        .header-group,
-        .login-container {
-            overflow: visible !important;
-            position: relative !important;
-        }
-
-        @media (max-width: 380px) {
-            .settings-icon {
-                top: -18px;
-                right: -10px;
-                width: 40px;
-                height: 40px;
-                font-size: 1.5rem;
-                padding: 8px;
-            }
-        }
-        
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        label {
-            color: white;
-            font-size: 1.1rem;
-            text-align: right;
-        }
-        
-        input[type="text"] {
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.08);
-            color: white;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            text-align: center;
-            width: 100%;
-        }
-        
-        input[type="text"]:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.6);
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-        }
-        
-        input[type="text"]::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .login-btn {
-            padding: 15px;
-            border-radius: 10px;
-            border: none;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .login-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .error-message {
-            color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 107, 107, 0.3);
-            display: none;
-            margin-top: 10px;
-        }
-
-        /* ========== DEVICE SUGGESTION ALERT ========== */
-        .device-suggestion {
-            display: none; /* پیش‌فرض مخفی */
-            background: rgba(255, 193, 7, 0.15);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            border-radius: 14px;
-            padding: 12px 14px;
-            margin-bottom: 20px;
-            flex-direction: row;
-            align-items: flex-start;
-            gap: 12px;
-            text-align: right;
-            position: relative;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .ds-icon {
-            background: rgba(255, 193, 7, 0.2);
-            color: #ffc107;
-            min-width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-
-        .ds-content {
-            flex: 1;
-        }
-
-        .ds-content h4 {
-            color: #ffc107;
-            font-size: 0.9rem;
-            margin-bottom: 4px;
-            font-weight: 700;
-        }
-
-        .ds-content p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.8rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .ds-close {
-            position: absolute;
-            top: 5px;
-            left: 8px;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 1.3rem;
-            cursor: pointer;
-            padding: 2px 6px;
-            line-height: 1;
-            transition: color 0.3s;
-        }
-
-        .ds-close:hover {
-            color: #fff;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .setup-guide {
-            background: var(--glass-bg);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: right;
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            transition: all 0.3s ease;
-        }
-        
-        .setup-guide h3 {
-            color: white;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-        
-        .setup-guide p {
-            color: white;
-            line-height: 1.6;
-            margin-bottom: 8px;
-        }
-        
-        .main-content {
-            display: none;
-            flex-direction: column;
-            flex: 1;
-            min-height: 0;
-        }
-        
-        .signature, .login-signature {
-            color: white;
-            text-align: center;
-            padding: 16px;
-            font-family: Vazirmatn, system-ui;
-            background: var(--glass-bg);
-            border-radius: 10px;
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            font-size: 14px;
-            font-weight: 500;
-            display: block;
-            margin: 30px auto;
-            width: fit-content;
-            max-width: 90%;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
-
-        /* ========== TAB STYLES ========== */
-        .tabs-container {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border-radius: 0 0 20px 20px;
-            padding: 15px 10px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--glass-border);
-            border-top: none;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 1000;
-            flex-shrink: 0;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .tabs-scroll-container {
-            overflow-x: auto;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
-            padding-bottom: 5px;
-            cursor: grab;
-        }
-        
-        .tabs-scroll-container::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .tabs-scroll-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-        
-        .tabs-scroll-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 4px;
-        }
-        
-        .tabs-scroll-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-        
-        .tabs-scroll-container:active {
-            cursor: grabbing;
-        }
-        
-        .tabs {
-            display: flex;
-            gap: 8px;
-            min-width: min-content;
-            user-select: none;
-        }
-        
-        .tab {
-            flex: 0 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.85rem;
-            font-weight: 500;
-            white-space: nowrap;
-            min-width: fit-content;
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .tab:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .tab.active {
-            background: rgba(255, 255, 255, 0.25);
-            border: 2px solid #ff4444;
-            box-shadow: 0 0 0 1px rgba(255, 68, 68, 0.3);
-            z-index: 2;
-        }
-        
-        :root:not([data-glass="true"]) .tab.active {
-            border: 2px solid #ff4444 !important;
-            box-shadow: 0 0 0 1px rgba(255, 68, 68, 0.3) !important;
-            background: rgba(255, 68, 68, 0.1) !important;
-            z-index: 2 !important;
-        }
-        
-        .tab i {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        /* ========== RESPONSIVE TABS ONLY FOR DESKTOP ========== */
-        body.desktop .tabs-container.icons-only .tab {
-            padding: 12px 14px;
-            min-width: 55px;
-            justify-content: center;
-        }
-        
-        body.desktop .tabs-container.icons-only .tab-text {
-            display: none !important;
-        }
-        
-        body.desktop .tabs-container.icons-only .tab i {
-            font-size: 1.4rem;
-            margin: 0;
-        }
-
-        /* ========== IFRAME CONTAINER ========== */
-        .iframe-container {
-            flex: 1;
-            position: relative;
-            background: var(--glass-bg);
-            border-radius: 1px;
-            overflow: hidden;
-            margin: 0 5px 5px 5px;
-            min-height: 0;
-            height: 100%;
-            transition: all 0.3s ease;
-        }
-        
-        @media (max-width: 480px) {
-            .iframe-container {
-                height: 85vh;
-            }
-        }
-        
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: none;
-            background: white;
-            border-radius: 1px;
-        }
-        
-        iframe.active {
-            display: block;
-        }
-
-        /* ========== PWA INSTALL BUTTON ========== */
-        .pwa-install-btn {
-            position: fixed;
-            bottom: 25px;
-            left: 25px;
-            padding: 16px 28px;
-            background: var(--bg-gradient);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            z-index: 1000;
-            transition: all 0.3s ease;
-            font-family: 'Vazirmatn', 'Segoe UI', sans-serif;
-            min-width: 180px;
-            min-height: 55px;
-            display: none;
-        }
-
-        .pwa-install-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-            background: var(--bg-gradient);
-        }
-
-        /* ========== RESPONSIVE DESIGN ========== */
-        @media (max-width: 1024px) {
-            .tab {
-                padding: 8px 14px;
-                font-size: 0.8rem;
-                gap: 6px;
-            }
-            
-            .tab i {
-                font-size: 1.1rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .tabs-container {
-                padding: 12px 15px;
-                border-radius: 0 0 15px 15px;
-                margin-bottom: 12px;
-            }
-            
-            .tab {
-                padding: 8px 12px;
-                font-size: 0.75rem;
-                gap: 5px;
-            }
-            
-            .tab i {
-                font-size: 1rem;
-            }
-            
-            .login-container {
-                padding: 30px 20px;
-                margin: 20px auto;
-                width: 95%;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .pwa-install-btn {
-                padding: 14px 22px;
-                font-size: 15px;
-                min-width: 160px;
-                min-height: 50px;
-                bottom: 20px;
-                left: 20px;
-            }
-            
-            .signature, .login-signature {
-                font-size: 14px;
-                padding: 15px;
-            }
-            
-            .iframe-container {
-                margin: 0 4px 8px 4px;
-                border-radius: 1px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .tabs-container {
-                padding: 10px 12px;
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
-            }
-            
-            .tab {
-                padding: 6px 10px;
-                font-size: 0.7rem;
-                gap: 4px;
-                border-radius: 10px;
-                backdrop-filter: blur(8px);
-                -webkit-backdrop-filter: blur(8px);
-            }
-            
-            h1 {
-                font-size: 1.7rem;
-            }
-            
-            .login-container {
-                padding: 25px 15px;
-                margin: 15px auto;
-            }
-            
-            .setup-guide {
-                padding: 12px;
-            }
-            
-            .setup-guide h3 {
-                font-size: 1rem;
-            }
-            
-            .setup-guide p {
-                font-size: 0.9rem;
-            }
-            
-            .signature, .login-signature {
-                font-size: 11px;
-                padding: 12px;
-            }
-            
-            .iframe-container {
-                margin: 0 5px 5px 5px;
-                border-radius: 3px;
-            }
-        }
-
-        @media all and (display-mode: standalone) {
-            .tabs-container {
-                padding-top: calc(15px + env(safe-area-inset-top));
-            }
-        }
-
-        @media (max-width: 360px) {
-            .tab {
-                padding: 5px 8px;
-                font-size: 0.65rem;
-            }
-            
-            .tab i {
-                font-size: 0.8rem;
-            }
-            
-            .login-container {
-                padding: 20px 12px;
-                margin: 10px auto;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-        }
-        
-        /* ========== FIXES FOR BACKDROP-FILTER ISSUES ========== */
-        .login-container::before,
-        .tabs-container::before,
-        .setup-guide::before,
-        .signature::before,
-        .login-signature::before,
-        .device-suggestion::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: inherit;
-            border-radius: inherit;
-            z-index: -1;
-        }
-        
-        @supports not (backdrop-filter: blur(10px)) {
-            .login-container,
-            .tabs-container,
-            .setup-guide,
-            .signature,
-            .login-signature,
-            .tab,
-            .device-suggestion {
-                background: rgba(255, 255, 255, 0.2) !important;
-            }
-        }
-
-        /* ========== SETTINGS MODAL ========== */
-        #settingsModal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .settings-content {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 90%;
-            max-height: 90%;
-            overflow-y: auto;
-            border: 1px solid var(--glass-border);
-            color: white;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        .settings-icon,
-        .settings-icon:hover,
-        .settings-icon:active {
-            box-shadow: none !important;
-        }
-
-        .close-settings {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .close-settings:hover,
-        .close-settings:active {
-            transform: rotate(90deg);
-        }
-
-        .settings-section {
-            margin-bottom: 20px;
-        }
-
-        .settings-section h3 {
-            margin-bottom: 10px;
-            color: white;
-        }
-
-        .preset-select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(0, 0, 0, 0.4);
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .preset-select option {
-            background: rgba(0, 0, 0, 0.6);
-            color: white;
-        }
-
-        .color-input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .color-type {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .color-type input[type="radio"] {
-            margin-left: 5px;
-        }
-
-        .glass-switch {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .glass-switch input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-        }
-
-        .save-btn {
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: var(--primary-color);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 10px;
-            filter: brightness(1);
-        }
-
-        .save-btn:hover:not(:disabled) {
-            filter: brightness(0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .save-btn:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .mobile-only { display: none; }
-        body.mobile .mobile-only { display: block; }
-        body.desktop .desktop-only { display: block; }
-        body.mobile .desktop-only { display: none; }
-
-        .contrast-warning {
-            color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 107, 107, 0.3);
-            margin-top: 10px;
-            display: none;
-            text-align: right;
-        }
-        
-        .settings-content::-webkit-scrollbar { width: 8px; }
-        .settings-content::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
-        .settings-content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
-        .settings-content::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.5); }
-        .settings-content { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1); border-radius: 5px; }
-    </style>
+    @media only screen and (max-width: 768px) {
+      .signature { font-size: 14px; padding: 15px; }
+    }
+    @media only screen and (max-width: 480px) {
+      .signature { font-size: 12px; padding: 13px; }
+    }
+  </style>
 </head>
+<body class="min-h-[100dvh] flex flex-col items-center justify-center py-8 px-0" tabindex="0">
 
-<body>
-    <div class="login-container" id="loginPage">
-        <div class="header-group">
-            <h1>ورود به ربات CST</h1>
-            <div class="settings-icon" onclick="toggleSettings()">
-                <i class="fas fa-cog"></i>
-            </div>
-        </div>
-        
-        <div class="device-suggestion" id="deviceSuggestion">
-            <div class="ds-icon">
-                <i class="fas fa-laptop-code"></i>
-            </div>
-            <div class="ds-content">
-                <h4>💡 پیشنهاد برای تحلیل حرفه‌ای</h4>
-                <p>این ابزار بسیار پیشرفته است. اگرچه در موبایل قابل اجراست، اما برای تسلط کامل بر چارت‌ها پیشنهاد می‌کنیم از <strong>لپ‌تاپ، تبلت یا کامپیوتر</strong> استفاده کنید.</p>
-            </div>
-            <span class="ds-close" onclick="this.parentElement.style.display='none'">&times;</span>
-        </div>
-        
-        <div class="setup-guide">
-            <h3>📱 راهنمای ورود</h3>
-            <p>• اپلیکیشن Google Authenticator را باز کنید</p>
-            <p>• کد ۶ رقمی مربوط به "CST-Robot" را پیدا کنید</p>
-            <p>• کد را در فیلد زیر وارد کنید</p>
-        </div>
-        
-        <div class="login-form" id="verifyForm">
-            <div class="input-group">
-                <label for="otp">کد ۶ رقمی Google Authenticator:</label>
-                <input type="text" id="otp" placeholder="کد ۶ رقمی" maxlength="6" required>
-            </div>
-            <button type="button" class="login-btn" id="verifyOtpBtn">ورود به سیستم</button>
-            <div class="error-message" id="verifyError">کد نامعتبر است</div>
-        </div>
-        
-        <div class="login-signature">
-            طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
-        </div>
+  <div id="focus-overlay">
+    <i class="fas fa-mouse-pointer text-4xl text-indigo-400 mb-4 animate-bounce"></i>
+    <p class="text-white text-lg font-medium">برای استفاده از کیبورد، کلیک کنید</p>
+  </div>
+
+  <div id="focus-catcher" tabindex="-1"></div>
+
+  <div class="bg-gray-800 w-[98%] md:max-w-lg shadow-none rounded-2xl overflow-hidden flex flex-col relative h-auto border border-gray-700">
+    
+    <div class="bg-gray-800 p-4 pb-2 relative z-10 border-b border-gray-700">
+      <div class="flex justify-between items-center mb-2">
+        <button id="openHistoryBtn" class="text-gray-400 hover:text-white p-2 rounded-full transition" title="تاریخچه">
+          <i class="fas fa-history text-lg"></i>
+        </button>
+        <span class="text-gray-500 text-xs font-bold tracking-widest uppercase">Calculator</span>
+        <div class="w-8"></div>
+      </div>
+
+      <div class="bg-gray-900 p-4 rounded-xl border border-gray-700">
+        <div id="calcHistory" class="text-right text-sm text-gray-500 h-6 overflow-x-auto display-hide-scroll whitespace-nowrap px-1 font-mono"></div>
+        <div id="calcDisplay" class="text-right text-4xl sm:text-5xl font-mono h-14 overflow-x-auto display-hide-scroll whitespace-nowrap text-white px-1">0</div>
+      </div>
     </div>
 
-    <div class="main-content" id="mainContent">
-        <div class="tabs-container" id="tabsContainer">
-            <div class="tabs-scroll-container" id="tabsScrollContainer">
-                <div class="tabs" id="tabs">
-                    <div class="tab active" onclick="openTab(0)">
-                        <i class="fas fa-equals"></i>
-                        <span class="tab-text">Calculator Pro W/D</span>
-                    </div>
-                    <div class="tab" onclick="openTab(1)">
-                        <i class="fas fa-4"></i>
-                        <span class="tab-text">Calculator Pro Formula</span>
-                    </div>
-                    <div class="tab" onclick="openTab(2)">
-                        <i class="fas fa-2"></i>
-                        <span class="tab-text">Calculator Pro Formula</span>
-                    </div>
-                    <div class="tab" onclick="openTab(3)">
-                        <i class="fas fa-stream"></i>
-                        <span class="tab-text">Calculator Pro Center W/D</span>
-                    </div>
-                    <div class="tab" onclick="openTab(4)">
-                        <i class="fa fa-line-chart"></i>
-                        <span class="tab-text">Cst Analyzer</span>
-                    </div>
-                    <div class="tab" onclick="openTab(5)">
-                        <i class="fa fa-exchange-alt"></i>
-                        <span class="tab-text">Forex Manager</span>
-                    </div>
-                    <div class="tab" onclick="openTab(6)">
-                        <i class="fa fa-calculator"></i>
-                        <span class="tab-text">Calculato</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="bg-gray-800 p-2 sm:p-3 grid grid-cols-4 gap-1 sm:gap-2 no-select pb-4">
+      <button class="btn-active bg-indigo-900 text-indigo-200 py-3 sm:py-4 rounded-lg text-sm font-medium" data-value="sqrt">√x</button>
+      <button class="btn-active bg-indigo-900 text-indigo-200 py-3 sm:py-4 rounded-lg text-sm font-medium" data-value="square">x²</button>
+      <button class="btn-active bg-indigo-900 text-indigo-200 py-3 sm:py-4 rounded-lg text-sm font-medium" data-value="reciprocal">1/x</button>
+      <button class="btn-active bg-red-600 text-white py-3 sm:py-4 rounded-lg font-bold" data-value="C">C</button>
 
-        <div class="iframe-container">
-            <iframe src="calculator_pro_w_d/index.html" class="active"></iframe>
-            <iframe src="calculator_pro_formula_4/index.html"></iframe>
-            <iframe src="calculator_pro_formula_2/index.html"></iframe>
-            <iframe src="calculator_pro_center_w_d/index.html"></iframe>
-            <iframe src="cst_analyzer/index.html"></iframe>
-            <iframe src="forex_manager/index.html"></iframe>
-            <iframe src="calculator/index.html"></iframe>
-        </div>
+      <button class="btn-active bg-gray-700 text-gray-200 py-3 sm:py-4 rounded-lg text-lg" data-value="CE">CE</button>
+      <button class="btn-active bg-gray-700 text-gray-200 py-3 sm:py-4 rounded-lg text-lg" data-value="backspace"><i class="fas fa-backspace"></i></button>
+      <button class="btn-active bg-gray-700 text-gray-200 py-3 sm:py-4 rounded-lg text-lg" data-value="percent">%</button>
+      <button class="btn-active bg-amber-600 text-white py-3 sm:py-4 rounded-lg text-xl font-bold" data-value="/">÷</button>
+      
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-medium" data-value="7">7</button>
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-medium" data-value="8">8</button>
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-medium" data-value="9">9</button>
+      <button class="btn-active bg-amber-600 text-white py-3 sm:py-4 rounded-lg text-xl font-bold" data-value="*">×</button>
+      
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-medium" data-value="4">4</button>
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-medium" data-value="5">5</button>
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-medium" data-value="6">6</button>
+      <button class="btn-active bg-amber-600 text-white py-3 sm:py-4 rounded-lg text-xl font-bold" data-value="-">−</button>
+      
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-medium" data-value="1">1</button>
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-medium" data-value="2">2</button>
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-medium" data-value="3">3</button>
+      <button class="btn-active bg-amber-600 text-white py-3 sm:py-4 rounded-lg text-xl font-bold" data-value="+">+</button>
+      
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-medium col-span-2" data-value="0">0</button>
+      <button class="btn-active bg-gray-700/50 text-white py-3 sm:py-4 rounded-lg text-2xl font-bold" data-value=".">.</button>
+      <button class="btn-active bg-green-600 text-white py-3 sm:py-4 rounded-lg text-2xl font-bold" data-value="=">=</button>
     </div>
+  </div>
 
-    <button class="pwa-install-btn" id="pwaInstallButton">📥 نصب برنامه</button>
+  <div class="signature">
+    طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
+  </div>
 
-    <div id="settingsModal">
-        <div class="settings-content">
-            <span class="close-settings" onclick="toggleSettings()">&times;</span>
-            <h2 style="text-align: center; margin-bottom: 20px;">تنظیمات تم</h2>
-            
-            <div class="settings-section desktop-only">
-                <h3>تم‌های پیش‌فرض</h3>
-                <select id="presetSelect" class="preset-select" onchange="updateHexFromPreset()">
-                    <option value="light">روشن (پیش‌فرض)</option>
-                    <option value="dark">تیره</option>
-                </select>
-            </div>
+  <div id="historyModal" class="modal fixed inset-0 z-50 items-center justify-center p-4 backdrop-blur-none">
+    <div class="bg-gray-800 w-full max-w-sm rounded-2xl shadow-none border border-gray-600 flex flex-col max-h-[60vh]">
+      
+      <div class="flex justify-between items-center p-4 border-b border-gray-700 bg-gray-800 rounded-t-2xl">
+        <h3 class="text-lg font-bold text-gray-200">تاریخچه محاسبات</h3>
+        <button id="closeHistoryBtn" class="text-gray-400 hover:text-white p-2">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
 
-            <div class="settings-section">
-                <h3>رنگ دلخواه (Hex)</h3>
-                <input type="color" id="colorInput" class="color-input" value="#735af2" onchange="handleColorChange()">
-                <input type="text" id="hexInput" class="color-input" placeholder="#000000" value="#735af2" onchange="handleHexChange()">
-            </div>
+      <div id="historyList" class="flex-1 overflow-y-auto p-2 custom-scroll">
+      </div>
 
-            <div class="settings-section desktop-only">
-                <h3>نوع رنگ</h3>
-                <div class="color-type">
-                    <label><input type="radio" name="colorType" value="solid" checked> تک‌رنگ</label>
-                    <label><input type="radio" name="colorType" value="gradient"> گرادیان</label>
-                </div>
-            </div>
-
-            <div class="settings-section desktop-only">
-                <h3>افکت شیشه‌ای</h3>
-                <label class="glass-switch">
-                    <input type="checkbox" id="glassSwitch" checked> فعال
-                </label>
-            </div>
-
-            <div class="settings-section mobile-only">
-                <h3>رنگ تک‌رنگ (موبایل)</h3>
-                <p style="color: rgba(255,255,255,0.7);">فقط تغییر رنگ تک‌رنگ در موبایل پشتیبانی می‌شود.</p>
-            </div>
-
-            <div class="contrast-warning" id="contrastWarning">⚠️ رنگ انتخابی باعث ناخوانایی متن‌ها، دکمه‌ها، تب‌ها می‌شه! لطفاً رنگ دیگه‌ای انتخاب کن تا کنتراست مناسب بشه.</div>
-
-            <button class="save-btn" id="saveThemeBtn" onclick="saveTheme()">ذخیره تغییرات</button>
-        </div>
+      <div class="p-3 border-t border-gray-700 bg-gray-800 rounded-b-2xl">
+        <button id="clearHistory" class="w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded-lg text-sm transition">
+          پاک کردن همه
+        </button>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // ==================== DETECT DEVICE & OS FOR SUGGESTION ====================
-        function showMobileSuggestion() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-            
-            // 1. تشخیص سیستم عامل (اندروید یا iOS)
-            const isAndroid = /android/i.test(ua);
-            const isIOSPhone = /iPhone|iPod/.test(ua) && !window.MSStream;
-            
-            // 2. تشخیص سایز صفحه
-            const isSmallScreen = window.innerWidth < 768;
+  <script>
+    let currentInput = '0';
+    let previousInput = '';
+    let operation = null;
+    let resetInput = false;
+    let calculationHistory = [];
 
-            // شرط: (سیستم عامل موبایل باشد) وَ (صفحه کوچک باشد)
-            if ((isAndroid || isIOSPhone) && isSmallScreen) {
-                 const suggestionBox = document.getElementById('deviceSuggestion');
-                 if (suggestionBox) {
-                     suggestionBox.style.display = 'flex';
-                 }
-            }
+    const calcDisplay = document.getElementById('calcDisplay');
+    const calcHistory = document.getElementById('calcHistory');
+    const historyList = document.getElementById('historyList');
+    const historyModal = document.getElementById('historyModal');
+    const focusCatcher = document.getElementById('focus-catcher');
+    const focusOverlay = document.getElementById('focus-overlay');
+
+    // --- مدیریت اورلی فوکوس ---
+    function activateCalculator() {
+        if (focusOverlay) {
+            focusOverlay.style.opacity = '0';
+            setTimeout(() => {
+                focusOverlay.remove();
+            }, 300);
         }
+        document.body.focus();
+    }
 
-        // ==================== DETECT DEVICE TYPE (GENERAL) ====================
-        function isMobileDevice() {
-            return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
+    if (focusOverlay) {
+        focusOverlay.addEventListener('click', activateCalculator);
+    }
 
-        function detectDeviceType() {
-            if (isMobileDevice()) {
-                document.body.classList.add('mobile');
-                document.body.classList.remove('desktop');
-            } else {
-                document.body.classList.add('desktop');
-                document.body.classList.remove('mobile');
-            }
-        }
+    function updateDisplay() {
+      const formattedInput = currentInput === 'خطا' ?
+        'خطا' : parseFloat(currentInput).toLocaleString('en-US', { maximumFractionDigits: 10 });
+      calcDisplay.textContent = currentInput.includes('.') ? currentInput : formattedInput;
+      calcHistory.textContent = previousInput + (operation ? ` ${getOperationSymbol(operation)}` : '');
+    }
 
-        // ==================== RESPONSIVE TABS FOR DESKTOP ONLY ====================
-        function handleDesktopResponsiveTabs() {
-            const tabsContainer = document.getElementById('tabsContainer');
-            const windowWidth = window.innerWidth;
-            
-            if (document.body.classList.contains('desktop')) {
-                tabsContainer.classList.remove('icons-only');
-                if (windowWidth <= 600) {
-                    tabsContainer.classList.add('icons-only');
-                }
-            }
-        }
+    function getOperationSymbol(op) {
+      const symbols = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+      return symbols[op] || op;
+    }
 
-        // ==================== DYNAMIC THEME COLOR ====================
-        function setThemeColor(color) {
-            let meta = document.querySelector('meta[name=theme-color]');
-            if (!meta) {
-                meta = document.createElement('meta');
-                meta.name = 'theme-color';
-                document.head.appendChild(meta);
-            }
-            meta.content = color;
-            document.querySelectorAll('meta[name="msapplication-TileColor"]').forEach(el => {
-                el.content = color;
-            });
-            document.querySelectorAll('meta[name="msapplication-navbutton-color"]').forEach(el => {
-                el.content = color;
-            });
-        }
+    function addToHistory(calculation) {
+      calculationHistory.unshift(calculation);
+      if (calculationHistory.length > 50) calculationHistory.pop();
+      renderHistory();
+    }
 
-        function updateThemeColor() {
-            if (window.innerWidth <= 480) {
-                setThemeColor(getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim());
-            } else {
-                const gradient = getComputedStyle(document.documentElement).getPropertyValue('--bg-gradient').trim();
-                setThemeColor(gradient.match(/#[\da-fA-F]{6}/)?.[0] || '#735af2');
-            }
-        }
-
-        // ==================== CONTRAST CHECK FUNCTIONS ====================
-        function hexToRgb(hex) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? {
-                r: parseInt(result[1], 16) / 255,
-                g: parseInt(result[2], 16) / 255,
-                b: parseInt(result[3], 16) / 255
-            } : null;
-        }
-
-        function getLuminance(color) {
-            const rgb = hexToRgb(color);
-            if (!rgb) return 0;
-            const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(c => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
-            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        }
-
-        function getContrastRatio(lum1, lum2) {
-            const brighter = Math.max(lum1, lum2);
-            const darker = Math.min(lum1, lum2);
-            return (brighter + 0.05) / (darker + 0.05);
-        }
-
-        function analyzeElements(bgColor, textColor) {
-            const elements = document.querySelectorAll('h1, p, label, button, .tab, .tab-text, .signature, .login-signature, .login-btn, input[type="text"], .settings-section h3');
-            const bgLum = getLuminance(bgColor);
-            const textLum = getLuminance(textColor);
-            let hasIssue = false;
-            for (let el of elements) {
-                if (el.textContent.trim().length > 0) {
-                    const isInteractive = el.tagName === 'BUTTON' || el.classList.contains('tab') || el.classList.contains('login-btn');
-                    const minRatio = isInteractive ? 3 : 4.5;
-                    const ratio = getContrastRatio(bgLum, textLum);
-                    if (ratio < minRatio) {
-                        hasIssue = true;
-                        break;
-                    }
-                }
-            }
-            return !hasIssue;
-        }
-
-        function validateAndUpdateSaveButton(bgColor, textColor = '#ffffff') {
-            const isReadable = analyzeElements(bgColor, textColor);
-            const saveBtn = document.getElementById('saveThemeBtn');
-            const warning = document.getElementById('contrastWarning');
-
-            if (isReadable) {
-                saveBtn.disabled = false;
-                warning.style.display = 'none';
-            } else {
-                saveBtn.disabled = true;
-                warning.style.display = 'block';
-                alert('⚠️ رنگ انتخابی باعث ناخوانایی متن‌ها، دکمه‌ها، تب‌ها و غیره می‌شه! لطفاً رنگ دیگه‌ای انتخاب کن تا کنتراست مناسب بشه.');
-            }
-        }
-
-        // ==================== THEME MANAGEMENT ====================
-        const presets = {
-            light: { gradient: 'linear-gradient(135deg, #735af2 0%, #5a3fd0 100%)', primary: '#735af2' },
-            dark: { gradient: 'linear-gradient(135deg, #1e1e1e 0%, #333 100%)', primary: '#333' }
+    function renderHistory() {
+      if (calculationHistory.length === 0) {
+        historyList.innerHTML = '<div class="text-center text-gray-500 text-sm py-8">تاریخچه خالی است</div>';
+        return;
+      }
+      historyList.innerHTML = '';
+      calculationHistory.forEach(item => {
+        const parts = item.split('=');
+        const div = document.createElement('div');
+        div.className = 'p-3 border-b border-gray-700 hover:bg-gray-700 cursor-pointer flex justify-between items-center rounded transition-colors mx-1';
+        div.innerHTML = `
+            <span class="text-gray-400 text-xs dir-ltr">${parts[0]}</span>
+            <span class="text-indigo-400 font-bold text-lg dir-ltr">${parts[1]}</span>
+        `;
+       
+        div.onclick = () => {
+            currentInput = parts[1].trim();
+            resetInput = true;
+            updateDisplay();
+            toggleModal(false);
         };
-        function loadTheme() {
-            const saved = localStorage.getItem('themeSettings');
-            if (saved) {
-                const settings = JSON.parse(saved);
-                applyTheme(settings);
-                document.getElementById('presetSelect').value = settings.preset || 'light';
-                document.getElementById('hexInput').value = settings.primary;
-                document.getElementById('colorInput').value = settings.primary;
-                if (settings.colorType) {
-                    document.querySelector(`input[name="colorType"][value="${settings.colorType}"]`).checked = true;
-                }
-                document.getElementById('glassSwitch').checked = settings.glass;
-            } else {
-                document.getElementById('presetSelect').value = 'light';
-                document.getElementById('hexInput').value = '#735af2';
-                document.getElementById('colorInput').value = '#735af2';
-            }
-            setTimeout(() => validateAndUpdateSaveButton(document.documentElement.style.getPropertyValue('--bg-gradient') || '#735af2'), 100);
+        historyList.appendChild(div);
+      });
+    }
+
+    function calculate() {
+      const prev = parseFloat(previousInput);
+      const current = parseFloat(currentInput);
+      if (isNaN(prev) || isNaN(current)) return;
+
+      let result;
+      switch(operation) {
+        case '+': result = prev + current; break;
+        case '-': result = prev - current; break;
+        case '*': result = prev * current; break;
+        case '/': result = current === 0 ? 'خطا' : prev / current; break;
+        default: return;
+      }
+
+      if (result === 'خطا' || isNaN(result)) {
+          currentInput = 'خطا';
+      } else {
+          result = parseFloat(result.toPrecision(12)); 
+          addToHistory(`${prev} ${getOperationSymbol(operation)} ${current} = ${result}`);
+          currentInput = result.toString();
+      }
+      
+      operation = null;
+      previousInput = ''; resetInput = true;
+      updateDisplay();
+    }
+
+    function scientific(op) {
+      const num = parseFloat(currentInput);
+      if (isNaN(num)) return;
+      let res, txt;
+      
+      if (op === 'sqrt') {
+        if (num < 0) { currentInput = 'خطا'; updateDisplay(); return; }
+        res = Math.sqrt(num); txt = `√(${num})`;
+      } else if (op === 'square') {
+        res = num * num;
+        txt = `sqr(${num})`;
+      } else if (op === 'reciprocal') {
+        if (num === 0) { currentInput = 'خطا'; updateDisplay(); return; }
+        res = 1 / num; txt = `1/(${num})`;
+      }
+      
+      res = parseFloat(res.toPrecision(12));
+      addToHistory(`${txt} = ${res}`);
+      currentInput = res.toString(); resetInput = true;
+      updateDisplay();
+    }
+
+    function toggleModal(show) {
+      if (show) { renderHistory(); historyModal.classList.add('show'); }
+      else { historyModal.classList.remove('show'); }
+    }
+
+    document.getElementById('openHistoryBtn').addEventListener('click', () => toggleModal(true));
+    document.getElementById('closeHistoryBtn').addEventListener('click', () => toggleModal(false));
+    document.getElementById('clearHistory').addEventListener('click', () => { calculationHistory = []; renderHistory(); });
+    historyModal.addEventListener('click', (e) => { if(e.target === historyModal) toggleModal(false); });
+    document.querySelectorAll('button[data-value]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // هر کلیک روی دکمه‌ها نیز فوکوس را برمی‌گرداند و اورلی را حذف می‌کند
+        if (focusOverlay && document.contains(focusOverlay)) activateCalculator();
+        
+        const val = btn.getAttribute('data-value');
+        if (['sqrt', 'square', 'reciprocal'].includes(val)) scientific(val);
+        else if (val === 'C') { currentInput = '0'; previousInput = ''; operation = null; }
+        else if (val === 'CE') { currentInput = '0'; }
+        else if (val === 'backspace') { currentInput = currentInput.length > 1 ? currentInput.slice(0, -1) : '0'; }
+  
+        else if (val === '=') { if (operation) calculate(); }
+        else if (['+', '-', '*', '/'].includes(val)) {
+          if (operation && previousInput && !resetInput) calculate();
+          previousInput = currentInput; operation = val; resetInput = true;
+        } else if (val === 'percent') { currentInput = (parseFloat(currentInput) / 100).toString(); }
+        else {
+        
+          if (resetInput) { currentInput = val; resetInput = false; }
+          else { currentInput = currentInput === '0' && val !== '.' ? val : currentInput + val; }
         }
+        updateDisplay();
+      });
+    });
 
-        function applyTheme(settings) {
-            const root = document.documentElement;
-            root.style.setProperty('--primary-color', settings.primary);
-            if (settings.colorType === 'gradient' && !isMobileDevice()) {
-                root.style.setProperty('--bg-gradient', settings.gradient || presets[settings.preset]?.gradient || presets.light.gradient);
-                root.style.setProperty('--glass-bg', 'rgba(255, 255, 255, 0.05)');
-            } else {
-                root.style.setProperty('--bg-gradient', settings.primary);
-                root.style.setProperty('--glass-bg', 'rgba(255, 255, 255, 0.1)');
-            }
-            root.style.setProperty('--glass-border', settings.glass ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)');
-            root.setAttribute('data-glass', settings.glass ? 'true' : 'false');
+    // --- کنترل کیبورد ---
+    function handleKeyPress(key) {
+      if (key === 'Enter') return '=';
+      if (key === 'Escape') return 'C';
+      if (key === 'Backspace') return 'backspace';
+      if (key === 'Delete') return 'CE';
+      if (key === '%') return 'percent';
+      if (key === ' ') return;
+      if (['0','1','2','3','4','5','6','7','8','9','.'].includes(key)) return key;
+      if (key === '+') return '+';
+      if (key === '-') return '-';
+      if (key === '*') return '*';
+      if (key === '/') return '/';
+      if (key === 's' || key === 'S') return 'sqrt';
+      if (key === 'x' || key === 'X') return 'square';
+      if (key === 'r' || key === 'R') return 'reciprocal';
+      return null;
+    }
 
-            updateThemeColor();
-        }
+    document.addEventListener('keydown', (e) => {
+      // اگر کاربر کلیدی زد، اورلی حذف شود
+      if (focusOverlay && document.contains(focusOverlay)) activateCalculator();
 
-        function handleColorChange() {
-            const colorValue = document.getElementById('colorInput').value;
-            document.getElementById('hexInput').value = colorValue;
-            updateThemePreview();
-        }
+      const val = handleKeyPress(e.key);
+      if (val) {
+        e.preventDefault();
+        const btn = document.querySelector(`button[data-value="${val}"]`);
+        if (btn) btn.click();
+      }
+    });
 
-        function handleHexChange() {
-            const hexValue = document.getElementById('hexInput').value;
-            if (hexValue.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
-                document.getElementById('colorInput').value = hexValue;
-            }
-            updateThemePreview();
-        }
-
-        function updateThemePreview() {
-            const hex = document.getElementById('hexInput').value;
-            const type = document.querySelector('input[name="colorType"]:checked').value;
-            const isGradient = type === 'gradient';
-            const primary = hex.startsWith('#') ? hex : '#' + hex;
-            let gradient = primary;
-
-            if (isGradient && !isMobileDevice()) {
-                const darker = shadeColor(primary, -20);
-                gradient = `linear-gradient(135deg, ${primary} 0%, ${darker} 100%)`;
-            }
-
-            document.documentElement.style.setProperty('--primary-color', primary);
-            document.documentElement.style.setProperty('--bg-gradient', gradient);
-            updateThemeColor();
-
-            validateAndUpdateSaveButton(gradient);
-        }
-
-        function updateHexFromPreset() {
-            const preset = document.getElementById('presetSelect').value;
-            const p = presets[preset];
-            document.getElementById('hexInput').value = p.primary;
-            document.getElementById('colorInput').value = p.primary;
-            updateThemePreview();
-        }
-
-        function shadeColor(color, percent) {
-            const num = parseInt(color.replace("#", ""), 16);
-            const amt = Math.round(2.55 * percent);
-            const R = (num >> 16) + amt;
-            const G = (num >> 8 & 0x00FF) + amt;
-            const B = (num & 0x0000FF) + amt;
-            return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
-        }
-
-        function saveTheme() {
-            const preset = document.getElementById('presetSelect').value;
-            const hex = document.getElementById('hexInput').value;
-            const primary = hex.startsWith('#') ? hex : '#' + hex;
-            const colorType = document.querySelector('input[name="colorType"]:checked').value;
-            const glass = document.getElementById('glassSwitch').checked;
-            let gradient = primary;
-
-            if (colorType === 'gradient' && !isMobileDevice()) {
-                const darker = shadeColor(primary, -20);
-                gradient = `linear-gradient(135deg, ${primary} 0%, ${darker} 100%)`;
-            }
-
-            const isReadable = analyzeElements(gradient, '#ffffff');
-            if (!isReadable) {
-                alert('❌ نمی‌تونم ذخیره کنم – رنگ انتخابی ناخواناست! لطفاً رنگ دیگه‌ای انتخاب کن.');
-                return;
-            }
-
-            const settings = {
-                preset,
-                primary,
-                gradient,
-                colorType,
-                glass
-            };
-            localStorage.setItem('themeSettings', JSON.stringify(settings));
-            applyTheme(settings);
-            toggleSettings();
-            alert('✅ تغییرات ذخیره شد! همه چیز خواناست.');
-        }
-
-        function toggleSettings() {
-            const modal = document.getElementById('settingsModal');
-            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        document.getElementById('settingsModal').addEventListener('click', function(e) {
-            if (e.target === this) toggleSettings();
-        });
-
-        // ==================== VISUAL FIXES FOR GLASS EFFECT ====================
-        function applyVisualFixes() {
-            const elements = document.querySelectorAll('.login-container, .tabs-container, .setup-guide, .signature, .login-signature, .tab');
-            elements.forEach(element => {
-                const computedStyle = window.getComputedStyle(element);
-                const borderRadius = computedStyle.borderRadius;
-                
-                if (borderRadius === '0px' && element.classList.contains('login-container')) {
-                    element.style.borderRadius = '20px';
-                }
-            });
-        }
-
-        // ==================== AUTHENTICATION ====================
-        const secretKey = 'JBSWY3DPEHPK3PXP';
-        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
-        const otpInput = document.getElementById('otp');
-        const verifyError = document.getElementById('verifyError');
-        const loginPage = document.getElementById('loginPage');
-        const mainContent = document.getElementById('mainContent');
-
-        function base32ToHex(base32) {
-            const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-            let bits = '';
-            let hex = '';
-            
-            base32 = base32.toUpperCase().replace(/=+$/, '');
-            for (let i = 0; i < base32.length; i++) {
-                const val = base32Chars.indexOf(base32.charAt(i));
-                if (val === -1) throw new Error('Invalid Base32 character');
-                bits += val.toString(2).padStart(5, '0');
-            }
-            
-            for (let i = 0; i + 8 <= bits.length; i += 8) {
-                const chunk = bits.substr(i, 8);
-                hex += parseInt(chunk, 2).toString(16).padStart(2, '0');
-            }
-            
-            return hex;
-        }
-
-        function generateTOTP() {
-            try {
-                const time = Math.floor(Date.now() / 1000 / 30);
-                const timeHex = CryptoJS.enc.Hex.parse(
-                    ('0000000000000000' + time.toString(16)).slice(-16)
-                );
-                const keyHex = base32ToHex(secretKey);
-                const key = CryptoJS.enc.Hex.parse(keyHex);
-                const hmac = CryptoJS.HmacSHA1(timeHex, key);
-                const hmacHex = hmac.toString(CryptoJS.enc.Hex);
-                const offset = (parseInt(hmacHex.substr(-1), 16)) & 0xf;
-                const code = parseInt(hmacHex.substr(offset * 2, 8), 16) & 0x7fffffff;
-                return (code % 1000000).toString().padStart(6, '0');
-            } catch (error) {
-                console.error('Error generating TOTP:', error);
-                return null;
-            }
-        }
-
-        function verifyOTP(enteredOtp) {
-            for (let i = -1; i <= 1; i++) {
-                const testTime = Math.floor(Date.now() / 1000 / 30) + i;
-                const testOtp = generateTOTPWithTime(testTime);
-                if (enteredOtp === testOtp) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        function generateTOTPWithTime(timeValue) {
-            try {
-                const timeHex = CryptoJS.enc.Hex.parse(
-                    ('0000000000000000' + timeValue.toString(16)).slice(-16)
-                );
-                const keyHex = base32ToHex(secretKey);
-                const key = CryptoJS.enc.Hex.parse(keyHex);
-                const hmac = CryptoJS.HmacSHA1(timeHex, key);
-                const hmacHex = hmac.toString(CryptoJS.enc.Hex);
-                const offset = (parseInt(hmacHex.substr(-1), 16)) & 0xf;
-                const code = parseInt(hmacHex.substr(offset * 2, 8), 16) & 0x7fffffff;
-                return (code % 1000000).toString().padStart(6, '0');
-            } catch (error) {
-                console.error('Error generating TOTP with time:', error);
-                return null;
-            }
-        }
-
-        verifyOtpBtn.addEventListener('click', function() {
-            const enteredOtp = otpInput.value.trim();
-            
-            if (enteredOtp.length !== 6 || isNaN(enteredOtp)) {
-                verifyError.textContent = 'کد باید ۶ رقمی باشد';
-                verifyError.style.display = 'block';
-                return;
-            }
-            
-            if (verifyOTP(enteredOtp)) {
-                loginPage.style.display = 'none';
-                mainContent.style.display = 'flex';
-                sessionStorage.setItem('cst_authenticated', 'true');
-                sessionStorage.setItem('cst_login_time', new Date().getTime());
-                
-                initMouseWheelScroll();
-            } else {
-                verifyError.textContent = 'کد نامعتبر است. لطفاً کد جدید را از اپلیکیشن دریافت کنید.';
-                verifyError.style.display = 'block';
-                otpInput.value = '';
-                otpInput.focus();
-                
-                setTimeout(() => {
-                    verifyError.style.display = 'none';
-                }, 5000);
-            }
-        });
-
-        otpInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                verifyOtpBtn.click();
-            }
-        });
-
-        if (sessionStorage.getItem('cst_authenticated') === 'true') {
-            loginPage.style.display = 'none';
-            mainContent.style.display = 'flex';
-            setTimeout(initMouseWheelScroll, 100);
-        } else {
-            loginPage.style.display = 'block';
-            mainContent.style.display = 'none';
-        }
-
-        window.addEventListener('load', () => {
-            if (loginPage.style.display !== 'none') {
-                 setTimeout(() => {
-                    otpInput.focus();
-                }, 500);
-            }
-        });
-
-        // ==================== TAB MANAGEMENT ====================
-        function openTab(n) {
-            document.querySelectorAll('.tab').forEach((t, i) => {
-                t.classList.toggle('active', i === n);
-            });
-            document.querySelectorAll('iframe').forEach((f, i) => {
-                f.classList.toggle('active', i === n);
-            });
-        }
-
-        // ==================== ADVANCED SCROLL FOR TABS ====================
-        function initMouseWheelScroll() {
-            const tabsScrollContainer = document.getElementById('tabsScrollContainer');
-            const tabs = document.getElementById('tabs');
-            
-            if (!tabsScrollContainer || !tabs) return;
-            
-            tabsScrollContainer.addEventListener('wheel', function(e) {
-                e.preventDefault();
-                this.scrollLeft += e.deltaY;
-            });
-
-            let isDragging = false;
-            let startX;
-            let scrollLeft;
-            
-            tabsScrollContainer.addEventListener('mousedown', function(e) {
-                isDragging = true;
-                startX = e.pageX - this.offsetLeft;
-                scrollLeft = this.scrollLeft;
-                this.style.cursor = 'grabbing';
-                this.style.userSelect = 'none';
-            });
-
-            tabs.addEventListener('mousedown', function(e) {
-                isDragging = true;
-                startX = e.pageX - tabsScrollContainer.offsetLeft;
-                scrollLeft = tabsScrollContainer.scrollLeft;
-                tabsScrollContainer.style.cursor = 'grabbing';
-                tabsScrollContainer.style.userSelect = 'none';
-            });
-
-            document.addEventListener('mouseup', function() {
-                isDragging = false;
-                tabsScrollContainer.style.cursor = 'grab';
-                tabsScrollContainer.style.userSelect = 'auto';
-            });
-
-            document.addEventListener('mousemove', function(e) {
-                if (!isDragging) return;
-                e.preventDefault();
-                const x = e.pageX - tabsScrollContainer.offsetLeft;
-                const walk = (x - startX) * 2;
-                tabsScrollContainer.scrollLeft = scrollLeft - walk;
-            });
-
-            let touchStartX;
-            let touchScrollLeft;
-            tabsScrollContainer.addEventListener('touchstart', function(e) {
-                touchStartX = e.touches[0].pageX;
-                touchScrollLeft = this.scrollLeft;
-            });
-            tabs.addEventListener('touchstart', function(e) {
-                touchStartX = e.touches[0].pageX;
-                touchScrollLeft = tabsScrollContainer.scrollLeft;
-            });
-            tabsScrollContainer.addEventListener('touchmove', function(e) {
-                if (!touchStartX) return;
-                e.preventDefault();
-                const x = e.touches[0].pageX;
-                const walk = (x - touchStartX) * 2;
-                this.scrollLeft = touchScrollLeft - walk;
-            });
-            tabsScrollContainer.addEventListener('touchend', function() {
-                touchStartX = null;
-            });
-        }
-
-        // ==================== PWA INSTALL ====================
-        let deferredPrompt;
-        const pwaInstallButton = document.getElementById('pwaInstallButton');
-        let installPromptTimeout;
-
-        function showInstallButton() {
-            pwaInstallButton.style.display = 'block';
-            if (installPromptTimeout) {
-                clearTimeout(installPromptTimeout);
-            }
-            
-            installPromptTimeout = setTimeout(() => {
-                pwaInstallButton.style.display = 'none';
-            }, 120000);
-        }
-
-        function hideInstallButton() {
-            pwaInstallButton.style.display = 'none';
-            if (installPromptTimeout) {
-                clearTimeout(installPromptTimeout);
-            }
-        }
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            showInstallButton();
-        });
-
-        pwaInstallButton.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    hideInstallButton();
-                }
-                deferredPrompt = null;
-            }
-        });
-
-        window.addEventListener('appinstalled', () => {
-            hideInstallButton();
-            deferredPrompt = null;
-        });
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/cst/sw.js')
-                    .then(function(registration) {
-                        console.log('✅ ServiceWorker ثبت شد: ', registration.scope);
-                    })
-                    .catch(function(error) {
-                        console.log('❌ خطا در ثبت ServiceWorker: ', error);
-                    });
-            });
-        }
-
-        // ==================== INIT ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            detectDeviceType();
-            loadTheme();
-            updateThemeColor();
-            handleDesktopResponsiveTabs();
-            
-            // فراخوانی تابع تشخیص موبایل برای نمایش هشدار
-            showMobileSuggestion();
-
-            setTimeout(applyVisualFixes, 100);
-        });
-
-        window.addEventListener('resize', () => {
-            updateThemeColor();
-            handleDesktopResponsiveTabs();
-            applyVisualFixes();
-        });
-    </script>
+    // --- فوکوس خودکار هنگام لود ---
+    window.addEventListener('load', () => {
+      document.body.focus();
+      setTimeout(() => {
+        focusCatcher.focus();
+        document.body.focus();
+      }, 100);
+    });
+    
+    // اطمینان از فوکوس هنگام کلیک در هر جای سند
+    document.addEventListener('click', () => {
+      document.body.focus();
+    });
+  </script>
 </body>
 </html>
