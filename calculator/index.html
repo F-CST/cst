@@ -11,7 +11,7 @@
   <style>
     body {
       font-family: 'Vazirmatn', sans-serif;
-      background-color: #111827; /* bg-gray-900 */
+      background-color: #111827;
     }
 
     /* اسکرول بار سفارشی زیبا */
@@ -56,53 +56,86 @@
     /* پیام کیبورد */
     .keyboard-hint {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.85);
-      color: white;
-      padding: 16px 24px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      font-size: 16px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       z-index: 1000;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s ease;
       pointer-events: none;
     }
     
     .keyboard-hint.show {
       opacity: 1;
+      pointer-events: all;
     }
     
-    .keyboard-hint.hide {
-      opacity: 0;
+    .keyboard-hint-content {
+      background: rgba(30, 41, 59, 0.95);
+      color: white;
+      padding: 24px 32px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 18px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      transform: translateY(20px);
+      transition: transform 0.4s ease;
+    }
+    
+    .keyboard-hint.show .keyboard-hint-content {
+      transform: translateY(0);
+    }
+    
+    .keyboard-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+      color: #60a5fa;
+    }
+    
+    .keyboard-hint-close {
+      background: #4b5563;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+    
+    .keyboard-hint-close:hover {
+      background: #6b7280;
     }
 
-    @media only screen and (max-width: 768px) {
-      .signature { font-size: 14px; padding: 15px; }
-      .keyboard-hint { display: none; }
-    }
-    @media only screen and (max-width: 480px) {
-      .signature { font-size: 12px; padding: 13px; }
-      .keyboard-hint { display: none; }
-    }
-    
-    /* تشخیص دستگاه لمسی */
+    /* مخفی کردن در دستگاه‌های لمسی */
     @media (hover: none) and (pointer: coarse) {
-      .keyboard-hint { display: none; }
+      .keyboard-hint { display: none !important; }
     }
   </style>
 </head>
 <body class="min-h-[100dvh] flex flex-col items-center justify-center py-8 px-0">
 
   <div class="keyboard-hint" id="keyboardHint">
-    برای استفاده از کیبورد فیزیکی باید روی ماشین‌حساب کلیک کنید
+    <div class="keyboard-hint-content">
+      <div class="keyboard-icon">
+        <i class="fas fa-keyboard"></i>
+      </div>
+      <p>برای استفاده از کیبورد روی ماشین‌حساب کلیک کنید</p>
+      <button class="keyboard-hint-close" id="closeHintBtn">متوجه شدم</button>
+    </div>
   </div>
 
-  <div class="bg-gray-800 w-[98%] md:max-w-lg shadow-none rounded-2xl overflow-hidden flex flex-col relative h-auto border border-gray-700" id="calculator">
+  <div class="bg-gray-800 w-[98%] md:max-w-lg shadow-none rounded-2xl overflow-hidden flex flex-col relative h-auto border border-gray-700" id="calculator" tabindex="0">
     
     <div class="bg-gray-800 p-4 pb-2 relative z-10 border-b border-gray-700">
       <div class="flex justify-between items-center mb-2">
@@ -182,7 +215,7 @@
     let operation = null;
     let resetInput = false;
     let calculationHistory = [];
-    let isTouchDevice = false;
+    let hasPhysicalKeyboard = false;
 
     const calcDisplay = document.getElementById('calcDisplay');
     const calcHistory = document.getElementById('calcHistory');
@@ -190,29 +223,46 @@
     const historyModal = document.getElementById('historyModal');
     const keyboardHint = document.getElementById('keyboardHint');
     const calculator = document.getElementById('calculator');
+    const closeHintBtn = document.getElementById('closeHintBtn');
 
-    // تشخیص دستگاه لمسی
-    function detectTouchDevice() {
-      return (('ontouchstart' in window) ||
-        (navigator.maxTouchPoints > 0) ||
-        (navigator.msMaxTouchPoints > 0));
+    // تشخیص دستگاه‌های دارای کیبورد فیزیکی
+    function hasPhysicalKeyboardDevice() {
+      // روش 1: بررسی سیستم عامل‌های دسکتاپ
+      const desktopOS = /Win|Mac|Linux/.test(navigator.platform);
+      
+      // روش 2: بررسی user agent برای دستگاه‌های دسکتاپ
+      const desktopUserAgent = !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      // روش 3: بررسی اندازه صفحه و نسبت ابعاد
+      const isLargeScreen = window.innerWidth >= 768 && window.innerHeight >= 600;
+      const isLandscape = window.innerWidth > window.innerHeight;
+      
+      // روش 4: بررسی قابلیت hover (دستگاه‌های با ماوس معمولا hover دارند)
+      const hasHover = window.matchMedia('(hover: hover)').matches;
+      
+      // روش 5: بررسی دقت اشاره‌گر (دستگاه‌های لمسی دقت پایین‌تری دارند)
+      const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+      
+      // اگر حداقل سه شرط از شرایط بالا برقرار باشد، دستگاه کیبورد فیزیکی دارد
+      const conditions = [desktopOS, desktopUserAgent, isLargeScreen, hasHover, hasFinePointer];
+      const trueConditions = conditions.filter(Boolean).length;
+      
+      return trueConditions >= 3;
     }
 
     // نمایش پیام کیبورد
     function showKeyboardHint() {
-      if (!isTouchDevice) {
+      if (hasPhysicalKeyboard) {
         keyboardHint.classList.add('show');
-        setTimeout(() => {
-          keyboardHint.classList.remove('show');
-          keyboardHint.classList.add('hide');
-        }, 3000);
+        
+        // ذخیره وضعیت در localStorage که کاربر پیام را دیده
+        localStorage.setItem('keyboardHintSeen', 'true');
       }
     }
 
     // مخفی کردن پیام کیبورد
     function hideKeyboardHint() {
       keyboardHint.classList.remove('show');
-      keyboardHint.classList.add('hide');
     }
 
     // تنظیم فوکوس روی ماشین حساب
@@ -223,14 +273,15 @@
 
     // مقداردهی اولیه
     function init() {
-      isTouchDevice = detectTouchDevice();
+      hasPhysicalKeyboard = hasPhysicalKeyboardDevice();
       
-      // فقط در دستگاه‌های غیرلمسی پیام را نمایش بده
-      if (!isTouchDevice) {
-        showKeyboardHint();
-        
-        // پس از 5 ثانیه پیام را مخفی کن
-        setTimeout(hideKeyboardHint, 5000);
+      // بررسی آیا کاربر قبلا پیام را دیده است
+      const hintSeen = localStorage.getItem('keyboardHintSeen');
+      
+      // فقط در دستگاه‌های دارای کیبورد فیزیکی و اگر کاربر قبلا پیام را ندیده، نمایش بده
+      if (hasPhysicalKeyboard && !hintSeen) {
+        // کمی تاخیر برای نمایش پیام پس از لود کامل صفحه
+        setTimeout(showKeyboardHint, 500);
       }
     }
 
@@ -334,7 +385,14 @@
     
     // رویداد کلیک روی ماشین حساب برای فوکوس
     calculator.addEventListener('click', focusCalculator);
-    calculator.setAttribute('tabindex', '0'); // امکان فوکوس با تب
+    closeHintBtn.addEventListener('click', hideKeyboardHint);
+    
+    // بستن پیام با کلیک روی پس‌زمینه
+    keyboardHint.addEventListener('click', (e) => {
+      if (e.target === keyboardHint) {
+        hideKeyboardHint();
+      }
+    });
 
     document.querySelectorAll('button[data-value]').forEach(btn => {
       btn.addEventListener('click', () => {
