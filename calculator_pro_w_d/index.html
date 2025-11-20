@@ -13,7 +13,6 @@
       --input-bg:#475569;
       --text-light:#f1f5f9;
     }
-    
     body{
       font-family: Vazirmatn, system-ui, sans-serif; 
       background:var(--bg); 
@@ -21,14 +20,12 @@
       min-height:100vh; 
       padding:20px;
     }
-    
     .card{
       background:var(--card); 
       border:1px solid rgba(255,255,255,0.08); 
       border-radius:10px; 
       padding:12px;
     }
-    
     .section-header{
       display:flex; 
       align-items:center; 
@@ -40,16 +37,13 @@
       background:var(--input-bg); 
       border:1px solid rgba(255,255,255,0.08);
     }
-    
     .section-title{
       font-weight:700;
     }
-    
     .muted{
       color:var(--muted); 
       font-size:.95rem;
     }
-    
     input[type="text"], input[type="date"], input[type="number"], select, textarea { 
       background:var(--input-bg); 
       border:1px solid rgba(255,255,255,0.1); 
@@ -60,16 +54,13 @@
       outline: none;
       transition: all 0.2s ease;
     }
-    
     input[type="text"]:focus, input[type="date"]:focus, input[type="number"]:focus, select:focus, textarea:focus { 
       border-color: rgba(59, 130, 246, 0.5);
       box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
     }
-    
     input::placeholder{ 
       color:#9ca3af; 
     }
-    
     .box-out{ 
       padding:.35rem .6rem; 
       border-radius:6px; 
@@ -79,43 +70,36 @@
       border: 1px solid transparent;
       transition: all 0.2s ease;
     }
-    
     .box-red{ 
       background:#7f1d1d; 
       color:#fff; 
       border-color: #991b1b;
     }
-    
     .box-green{ 
       background:#064e3b; 
       color:#fff; 
       border-color: #065f46;
     }
-    
     .box-gray{ 
       background:#4b5563; 
       color:#fff; 
       border-color: #6b7280;
     }
-    
     .box-blue{ 
       background:#1e3a8a; 
       color:#fff; 
       border-color: #3730a3;
     }
-    
     .box-yellow{ 
       background:#854d0e; 
       color:#fff; 
       border-color: #a16207;
     }
-    
     .num-label{ 
       font-weight:700; 
       margin-left:.45rem; 
       opacity:.95; 
     }
-    
     /* استایل کامل و اصلاح شده برای دکمه‌ها */
     .small-btn{ 
       padding:0.5rem 0.75rem; 
@@ -136,7 +120,6 @@
       text-decoration: none;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    
     /* استایل‌های hover و focus برای دکمه‌ها */
     .small-btn:hover {
       background: rgba(255, 255, 255, 0.15);
@@ -144,121 +127,100 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
-    
     .small-btn:focus {
       outline: 2px solid rgba(59, 130, 246, 0.6);
       outline-offset: 2px;
       border-color: rgba(59, 130, 246, 0.8);
     }
-    
     .small-btn:active {
       transform: translateY(0);
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
-    
     /* استایل‌های خاص برای رنگ‌های مختلف دکمه‌ها */
     .small-btn.bg-slate-600 {
       background: #475569;
       border-color: #64748b;
       color: #fff;
     }
-    
     .small-btn.bg-slate-600:hover {
       background: #64748b;
       border-color: #94a3b8;
     }
-    
     .small-btn.bg-emerald-600 {
       background: #059669;
       border-color: #10b981;
       color: #fff;
     }
-    
     .small-btn.bg-emerald-600:hover {
       background: #10b981;
       border-color: #34d399;
     }
-    
     .small-btn.bg-rose-600 {
       background: #dc2626;
       border-color: #ef4444;
       color: #fff;
     }
-    
     .small-btn.bg-rose-600:hover {
       background: #ef4444;
       border-color: #f87171;
     }
-    
     .small-btn.bg-blue-600 {
       background: #2563eb;
       border-color: #3b82f6;
       color: #fff;
     }
-    
     .small-btn.bg-blue-600:hover {
       background: #3b82f6;
       border-color: #60a5fa;
     }
-    
     .small-btn.bg-yellow-600 {
       background: #d97706;
       border-color: #f59e0b;
       color: #fff;
     }
-    
     .small-btn.bg-yellow-600:hover {
       background: #f59e0b;
       border-color: #fbbf24;
     }
-    
     .small-btn.bg-indigo-600 {
       background: #4f46e5;
       border-color: #6366f1;
       color: #fff;
     }
-    
     .small-btn.bg-indigo-600:hover {
       background: #6366f1;
       border-color: #818cf8;
     }
-    
     .small-btn.bg-purple-600 {
       background: #7c3aed;
       border-color: #8b5cf6;
       color: #fff;
     }
-    
     .small-btn.bg-purple-600:hover {
       background: #8b5cf6;
       border-color: #a78bfa;
     }
-    
     .small-btn.bg-green-600 {
       background: #059669;
       border-color: #10b981;
       color: #fff;
     }
-    
     .small-btn.bg-green-600:hover {
       background: #10b981;
       border-color: #34d399;
     }
-    
     /* استایل برای دکمه‌های در حالت disabled */
     .small-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       transform: none;
     }
-    
     .small-btn:disabled:hover {
       background: inherit;
       border-color: inherit;
       transform: none;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    
     /* استایل مخصوص برای دکمه‌های داخل فهرست جفت‌ارزها */
     #categories_container .small-btn {
       padding: 0.2rem 0.4rem !important;
@@ -267,7 +229,6 @@
       border-width: 1px !important;
       white-space: nowrap;
     }
-    
     /* استایل برای selectهای داخل فهرست جفت‌ارزها */
     #categories_container select.small-btn {
       padding: 0.15rem 0.3rem !important;
@@ -275,7 +236,6 @@
       min-height: 22px !important;
       max-width: 120px;
     }
-    
     /* استایل برای دکمه‌های عمل در لیست جفت‌ارزها */
     #categories_container button.small-btn {
       min-width: 28px;
@@ -283,34 +243,28 @@
       align-items: center;
       justify-content: center;
     }
-    
     /* استایل برای آیتم‌های لیست جفت‌ارزها */
     #categories_container li {
       padding: 0.4rem 0.5rem !important;
       gap: 0.3rem !important;
     }
-    
     /* استایل برای container دکمه‌ها در هر آیتم */
     #categories_container .flex.gap-1 {
       flex-wrap: nowrap !important;
       gap: 0.2rem !important;
       min-width: fit-content;
     }
-    
     .thin-scroll::-webkit-scrollbar{ 
       width:8px; 
       height:8px; 
     }
-    
     .thin-scroll::-webkit-scrollbar-thumb{ 
       background:rgba(255,255,255,0.1); 
       border-radius:8px; 
     }
-    
     .hidden{ 
       display:none !important; 
     }
-    
     .micro-btn{ 
       background:#0ea5a4; 
       color:#021; 
@@ -321,25 +275,21 @@
       border: 2px solid #0ea5a4;
       transition: all 0.3s ease;
     }
-    
     .micro-btn:hover {
       background: #0d9488;
       border-color: #0d9488;
       transform: translateY(-1px);
     }
-    
     .micro-btn.recording{ 
       background:#ef4444; 
       color:#fff; 
       border-color: #ef4444;
     }
-    
     .micro-btn.connected{ 
       background:#10b981; 
       color:#fff; 
       border-color: #10b981;
     }
-    
     .icon-btn{ 
       background:var(--input-bg); 
       border:1px solid rgba(255,255,255,0.08); 
@@ -349,18 +299,15 @@
       color:var(--text-light);
       transition: all 0.2s ease;
     }
-    
     .icon-btn:hover {
       background: rgba(255, 255, 255, 0.1);
       border-color: rgba(255, 255, 255, 0.2);
     }
-    
     .title-click{ 
       display:flex; 
       align-items:center; 
       gap:8px; 
     }
-    
     .category-header{ 
       background:rgba(255,255,255,0.08); 
       padding:.5rem; 
@@ -370,18 +317,15 @@
       border:1px solid rgba(255,255,255,0.08);
       transition: all 0.2s ease;
     }
-    
     .category-header:hover {
       background: rgba(255, 255, 255, 0.12);
       border-color: rgba(255, 255, 255, 0.15);
     }
-    
     .category-content{ 
       padding:.5rem; 
       border-right:2px solid #0ea5a4; 
       margin-right:.5rem; 
     }
-    
     .danger-zone{ 
       background:#7f1d1d; 
       border:1px solid rgba(239,68,68,0.3); 
@@ -389,12 +333,10 @@
       border-radius:8px; 
       margin-top:12px; 
     }
-    
     .calendar-icon{ 
       color:var(--text-light); 
       font-size:1.2rem; 
     }
-    
     .show-picker-btn{ 
       color:var(--text-light) !important; 
       background:rgba(255,255,255,0.15) !important; 
@@ -404,35 +346,29 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    
     .show-picker-btn:hover {
       background: rgba(255, 255, 255, 0.25) !important;
       border-color: rgba(255, 255, 255, 0.3) !important;
     }
-    
     .center-modal{ 
       display:flex !important; 
       align-items:center; 
       justify-content:center; 
     }
-    
     .category-item{ 
       background:rgba(255,255,255,0.05); 
       border:1px solid rgba(255,255,255,0.1); 
     }
-    
     .resizable-container { 
       resize: vertical; 
       overflow: auto; 
       min-height: 120px; 
       max-height: 400px; 
     }
-    
     .history-compact { 
       max-height: none !important; 
       overflow: visible !important;
     }
-    
     .history-entry-compact {
       background: var(--input-bg);
       border: 1px solid rgba(255,255,255,0.1);
@@ -441,12 +377,10 @@
       margin-bottom: 8px;
       transition: all 0.2s ease;
     }
-    
     .history-entry-compact:hover {
       border-color: rgba(255,255,255,0.2);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
-
     .backup-item {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
@@ -454,14 +388,12 @@
       padding: 10px;
       margin-bottom: 8px;
     }
-    
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 8px;
       margin: 10px 0;
     }
-    
     .stat-item {
       background: rgba(255,255,255,0.05);
       padding: 8px;
@@ -469,7 +401,6 @@
       text-align: center;
       border: 1px solid rgba(255,255,255,0.1);
     }
-    
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -480,14 +411,12 @@
       backdrop-filter: blur(4px);
       z-index: 1000;
     }
-    
     .modal-content {
       position: relative;
       max-height: 90vh;
       overflow-y: auto;
       margin: auto;
     }
-
     .closest-info {
       background: rgba(245, 158, 11, 0.2);
       border: 1px solid rgba(245, 158, 11, 0.3);
@@ -495,7 +424,6 @@
       padding: 10px;
       margin-top: 12px;
     }
-
     .multi-date-controls {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
@@ -503,7 +431,6 @@
       padding: 10px;
       margin-bottom: 12px;
     }
-    
     .date-range-item {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.08);
@@ -511,7 +438,6 @@
       padding: 8px;
       margin-bottom: 8px;
     }
-    
     .date-comparison-header {
       background: rgba(59, 130, 246, 0.2);
       border: 1px solid rgba(59, 130, 246, 0.3);
@@ -519,7 +445,6 @@
       padding: 8px;
       margin-bottom: 8px;
     }
-    
     .comparison-group {
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 8px;
@@ -527,11 +452,9 @@
       margin-bottom: 12px;
       transition: all 0.2s ease;
     }
-    
     .comparison-group:hover {
       border-color: rgba(255,255,255,0.2);
     }
-
     .signature {
       color: white;
       text-align: center;
@@ -549,7 +472,6 @@
       max-width: 90%;
       box-sizing: border-box;
     }
-
     /* استایل‌های مخصوص موبایل */
     @media only screen and (max-width: 768px) {
       .small-btn {
@@ -558,31 +480,26 @@
         font-size: 0.9rem;
         border-width: 2px;
       }
-      
       /* استایل مخصوص موبایل برای دکمه‌های فهرست جفت‌ارزها */
       #categories_container .small-btn {
         padding: 0.15rem 0.3rem !important;
         font-size: 0.65rem !important;
         min-height: 22px !important;
       }
-      
       #categories_container select.small-btn {
         padding: 0.1rem 0.25rem !important;
         font-size: 0.6rem !important;
         min-height: 20px !important;
         max-width: 100px;
       }
-      
       #categories_container button.small-btn {
         min-width: 24px;
       }
-      
       #categories_container li {
         padding: 0.3rem 0.4rem !important;
         gap: 0.2rem !important;
         flex-wrap: wrap;
       }
-      
       #categories_container .flex.gap-1 {
         gap: 0.15rem !important;
         order: 2;
@@ -592,78 +509,65 @@
         padding-top: 0.3rem;
         border-top: 1px solid rgba(255,255,255,0.1);
       }
-      
       #categories_container .flex-1 {
         order: 1;
         width: 100%;
       }
-      
       .signature {
         font-size: 14px;
         padding: 15px;
       }
-      
       /* اطمینان از نمایش border در موبایل */
       .small-btn:active {
         background: rgba(255, 255, 255, 0.2);
         border-color: rgba(255, 255, 255, 0.4);
         transform: scale(0.98);
       }
-      
       .box-out {
         padding: 0.5rem 0.75rem;
         min-height: 44px;
         display: flex;
         align-items: center;
       }
-      
       .stats-grid {
         grid-template-columns: 1fr;
         gap: 6px;
       }
     }
-
     @media only screen and (max-width: 480px) {
       .signature {
         font-size: 12px;
         padding: 13px;
       }
-      
       .small-btn {
         padding: 0.875rem 1rem;
         font-size: 0.95rem;
       }
     }
-
 /* استایل برای آیکون دکمه تاگل */
 #toggle_icon {
   transition: all 0.3s ease;
   font-weight: bold;
   display: inline-block;
 }
-
 /* افکت hover برای دکمه تاگل */
 #toggle_history_btn:hover #toggle_icon {
   transform: scale(1.2);
 }
-
 /* استایل برای حالت باز بودن */
 #toggle_history_btn.open {
   background: #374151 !important;
   border-color: #6b7280 !important;
 }
-
 /* استایل برای حالت بسته بودن */
 #toggle_history_btn.closed {
   background: #475569 !important;
   border-color: #64748b !important;
 }
-  
 </style>
 </head>
 <body>
   <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4">
-
     <aside class="card">
       <div id="hdr_pairs" class="section-header">
 <div class="title-click">
@@ -689,7 +593,6 @@
             <div id="categories_list" class="mt-1 space-y-1 max-h-20 overflow-y-auto thin-scroll"></div>
           </div>
         </div>
-
         <div class="mb-3">
           <input id="new_pair_name" placeholder="مثال: EURUSD" type="text"/>
           <div class="flex gap-2 mt-2">
@@ -697,7 +600,6 @@
             <button id="clear_pairs_btn" class="small-btn bg-rose-600 hover:bg-rose-700">حذف همه</button>
           </div>
         </div>
-
         <div>
           <div class="flex justify-between items-center mb-2">
             <label class="muted">فهرست جفت‌ارزها</label>
@@ -706,7 +608,6 @@
           <div id="categories_container" class="resizable-container mt-2 thin-scroll border border-white/10 rounded p-2 space-y-3">
           </div>
         </div>
-
         <div class="border-t border-white/10 pt-3 mt-3">
           <div class="mb-2">
             <button id="export_btn" class="small-btn bg-blue-600 hover:bg-blue-700 w-full">دانلود بک‌آپ (JSON)</button>
@@ -715,12 +616,10 @@
             <input id="import_file" type="file" accept="application/json" class="hidden"/>
             <button id="import_btn" class="small-btn bg-yellow-600 hover:bg-yellow-700 w-full">بارگذاری بک‌آپ (JSON)</button>
           </div>
-          
           <div class="danger-zone">
             <div class="text-center mb-2">
               <span class="text-white font-semibold">⚙ مدیریت پیشرفته داده‌ها</span>
             </div>
-            
             <div class="mb-3">
               <label class="muted text-xs block mb-1">حذف رکوردهای قدیمی‌تر از:</label>
               <div class="flex gap-2">
@@ -731,33 +630,25 @@
                 حذف رکوردهای قدیمی
               </button>
             </div>
-
             <button id="show_stats_btn" class="small-btn bg-purple-600 hover:bg-purple-700 text-white w-full mb-2">
               نمایش آمار و اطلاعات
             </button>
-
             <button id="manage_backups_btn" class="small-btn bg-indigo-600 hover:bg-indigo-700 text-white w-full">
               مدیریت بک‌آپ‌ها
             </button>
-            
             <p class="muted text-xs mt-2 text-center">این عملیات غیرقابل بازگشت هستند</p>
           </div>
-          
           <p class="muted text-xs mt-2">تاریخ‌ها میلادی ذخیره و نمایش داده می‌شوند.</p>
         </div>
       </div>
     </aside>
-
     <main class="card">
       <div id="hdr_calc" class="section-header">
-
         <div class="title-click">
     <span class="hamburger-icon">⇅</span>
     <span class="section-title">ماشین حساب فرمول‌ها — برنامه اول</span>
 </div>
-
       </div>
-
       <div id="box_calc" class="mt-3">
         <div class="mb-3">
           <div class="flex items-center gap-2 mb-2">
@@ -766,7 +657,6 @@
           </div>
           <select id="pair_select"></select>
         </div>
-
         <div class="grid grid-cols-2 gap-3 mb-3">
           <div>
             <label class="muted">عدد سقف</label>
@@ -793,7 +683,6 @@
             <input id="input_daily_low" type="text" placeholder=""/>
           </div>
         </div>
-
         <div class="mb-3">
           <label class="muted">تاریخ (میلادی)</label>
           <div class="flex items-center gap-2">
@@ -804,44 +693,35 @@
           </div>
           <p class="muted text-xs mt-1">تاریخ انتخاب‌شده برای ذخیره رکورد استفاده می‌شود.</p>
         </div>
-
         <div class="mb-3">
           <label class="muted">یادداشت (اختیاری)</label>
           <textarea id="note_input" rows="2" placeholder=""></textarea>
         </div>
-
         <div class="flex gap-2 mb-3">
           <button id="calculate_button" class="small-btn bg-emerald-600 hover:bg-emerald-700 flex-1">محاسبه و ذخیره</button>
           <button id="reset_button" class="small-btn bg-slate-600 hover:bg-slate-700 flex-1">ریست</button>
         </div>
-
         <div>
           <h4 class="muted mb-2">نتایج (مرتب‌شده از کوچک به بزرگ)</h4>
           <div id="results_list" class="space-y-2"></div>
-          
           <div id="closest_info" class="closest-info hidden"></div>
-          
           <p id="error_message" class="muted text-rose-400 mt-2"></p>
           <p id="voice_status" class="muted mt-2"></p>
         </div>
       </div>
     </main>
-
     <section class="card">
       <div id="hdr_history" class="section-header">
-
                 <div class="title-click">
     <span class="hamburger-icon">⇅</span>
     <span class="section-title">تاریخچه - برنامه اول</span>
 </div>
       </div>
-
       <div id="box_history" class="mt-3">
         <div class="flex items-center justify-between mb-2">
           <div class="text-sm font-semibold">تاریخچه</div>
           <div class="muted">کل: <span id="entries_count">0</span></div>
         </div>
-
 <div class="flex gap-2 mb-3">
   <button id="toggle_history_btn" class="small-btn flex-1 bg-slate-600 hover:bg-slate-700 flex items-center justify-center gap-2 transition-all duration-300 closed">
     <span id="toggle_icon" class="text-lg transition-all duration-300 transform">📁</span>
@@ -849,7 +729,6 @@
   </button>
   <button id="quick_prune" class="small-btn bg-rose-600 hover:bg-rose-700 hidden">پاک ۳۰ روزه</button>
 </div>
-
         <div id="history_panel" class="mt-3 hidden">
           <div class="multi-date-controls">
             <div class="flex items-center justify-between mb-3">
@@ -858,7 +737,6 @@
                 فعال کردن حالت چندتاریخی
               </button>
             </div>
-            
             <div id="single_date_section">
               <div class="mb-2 grid grid-cols-2 gap-2">
                 <input id="history_date" type="date"/>
@@ -867,7 +745,6 @@
                 </select>
               </div>
             </div>
-            
             <div id="multi_date_section" class="hidden">
               <div class="mb-3">
                 <div class="flex items-center gap-2 mb-2">
@@ -875,10 +752,8 @@
                     <option value="">همه جفت‌ارزها</option>
                   </select>
                 </div>
-                
                 <div id="date_ranges_container" class="space-y-2">
                 </div>
-                
                 <div class="flex gap-2 mt-3">
                   <button id="add_date_btn" class="small-btn bg-green-600 hover:bg-green-700 flex-1">
                     ➕ افزودن تاریخ
@@ -890,10 +765,8 @@
               </div>
             </div>
           </div>
-
           <div id="history_list" class="history-compact space-y-2"></div>
         </div>
-
         <div id="detail_modal" class="hidden fixed inset-0 bg-black bg-opacity-60 items-center justify-center p-4 z-50">
           <div class="bg-[var(--card)] p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/10">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
@@ -911,7 +784,6 @@
       </div>
     </section>
   </div>
-
   <div id="stats_modal" class="hidden modal-overlay">
     <div class="modal-content bg-[var(--card)] p-6 rounded-lg max-w-md w-full mx-4 border border-white/10">
       <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
@@ -922,7 +794,6 @@
       </div>
     </div>
   </div>
-
   <div id="backups_modal" class="hidden modal-overlay">
     <div class="modal-content bg-[var(--card)] p-6 rounded-lg max-w-2xl w-full mx-4 border border-white/10">
       <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
@@ -933,7 +804,6 @@
       </div>
     </div>
   </div>
-
 <script>
 // ---------- helpers ----------
 const uid = ()=> Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -941,7 +811,6 @@ const storageGet = k => JSON.parse(localStorage.getItem('calc_pro_1_' + k) || 'n
 const storageSet = (k,v) => localStorage.setItem('calc_pro_1_' + k, JSON.stringify(v));
 const AUTO_PRUNE_ENABLED = false;
 const MAX_DAYS = 3650;
-
 function nowISO(){ return new Date().toISOString(); }
 function formatGregorian(dtISO){
   const d = new Date(dtISO);
@@ -958,12 +827,10 @@ function ensureDefaults(){
   ]);
 }
 ensureDefaults();
-
 // ---------- تشخیص دستگاه موبایل/تبلت ----------
 function isMobileOrTablet() {
     return window.innerWidth <= 1024;
 }
-
 // ---------- مدیریت وضعیت باکس‌ها بر اساس دستگاه ----------
 function initializeBoxStates() {
     if (isMobileOrTablet()) {
@@ -976,7 +843,6 @@ function initializeBoxStates() {
         if(boxHistory) boxHistory.classList.remove('hidden');
     }
 }
-
 // ---------- DOM refs ----------
 const $ = id => document.getElementById(id);
 const pairSelect = $('pair_select');
@@ -990,7 +856,6 @@ const newCategoryName = $('new_category_name');
 const addCategoryBtn = $('add_category_btn');
 const deleteCategoryBtn = $('delete_category_btn');
 const categoriesList = $('categories_list');
-
 const inputY1 = $('input_y1');
 const inputCurrentHigh = $('input_current_high');
 const inputY2 = $('input_y2');
@@ -1005,35 +870,28 @@ const resultsList = $('results_list');
 const errorMessage = $('error_message');
 const voiceStatus = $('voice_status');
 const closestInfo = $('closest_info');
-
 const exportBtn = $('export_btn');
 const importFile = $('import_file');
 const importBtn = $('import_btn');
-
 const historyDate = $('history_date');
 const historyList = $('history_list');
 const entriesCount = $('entries_count');
-
 const toggleHistoryBtn = $('toggle_history_btn');
 const historyPanel = $('history_panel');
 const quickPrune = $('quick_prune');
-
 const detailModal = $('detail_modal');
 const detailContent = $('detail_content');
 const closeDetail = $('close_detail');
 const editRecordBtn = $('edit_record_btn');
 const moveRecordBtn = $('move_record_btn');
 const deleteRecordBtn = $('delete_record_btn');
-
 const togglePairsHdr = $('hdr_pairs');
 const boxPairs = $('box_pairs');
 const toggleCalcHdr = $('hdr_calc');
 const boxCalc = $('box_calc');
 const toggleHistoryHdr = $('hdr_history');
 const boxHistory = $('box_history');
-
 const microToggle = $('micro_toggle');
-
 const toggleMultiDateBtn = $('toggle_multi_date');
 const singleDateSection = $('single_date_section');
 const multiDateSection = $('multi_date_section');
@@ -1041,43 +899,65 @@ const multiDatePairFilter = $('multi_date_pair_filter');
 const dateRangesContainer = $('date_ranges_container');
 const addDateBtn = $('add_date_btn');
 const applyMultiDateBtn = $('apply_multi_date_btn');
-
 // ---------- UI utils ----------
 function safeForEach(arr, fn){ if(!Array.isArray(arr)) return; arr.forEach(fn); }
 
-function formatNumberBasedOnInput(number, originalInput) {
-  if (!originalInput) return number.toString();
-  const hasDot = originalInput.includes('.');
-  if (hasDot) {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  } else {
-    return number.toString();
+// ---------- توابع جدید برای پردازش فرمت نقطه‌دار بدون اعشار ----------
+function parseFormattedInteger(str) {
+  if (!str) return { rawNumber: NaN, format: { hasDot: false } };
+  const original = str.toString().trim();
+  const hasDot = original.includes('.');
+  if (!hasDot) {
+    const cleaned = original.replace(/[^\d]/g, '');
+    return { rawNumber: cleaned ? parseInt(cleaned, 10) : NaN, format: { hasDot: false } };
   }
-}
-
-function parseNumberInput(str) { 
-  if(!str) return {value: NaN, original: str}; 
-  const original = str.toString();
-  const cleaned = str.toString()
-    .replace(/[\s،]/g, '')
-    .replace(/,/g, '')
-    .replace(/\./g, '');
+  const parts = original.split('.');
+  if (parts.length !== 2) {
+    const cleaned = original.replace(/[^\d]/g, '');
+    return { rawNumber: cleaned ? parseInt(cleaned, 10) : NaN, format: { hasDot: false } };
+  }
+  const [leftPart, rightPart] = parts;
+  const leftDigits = leftPart.replace(/[^\d]/g, '');
+  const rightDigits = rightPart.replace(/[^\d]/g, '');
+  if (!leftDigits && !rightDigits) return { rawNumber: NaN, format: { hasDot: false } };
+  const fullNumberStr = (leftDigits + rightDigits) || '0';
+  const totalLength = fullNumberStr.length;
+  const rawNumber = parseInt(fullNumberStr, 10);
   return {
-    value: parseFloat(cleaned),
-    original: original
-  }; 
+    rawNumber,
+    format: {
+      hasDot: true,
+      left: leftDigits.length,
+      right: rightDigits.length,
+      total: totalLength
+    }
+  };
 }
 
-function formatWithDots(number){ 
-  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); 
+function formatOutputByInputFormat(number, inputFormat) {
+  if (isNaN(number)) return '';
+  const numStr = Math.abs(number).toString();
+  const isNegative = number < 0;
+  if (!inputFormat || !inputFormat.hasDot) {
+    return isNegative ? '-' + numStr : numStr;
+  }
+  const { left, right, total } = inputFormat;
+  let padded = numStr.padStart(total, '0');
+  if (padded.length > total) {
+    padded = padded.slice(-total);
+  }
+  const leftPart = padded.slice(0, left);
+  const rightPart = padded.slice(left);
+  const finalLeft = leftPart === '' ? '0' : parseInt(leftPart || '0', 10).toString();
+  let result = finalLeft + '.' + rightPart;
+  if (isNegative) result = '-' + result;
+  return result;
 }
 
-// ---------- محاسبات جدید ----------
 function findClosestNumbers(numbers) {
   if (numbers.length < 2) return { pairs: [], minDistance: 0 };
   let minDistance = Infinity;
   const closestPairs = [];
-  
   for (let i = 0; i < numbers.length; i++) {
     for (let j = i + 1; j < numbers.length; j++) {
       const distance = Math.abs(numbers[i].value - numbers[j].value);
@@ -1093,16 +973,17 @@ function findClosestNumbers(numbers) {
   return { pairs: closestPairs, minDistance };
 }
 
-function renderClosestInfo(closestPairs, minDistance, inputFormats) {
+function renderClosestInfo(closestPairs, minDistance, inputFormat) {
   if (!closestInfo) return;
   if (closestPairs.length === 0) {
     closestInfo.classList.add('hidden');
     return;
   }
-  let closestText = `<div class="text-sm font-semibold mb-2">نزدیک‌ترین اعداد (فاصله: ${formatNumberBasedOnInput(minDistance, inputFormats[0])}):</div>`;
+  const displayDist = formatOutputByInputFormat(minDistance, inputFormat);
+  let closestText = `<div class="text-sm font-semibold mb-2">نزدیک‌ترین اعداد (فاصله: ${displayDist}):</div>`;
   closestPairs.forEach(pair => {
-    const display1 = formatNumberBasedOnInput(pair[0].value, inputFormats[0]);
-    const display2 = formatNumberBasedOnInput(pair[1].value, inputFormats[0]);
+    const display1 = formatOutputByInputFormat(pair[0].value, inputFormat);
+    const display2 = formatOutputByInputFormat(pair[1].value, inputFormat);
     closestText += `<div class="text-xs mb-1">• ${pair[0].label} (${display1}) و ${pair[1].label} (${display2})</div>`;
   });
   closestInfo.innerHTML = closestText;
@@ -1114,9 +995,7 @@ function computeOutputs(y1, y2, currentLow, currentHigh, dailyHigh, dailyLow) {
   const result2 = Math.floor(Math.pow(Math.sqrt(y1) - 0.5, 2));
   const result3 = Math.floor(Math.pow(Math.sqrt(y2) + 1, 2));
   const result4 = Math.floor(Math.pow(Math.sqrt(y2) + 0.5, 2));
-  
   let result5 = null, result6 = null, result7 = null, result8 = null;
-  
   if (!isNaN(dailyHigh)) {
     result5 = Math.floor(Math.pow(Math.sqrt(dailyHigh) - 1, 2));
     result6 = Math.floor(Math.pow(Math.sqrt(dailyHigh) - 0.5, 2));
@@ -1125,7 +1004,6 @@ function computeOutputs(y1, y2, currentLow, currentHigh, dailyHigh, dailyLow) {
     result7 = Math.floor(Math.pow(Math.sqrt(dailyLow) + 1, 2));
     result8 = Math.floor(Math.pow(Math.sqrt(dailyLow) + 0.5, 2));
   }
-  
   return [result1, result2, result3, result4, result5, result6, result7, result8];
 }
 
@@ -1135,9 +1013,8 @@ function decideColor(v, currentLow, currentHigh){
   return 'box-gray'; 
 }
 
-function buildDisplayOutputs(outputs, currentLow, currentHigh, inputFormats, closestPairs = []) {
+function buildDisplayOutputs(outputs, currentLow, currentHigh, inputFormat, closestPairs = []) {
   const results = [];
-  
   if (!isNaN(outputs[0])) results.push({ label: "فرمول ۱ (سقف)", value: outputs[0] });
   if (!isNaN(outputs[1])) results.push({ label: "فرمول ۲ (سقف)", value: outputs[1] });
   if (!isNaN(outputs[2])) results.push({ label: "فرمول ۳ (کف)", value: outputs[2] });
@@ -1146,24 +1023,14 @@ function buildDisplayOutputs(outputs, currentLow, currentHigh, inputFormats, clo
   if (!isNaN(outputs[5])) results.push({ label: "فرمول ۶ (سقف روزانه)", value: outputs[5] });
   if (!isNaN(outputs[6])) results.push({ label: "فرمول ۷ (کف روزانه)", value: outputs[6] });
   if (!isNaN(outputs[7])) results.push({ label: "فرمول ۸ (کف روزانه)", value: outputs[7] });
-  
   results.sort((a, b) => a.value - b.value);
-  
   return results.map((result, index) => {
     const color = decideColor(result.value, currentLow, currentHigh);
     const isClosest = closestPairs.some(pair => 
       pair.some(p => p.label === result.label && p.value === result.value)
     );
-    
-    let displayVal;
-    if (inputFormats && inputFormats.some(format => format && format.includes('.'))) {
-      displayVal = formatNumberBasedOnInput(result.value, inputFormats[0]);
-    } else {
-      displayVal = result.value.toString();
-    }
-    
+    const displayVal = formatOutputByInputFormat(result.value, inputFormat);
     const suffix = (result.value < currentLow ? ' ↓ زیر کف فعلی' : (result.value > currentHigh ? ' ↑ بالای سقف فعلی' : ''));
-    
     return { 
       order: index + 1, 
       label: result.label,
@@ -1211,7 +1078,7 @@ function copyToClipboard(text) {
 }
 
 // ---------- مدیریت داده‌ها ----------
-function saveEntry(pairId, inputs, outputsDisplay, note='', dateISO=null, inputFormats=null, closestInfo=null){
+function saveEntry(pairId, inputs, outputsDisplay, note='', dateISO=null, inputFormat=null, closestInfo=null){
   const entries = storageGet('entries')||[];
   const si = dateISO || nowISO();
   const entry = { 
@@ -1222,14 +1089,7 @@ function saveEntry(pairId, inputs, outputsDisplay, note='', dateISO=null, inputF
     inputs, 
     outputsDisplay, 
     note,
-    inputFormats: inputFormats || {
-      y1: inputs.originalY1 || '',
-      currentHigh: inputs.originalCurrentHigh || '',
-      y2: inputs.originalY2 || '', 
-      currentLow: inputs.originalCurrentLow || '',
-      dailyHigh: inputs.originalDailyHigh || '',
-      dailyLow: inputs.originalDailyLow || ''
-    },
+    inputFormat: inputFormat,
     closestInfo: closestInfo || null
   };
   entries.push(entry); 
@@ -1246,46 +1106,35 @@ function pruneOldEntries(){
   if(kept.length !== entries.length) storageSet('entries', kept);
 }
 
-// مدیریت وضعیت باکس‌ها بر اساس دستگاه - فقط هنگام لود صفحه
 initializeBoxStates();
-  
+
 // ---------- event listeners ----------
 if(calculateButton) calculateButton.addEventListener('click', ()=>{
   if(!inputY1 || !inputY2 || !inputCurrentHigh || !inputCurrentLow){ 
     if(errorMessage) errorMessage.textContent = 'خطا: برخی فیلدها موجود نیستند.'; 
     return; 
   }
-  
   if(errorMessage) errorMessage.textContent = '';
   try{
-    const parsedY1 = parseNumberInput(inputY1.value);
-    const parsedCurrentHigh = parseNumberInput(inputCurrentHigh.value);
-    const parsedY2 = parseNumberInput(inputY2.value);
-    const parsedCurrentLow = parseNumberInput(inputCurrentLow.value);
-    const parsedDailyHigh = parseNumberInput(inputDailyHigh.value);
-    const parsedDailyLow = parseNumberInput(inputDailyLow.value);
-    
-    const y1 = parsedY1.value;
-    const currentHigh = parsedCurrentHigh.value;
-    const y2 = parsedY2.value;
-    const currentLow = parsedCurrentLow.value;
-    const dailyHigh = parsedDailyHigh.value;
-    const dailyLow = parsedDailyLow.value;
-    
+    const parsedY1 = parseFormattedInteger(inputY1.value);
+    const parsedCurrentHigh = parseFormattedInteger(inputCurrentHigh.value);
+    const parsedY2 = parseFormattedInteger(inputY2.value);
+    const parsedCurrentLow = parseFormattedInteger(inputCurrentLow.value);
+    const parsedDailyHigh = parseFormattedInteger(inputDailyHigh.value);
+    const parsedDailyLow = parseFormattedInteger(inputDailyLow.value);
+
+    const y1 = parsedY1.rawNumber;
+    const currentHigh = parsedCurrentHigh.rawNumber;
+    const y2 = parsedY2.rawNumber;
+    const currentLow = parsedCurrentLow.rawNumber;
+    const dailyHigh = parsedDailyHigh.rawNumber;
+    const dailyLow = parsedDailyLow.rawNumber;
+
     if(isNaN(y1) || isNaN(y2) || isNaN(currentLow) || isNaN(currentHigh)) throw new Error('لطفاً چهار فیلد اصلی را با اعداد معتبر پر کنید.');
     if(y1 < 0 || y2 < 0) throw new Error('لطفاً فقط اعداد مثبت وارد کنید.');
 
     const outputs = computeOutputs(y1, y2, currentLow, currentHigh, dailyHigh, dailyLow);
-    
-    const inputFormats = [
-      parsedY1.original, 
-      parsedCurrentHigh.original, 
-      parsedY2.original, 
-      parsedCurrentLow.original,
-      parsedDailyHigh.original,
-      parsedDailyLow.original
-    ];
-    
+
     const resultsForClosest = [];
     if (!isNaN(outputs[0])) resultsForClosest.push({ label: "فرمول ۱ (سقف)", value: outputs[0] });
     if (!isNaN(outputs[1])) resultsForClosest.push({ label: "فرمول ۲ (سقف)", value: outputs[1] });
@@ -1295,12 +1144,12 @@ if(calculateButton) calculateButton.addEventListener('click', ()=>{
     if (!isNaN(outputs[5])) resultsForClosest.push({ label: "فرمول ۶ (سقف روزانه)", value: outputs[5] });
     if (!isNaN(outputs[6])) resultsForClosest.push({ label: "فرمول ۷ (کف روزانه)", value: outputs[6] });
     if (!isNaN(outputs[7])) resultsForClosest.push({ label: "فرمول ۸ (کف روزانه)", value: outputs[7] });
-    
+
     const { pairs: closestPairs, minDistance } = findClosestNumbers(resultsForClosest);
-    
-    const displays = buildDisplayOutputs(outputs, currentLow, currentHigh, inputFormats, closestPairs);
+
+    const displays = buildDisplayOutputs(outputs, currentLow, currentHigh, parsedY1.format, closestPairs);
     renderResultsDisplay(displays);
-    renderClosestInfo(closestPairs, minDistance, inputFormats);
+    renderClosestInfo(closestPairs, minDistance, parsedY1.format);
 
     let chosenISO = null;
     if(datePicker && datePicker.value){
@@ -1314,54 +1163,46 @@ if(calculateButton) calculateButton.addEventListener('click', ()=>{
 
     const pairId = pairSelect ? pairSelect.value || null : null;
     const note = noteInput ? noteInput.value || '' : '';
-    
+
     saveEntry(pairId, {
-      y1, 
-      y2,
-      currentLow,
-      currentHigh,
-      dailyHigh,
-      dailyLow,
-      originalY1: parsedY1.original,
-      originalCurrentHigh: parsedCurrentHigh.original,
-      originalY2: parsedY2.original,
-      originalCurrentLow: parsedCurrentLow.original,
-      originalDailyHigh: parsedDailyHigh.original,
-      originalDailyLow: parsedDailyLow.original
-    }, displays, note, chosenISO, inputFormats, {
+      y1, y2, currentLow, currentHigh, dailyHigh, dailyLow,
+      originalY1: inputY1.value,
+      originalCurrentHigh: inputCurrentHigh.value,
+      originalY2: inputY2.value,
+      originalCurrentLow: inputCurrentLow.value,
+      originalDailyHigh: inputDailyHigh.value,
+      originalDailyLow: inputDailyLow.value
+    }, displays, note, chosenISO, parsedY1.format, {
       closestPairs: closestPairs,
       minDistance: minDistance
     });
-
-  }catch(err){ if(errorMessage) errorMessage.textContent = 'خطا: '+err.message; }
+  }catch(err){ 
+    if(errorMessage) errorMessage.textContent = 'خطا: '+err.message; 
+  }
 });
 
 if(resetButton) resetButton.addEventListener('click', ()=>{
-  // فقط فیلدهای عددی ورودی را پاک کن
   if(inputY1) inputY1.value = '';
   if(inputY2) inputY2.value = '';
   if(inputCurrentHigh) inputCurrentHigh.value = '';
   if(inputCurrentLow) inputCurrentLow.value = '';
   if(inputDailyHigh) inputDailyHigh.value = '';
   if(inputDailyLow) inputDailyLow.value = '';
-  
-  // نتایج و خطاها را پاک کن، اما تاریخ، یادداشت و وضعیت صوتی را نه
   if(resultsList) resultsList.innerHTML = '';
   if(errorMessage) errorMessage.textContent = '';
   if(closestInfo) {
     closestInfo.innerHTML = '';
     closestInfo.classList.add('hidden');
   }
-  // voiceStatus را دست نزن (فرمان صوتی قطع نشود)
 });
 
+// سایر بخش‌های مدیریت جفت‌ارز، تاریخچه، بک‌آپ، صوت و غیره بدون تغییر باقی مانده‌اند
 // ---------- مدیریت جفت‌ارزها ----------
 function renderPairs(){
   const pairs = storageGet('pairs') || [];
   if(pairSelect) pairSelect.innerHTML = '';
   if(historyPairFilter) historyPairFilter.innerHTML = '<option value="">همه جفت‌ارزها</option>';
   if(multiDatePairFilter) multiDatePairFilter.innerHTML = '<option value="">همه جفت‌ارزها</option>';
-  
   pairs.forEach(p => {
     if(pairSelect){
       const opt = document.createElement('option');
@@ -1382,7 +1223,6 @@ function renderPairs(){
       multiDatePairFilter.appendChild(opt3);
     }
   });
-  
   if(pairs.length === 0 && pairSelect){
     const opt = document.createElement('option');
     opt.value = '';
@@ -1391,7 +1231,6 @@ function renderPairs(){
   }
   renderCategories();
 }
-
 function addPair(name){
   if(!name || !name.trim()) return;
   const pairs = storageGet('pairs')||[];
@@ -1404,7 +1243,6 @@ function addPair(name){
   storageSet('pairs', pairs);
   renderPairs();
 }
-
 function swapPairs(i,j){
   const pairs = storageGet('pairs')||[];
   if(!pairs[i] || !pairs[j]) return;
@@ -1412,7 +1250,6 @@ function swapPairs(i,j){
   storageSet('pairs', pairs);
   renderPairs();
 }
-
 function movePairToCategory(pairId, newCategoryId){
   const pairs = storageGet('pairs')||[];
   const pair = pairs.find(p => p.id === pairId);
@@ -1422,15 +1259,12 @@ function movePairToCategory(pairId, newCategoryId){
     renderPairs();
   }
 }
-
 if(addPairBtn) addPairBtn.addEventListener('click', ()=>{ addPair(newPairName ? newPairName.value : ''); if(newPairName) newPairName.value=''; });
 if(clearPairsBtn) clearPairsBtn.addEventListener('click', ()=>{ if(confirm('آیا همه جفت‌ارزها حذف شوند؟')){ storageSet('pairs', []); renderPairs(); } });
-
 // ---------- مدیریت دسته‌بندی‌ها ----------
 function renderCategories(){
   const categories = storageGet('categories') || [];
   const pairs = storageGet('pairs') || [];
-  
   if(categorySelect){
     categorySelect.innerHTML = '<option value="">بدون دسته‌بندی</option>';
     categories.forEach(cat => {
@@ -1440,7 +1274,6 @@ function renderCategories(){
       categorySelect.appendChild(opt);
     });
   }
-  
   if(categoriesList){
     categoriesList.innerHTML = '';
     if(categories.length === 0){
@@ -1457,7 +1290,6 @@ function renderCategories(){
       });
     }
   }
-  
   if(categoriesContainer){
     categoriesContainer.innerHTML = '';
     const uncategorizedPairs = pairs.filter(p => !p.categoryId);
@@ -1472,7 +1304,6 @@ function renderCategories(){
     });
   }
 }
-
 function renderCategorySection(categoryId, categoryName, pairs){
   const section = document.createElement('div');
   section.className = 'category-section';
@@ -1515,7 +1346,6 @@ function renderCategorySection(categoryId, categoryName, pairs){
     content.classList.toggle('hidden');
   });
 }
-
 function addCategory(name){
   if(!name || !name.trim()) return;
   const categories = storageGet('categories') || [];
@@ -1527,7 +1357,6 @@ function addCategory(name){
   storageSet('categories', categories);
   renderCategories();
 }
-
 function deleteCategory(){
   const selectedCategoryId = categorySelect ? categorySelect.value : null;
   if(!selectedCategoryId){
@@ -1553,10 +1382,8 @@ function deleteCategory(){
   renderCategories();
   renderPairs();
 }
-
 if(addCategoryBtn) addCategoryBtn.addEventListener('click', () => { addCategory(newCategoryName ? newCategoryName.value : ''); if(newCategoryName) newCategoryName.value = ''; });
 if(deleteCategoryBtn) deleteCategoryBtn.addEventListener('click', deleteCategory);
-
 if(categoriesContainer){
   categoriesContainer.addEventListener('click', (e)=>{
     const btn = e.target.closest('button'); if(!btn) return;
@@ -1575,7 +1402,6 @@ if(categoriesContainer){
     }
   });
 }
-
 // ---------- تاریخچه ----------
 function renderHistory(){
   if (multiDateSection && !multiDateSection.classList.contains('hidden')) {
@@ -1586,14 +1412,12 @@ function renderHistory(){
       return;
     }
   }
-  
   const entries = (storageGet('entries')||[]).slice();
   entries.sort((a,b)=> new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime());
   if(entriesCount) entriesCount.textContent = entries.length;
   const filterDate = historyDate && historyDate.value ? new Date(historyDate.value).toDateString() : null;
   const filterPair = historyPairFilter && historyPairFilter.value ? historyPairFilter.value : null;
   if(historyList) historyList.innerHTML = '';
-
   let filtered = entries;
   if(!filterDate){
     const today = new Date().toDateString();
@@ -1601,27 +1425,23 @@ function renderHistory(){
   } else {
     filtered = entries.filter(e => new Date(e.dateISO).toDateString() === filterDate);
   }
-
   if(filterPair) filtered = filtered.filter(e => e.pairId === filterPair);
-
   if(filtered.length === 0){ 
     if(historyList) historyList.innerHTML = '<div class="muted text-sm text-center py-4">رکوردی جهت نمایش وجود ندارد.</div>'; 
     return; 
   }
-
   safeForEach(filtered, e=>{
     const pair = (storageGet('pairs')||[]).find(p=>p.id===e.pairId);
     const pairName = pair?.name || '—';
     const category = pair ? (storageGet('categories')||[]).find(c=>c.id===pair.categoryId) : null;
-    
     const wrapper = document.createElement('div'); 
     wrapper.className = 'history-entry-compact flex flex-col gap-3 hover:border-white/20 transition-colors';
-    
     let closestHTML = '';
     if (e.closestInfo && e.closestInfo.closestPairs && e.closestInfo.closestPairs.length > 0) {
+      const displayDist = formatOutputByInputFormat(e.closestInfo.minDistance, e.inputFormat);
       closestHTML = `
         <div class="mt-2 pt-2 border-t border-white/10">
-          <div class="text-xs muted mb-1">نزدیک‌ترین اعداد (فاصله: ${formatNumberBasedOnInput(e.closestInfo.minDistance, e.inputFormats.y1)}):</div>
+          <div class="text-xs muted mb-1">نزدیک‌ترین اعداد (فاصله: ${displayDist}):</div>
           <div class="text-xs space-y-1">
             ${e.closestInfo.closestPairs.map(pair => 
               `• ${pair[0].label} و ${pair[1].label}`
@@ -1630,7 +1450,6 @@ function renderHistory(){
         </div>
       `;
     }
-    
     wrapper.innerHTML = `
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
@@ -1650,7 +1469,6 @@ function renderHistory(){
       </div>
       ${closestHTML}
     `;
-    
     const bottom = document.createElement('div'); 
     bottom.className = 'flex gap-2 justify-end';
     const viewBtn = document.createElement('button'); 
@@ -1662,7 +1480,6 @@ function renderHistory(){
     historyList.appendChild(wrapper);
   });
 }
-
 function showDetail(entryId){
   const entries = storageGet('entries')||[]; 
   const e = entries.find(x=>x.id===entryId); 
@@ -1671,14 +1488,14 @@ function showDetail(entryId){
   const pairName = pair?.name || '—';
   const category = pair ? (storageGet('categories')||[]).find(c=>c.id===pair.categoryId) : null;
   if(detailContent) detailContent.innerHTML = '';
-  
   let closestHTML = '';
   if (e.closestInfo && e.closestInfo.closestPairs && e.closestInfo.closestPairs.length > 0) {
+    const displayDist = formatOutputByInputFormat(e.closestInfo.minDistance, e.inputFormat);
     closestHTML = `
       <div class="bg-white/5 p-4 rounded">
         <div class="text-xs muted mb-3">نزدیک‌ترین اعداد</div>
         <div class="text-sm space-y-2">
-          <div class="font-semibold">فاصله: ${formatNumberBasedOnInput(e.closestInfo.minDistance, e.inputFormats.y1)}</div>
+          <div class="font-semibold">فاصله: ${displayDist}</div>
           ${e.closestInfo.closestPairs.map(pair => 
             `<div class="flex justify-between items-center p-2 bg-white/5 rounded">
               <div>${pair[0].label} و ${pair[1].label}</div>
@@ -1688,7 +1505,6 @@ function showDetail(entryId){
       </div>
     `;
   }
-  
   detailContent.innerHTML = `
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="space-y-3">
@@ -1704,7 +1520,6 @@ function showDetail(entryId){
           <div class="font-semibold">${e.dateDisplay}</div>
         </div>
       </div>
-      
       <div class="space-y-3">
         <div class="bg-white/5 p-3 rounded">
           <div class="text-xs muted mb-1">یادداشت</div>
@@ -1712,19 +1527,17 @@ function showDetail(entryId){
         </div>
       </div>
     </div>
-    
     <div class="bg-white/5 p-4 rounded">
       <div class="text-xs muted mb-3">ورودی‌ها</div>
       <div class="grid grid-cols-2 gap-3 text-sm">
-        <div>عدد سقف: <span class="font-mono">${e.inputs.originalY1 || e.inputs.y1}</span></div>
-        <div>سقف فعلی: <span class="font-mono">${e.inputs.originalCurrentHigh || e.inputs.currentHigh}</span></div>
-        <div>عدد کف: <span class="font-mono">${e.inputs.originalY2 || e.inputs.y2}</span></div>
-        <div>کف فعلی: <span class="font-mono">${e.inputs.originalCurrentLow || e.inputs.currentLow}</span></div>
-        <div>سقف روزانه: <span class="font-mono">${e.inputs.originalDailyHigh || e.inputs.dailyHigh || '---'}</span></div>
-        <div>کف روزانه: <span class="font-mono">${e.inputs.originalDailyLow || e.inputs.dailyLow || '---'}</span></div>
+        <div>عدد سقف: <span class="font-mono">${e.inputs.originalY1}</span></div>
+        <div>سقف فعلی: <span class="font-mono">${e.inputs.originalCurrentHigh}</span></div>
+        <div>عدد کف: <span class="font-mono">${e.inputs.originalY2}</span></div>
+        <div>کف فعلی: <span class="font-mono">${e.inputs.originalCurrentLow}</span></div>
+        <div>سقف روزانه: <span class="font-mono">${e.inputs.originalDailyHigh || '---'}</span></div>
+        <div>کف روزانه: <span class="font-mono">${e.inputs.originalDailyLow || '---'}</span></div>
       </div>
     </div>
-    
     <div class="bg-white/5 p-4 rounded">
       <div class="text-xs muted mb-3">خروجی‌ها (مرتب‌شده)</div>
       <div class="flex flex-wrap gap-2 justify-center">
@@ -1735,27 +1548,22 @@ function showDetail(entryId){
         ).join('')}
       </div>
     </div>
-    
     ${closestHTML}
   `;
-
   if(detailModal) {
     detailModal.classList.remove('hidden');
     detailModal.classList.add('center-modal');
   }
-
   if(editRecordBtn) editRecordBtn.onclick = ()=> editRecord(e.id);
   if(deleteRecordBtn) deleteRecordBtn.onclick = ()=> deleteRecord(e.id);
   if(moveRecordBtn) moveRecordBtn.onclick = ()=> moveRecord(e.id);
 }
-
 if(closeDetail) closeDetail.addEventListener('click', ()=> { 
   if(detailModal) {
     detailModal.classList.add('hidden');
     detailModal.classList.remove('center-modal');
   }
 });
-
 function deleteRecord(id){ 
   if(!confirm('آیا از حذف این رکورد مطمئن هستید؟')) return; 
   const entries = storageGet('entries')||[]; 
@@ -1769,17 +1577,16 @@ function deleteRecord(id){
     detailModal.classList.remove('center-modal');
   }
 }
-
 function editRecord(id){
   const entries = storageGet('entries')||[]; const e = entries.find(x=>x.id===id); if(!e) return;
   if(!confirm('مقادیر رکورد در فرم بارگذاری خواهد شد. پس از ویرایش دکمهٔ محاسبه را بزنید تا رکورد جدید ذخیره شود. رکورد قدیمی حذف می‌شود. ادامه می‌دهید؟')) return;
   if(pairSelect) pairSelect.value = e.pairId || '';
-  if(inputY1) inputY1.value = e.inputFormats?.y1 || e.inputs.y1; 
-  if(inputCurrentHigh) inputCurrentHigh.value = e.inputFormats?.currentHigh || e.inputs.currentHigh; 
-  if(inputY2) inputY2.value = e.inputFormats?.y2 || e.inputs.y2; 
-  if(inputCurrentLow) inputCurrentLow.value = e.inputFormats?.currentLow || e.inputs.currentLow; 
-  if(inputDailyHigh) inputDailyHigh.value = e.inputFormats?.dailyHigh || e.inputs.dailyHigh || ''; 
-  if(inputDailyLow) inputDailyLow.value = e.inputFormats?.dailyLow || e.inputs.dailyLow || ''; 
+  if(inputY1) inputY1.value = e.inputs.originalY1; 
+  if(inputCurrentHigh) inputCurrentHigh.value = e.inputs.originalCurrentHigh; 
+  if(inputY2) inputY2.value = e.inputs.originalY2; 
+  if(inputCurrentLow) inputCurrentLow.value = e.inputs.originalCurrentLow; 
+  if(inputDailyHigh) inputDailyHigh.value = e.inputs.originalDailyHigh || ''; 
+  if(inputDailyLow) inputDailyLow.value = e.inputs.originalDailyLow || ''; 
   if(noteInput) noteInput.value = e.note||''; 
   if(datePicker) datePicker.value = e.dateDisplay.split(' ')[0] || '';
   const idx = entries.findIndex(x=>x.id===id); if(idx!==-1){ entries.splice(idx,1); storageSet('entries',entries); }
@@ -1790,7 +1597,6 @@ function editRecord(id){
   }
   window.scrollTo({top:0, behavior:'smooth'});
 }
-
 function moveRecord(id){
   const newDate = prompt('تاریخ جدید (YYYY-MM-DD) را وارد کنید:'); if(!newDate) return;
   const d = new Date(newDate + 'T00:00:00'); if(isNaN(d)){ alert('تاریخ نامعتبر.'); return; }
@@ -1801,7 +1607,6 @@ function moveRecord(id){
     detailModal.classList.remove('center-modal');
   }
 }
-
 // ---------- backup/import ----------
 function showNotification(message, type = 'success') {
   const toast = document.createElement('div');
@@ -1814,7 +1619,6 @@ function showNotification(message, type = 'success') {
     }
   }, 3000);
 }
-
 if(exportBtn) exportBtn.addEventListener('click', ()=>{
   try {
     const payload = { 
@@ -1845,9 +1649,7 @@ if(exportBtn) exportBtn.addEventListener('click', ()=>{
     showNotification('❌ خطا در دانلود فایل پشتیبان: ' + err.message, 'error');
   }
 });
-
 if(importBtn) importBtn.addEventListener('click', ()=> importFile && importFile.click());
-
 if(importFile) importFile.addEventListener('change', (e)=>{ 
   const f = e.target.files[0]; 
   if(!f) return; 
@@ -1870,7 +1672,7 @@ if(importFile) importFile.addEventListener('change', (e)=>{
         else storageSet('categories', []);
         renderPairs(); 
         renderHistory(); 
-        let message = '✅ بک‌آپ با موفقیت بارگذاری شد!\n\n';
+        let message = '✅ بک‌آپ با موفقیت بارگذاری شد!\n';
         message += `📊 اطلاعات بک‌آپ:\n`;
         message += `• ${obj.entries?.length || 0} رکورد تاریخی\n`;
         message += `• ${obj.pairs?.length || 0} جفت‌ارز\n`;
@@ -1889,14 +1691,11 @@ if(importFile) importFile.addEventListener('change', (e)=>{
   reader.readAsText(f); 
   importFile.value=''; 
 });
-
 // ---------- UI controls ----------
-// تابع جدید برای مدیریت دکمه تاگل - اینجا اضافه شده
 function updateToggleButton(isOpen) {
   const toggleIcon = document.getElementById('toggle_icon');
   const toggleText = document.getElementById('toggle_text');
   const toggleBtn = document.getElementById('toggle_history_btn');
-  
   if (isOpen) {
     toggleIcon.textContent = '📂';
     toggleIcon.style.transform = 'rotate(0deg) scale(1.1)';
@@ -1911,11 +1710,8 @@ function updateToggleButton(isOpen) {
     toggleBtn.classList.add('closed');
   }
 }
-
-// event listener اصلاح شده برای دکمه تاریخچه
 if(toggleHistoryBtn) toggleHistoryBtn.addEventListener('click', ()=>{
   const isCurrentlyHidden = historyPanel.classList.contains('hidden');
-  
   if(isCurrentlyHidden){
     historyPanel.classList.remove('hidden'); 
     updateToggleButton(true);
@@ -1927,21 +1723,17 @@ if(toggleHistoryBtn) toggleHistoryBtn.addEventListener('click', ()=>{
     updateToggleButton(false);
   }
 });
-
 if(historyDate) historyDate.addEventListener('change', renderHistory);
 if(historyPairFilter) historyPairFilter.addEventListener('change', renderHistory);
-
 if(togglePairsHdr) togglePairsHdr.addEventListener('click', ()=> { boxPairs.classList.toggle('hidden'); });
 if(toggleCalcHdr) toggleCalcHdr.addEventListener('click', ()=> { boxCalc.classList.toggle('hidden'); });
 if(toggleHistoryHdr) toggleHistoryHdr.addEventListener('click', ()=> { boxHistory.classList.toggle('hidden'); });
-
 // ---------- صوت ----------
 let recognition = null;
 let isRecording = false;
 let isVoiceActive = false;
 let currentField = null;
 const numericFields = [inputY1, inputCurrentHigh, inputY2, inputCurrentLow, inputDailyHigh, inputDailyLow];
-
 function parseNumberFromTranscript(transcript){
   if(!transcript) return null;
   const persianDigits = {'۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'};
@@ -1950,7 +1742,6 @@ function parseNumberFromTranscript(transcript){
   const match = normalized.match(/-?\d*\.?\d+/);
   return match ? match[0] : null;
 }
-
 function startVoiceRecognition(){
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SpeechRecognition){ 
@@ -1962,7 +1753,6 @@ function startVoiceRecognition(){
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
   recognition.continuous = false;
-
   recognition.onstart = () => {
     isRecording = true;
     if(microToggle) microToggle.classList.add('recording');
@@ -1971,7 +1761,6 @@ function startVoiceRecognition(){
       voiceStatus.textContent = `🎤 در حال گوش دادن لطفاً عدد را بگویید`;
     }
   };
-  
   recognition.onend = () => {
     isRecording = false;
     if(microToggle) microToggle.classList.remove('recording');
@@ -1983,7 +1772,6 @@ function startVoiceRecognition(){
       }, 300);
     }
   };
-  
   recognition.onerror = (ev) => {
     isRecording = false;
     if(microToggle) microToggle.classList.remove('recording');
@@ -1995,7 +1783,6 @@ function startVoiceRecognition(){
       }, 1000);
     }
   };
-  
   recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript;
     const numStr = parseNumberFromTranscript(transcript);
@@ -2013,14 +1800,12 @@ function startVoiceRecognition(){
       voiceStatus.textContent = '❌ عدد تشخیص داده نشد. دوباره تلاش کنید.';
     }
   };
-  
   try{
     recognition.start();
   }catch(e){
     console.log('خطا در شروع ضبط:', e);
   }
 }
-
 function stopVoiceRecognition(){
   isVoiceActive = false;
   try{
@@ -2034,7 +1819,6 @@ function stopVoiceRecognition(){
   }
   if(voiceStatus) voiceStatus.textContent = 'اتصال صوتی قطع شد';
 }
-
 function getFieldName(field){
   const names = {
     [inputY1]: 'عدد سقف',
@@ -2046,7 +1830,6 @@ function getFieldName(field){
   };
   return names[field] || 'این فیلد';
 }
-
 safeForEach(numericFields, (field) => {
   if(!field) return;
   field.addEventListener('focus', () => {
@@ -2059,7 +1842,6 @@ safeForEach(numericFields, (field) => {
     }
   });
 });
-
 if(microToggle){
   microToggle.addEventListener('click', ()=>{
     if(isVoiceActive){
@@ -2080,10 +1862,8 @@ if(microToggle){
     }
   });
 }
-
 // ---------- تاریخ چندگانه ----------
 let dateRanges = [];
-
 function toggleMultiDateMode() {
   const isMultiDateActive = multiDateSection.classList.contains('hidden');
   if (isMultiDateActive) {
@@ -2102,13 +1882,11 @@ function toggleMultiDateMode() {
     renderHistory();
   }
 }
-
 function addDateRange() {
   const dateId = uid();
   dateRanges.push({ id: dateId, date: '' });
   renderDateRanges();
 }
-
 function renderDateRanges() {
   if (!dateRangesContainer) return;
   dateRangesContainer.innerHTML = '';
@@ -2125,17 +1903,14 @@ function renderDateRanges() {
     dateRangesContainer.appendChild(dateItem);
   });
 }
-
 function updateDateRange(dateId, newDate) {
   const range = dateRanges.find(r => r.id === dateId);
   if (range) range.date = newDate;
 }
-
 function removeDateRange(dateId) {
   dateRanges = dateRanges.filter(r => r.id !== dateId);
   renderDateRanges();
 }
-
 function applyMultiDateFilter() {
   const selectedPair = multiDatePairFilter ? multiDatePairFilter.value : null;
   const selectedDates = dateRanges.filter(r => r.date).map(r => r.date);
@@ -2145,7 +1920,6 @@ function applyMultiDateFilter() {
   }
   renderMultiDateHistory(selectedPair, selectedDates);
 }
-
 function renderMultiDateHistory(pairFilter = null, dates = []) {
   const entries = (storageGet('entries')||[]).slice();
   entries.sort((a,b)=> new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime());
@@ -2187,13 +1961,14 @@ function renderMultiDateHistory(pairFilter = null, dates = []) {
       wrapper.className = 'history-entry-compact flex flex-col gap-3 hover:border-white/20 transition-colors mt-2';
       let closestHTML = '';
       if (e.closestInfo && e.closestInfo.closestPairs && e.closestInfo.closestPairs.length > 0) {
+        const displayDist = formatOutputByInputFormat(e.closestInfo.minDistance, e.inputFormat);
         closestHTML = `
           <div class="flex gap-3 justify-center text-xs">
             ${e.closestInfo.closestPairs.map(pair => 
               `<span class="bg-white/10 px-2 py-1 rounded cursor-pointer hover:opacity-80" 
-                      onclick="copyToClipboard('${formatNumberBasedOnInput(e.closestInfo.minDistance, e.inputFormats.y1)}')"
+                      onclick="copyToClipboard('${displayDist}')"
                       title="کلیک برای کپی">
-                نزدیک‌ترین: فاصله ${formatNumberBasedOnInput(e.closestInfo.minDistance, e.inputFormats.y1)} 📋
+                نزدیک‌ترین: فاصله ${displayDist} 📋
               </span>`
             ).join('')}
           </div>
@@ -2227,7 +2002,6 @@ function renderMultiDateHistory(pairFilter = null, dates = []) {
     historyList.appendChild(groupWrapper);
   });
 }
-
 if(toggleMultiDateBtn) toggleMultiDateBtn.addEventListener('click', toggleMultiDateMode);
 if(addDateBtn) addDateBtn.addEventListener('click', addDateRange);
 if(applyMultiDateBtn) applyMultiDateBtn.addEventListener('click', applyMultiDateFilter);
@@ -2237,7 +2011,6 @@ if(multiDatePairFilter) multiDatePairFilter.addEventListener('change', function(
     if (selectedDates.length > 0) applyMultiDateFilter();
   }
 });
-
 // ---------- مدیریت پیشرفته ----------
 function manualPruneOldEntries(days = 365) {
   const entries = storageGet('entries') || [];
@@ -2251,7 +2024,6 @@ function manualPruneOldEntries(days = 365) {
   }
   return 0;
 }
-
 function showSystemStats() {
   const entries = storageGet('entries') || [];
   const pairs = storageGet('pairs') || [];
@@ -2302,7 +2074,6 @@ function showSystemStats() {
     $('stats_modal').classList.add('center-modal');
   }
 }
-
 function manageBackups() {
   const entries = storageGet('entries') || [];
   const pairs = storageGet('pairs') || [];
@@ -2346,7 +2117,6 @@ function manageBackups() {
     $('backups_modal').classList.add('center-modal');
   }
 }
-
 function createBackup() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
   const entries = storageGet('entries') || [];
@@ -2369,7 +2139,6 @@ function createBackup() {
   URL.revokeObjectURL(url);
   alert(`✅ بک‌آپ با موفقیت ایجاد و دانلود شد!\n📁 فایل: calc-pro-1-backup-${timestamp}.json\n📊 حجم: ${(blob.size / 1024).toFixed(2)} KB`);
 }
-
 if ($('manual_prune_btn')) $('manual_prune_btn').addEventListener('click', function() {
   const days = parseInt($('manual_prune_days').value) || 365;
   if (days < 1) { alert('تعداد روز باید بیشتر از ۰ باشد'); return; }
@@ -2379,26 +2148,21 @@ if ($('manual_prune_btn')) $('manual_prune_btn').addEventListener('click', funct
     else alert('ℹ️ هیچ رکورد قدیمی‌ای برای حذف یافت نشد.');
   }
 });
-
 if ($('show_stats_btn')) $('show_stats_btn').addEventListener('click', showSystemStats);
 if ($('manage_backups_btn')) $('manage_backups_btn').addEventListener('click', manageBackups);
-
 if ($('close_stats')) $('close_stats').addEventListener('click', function() {
   $('stats_modal').classList.add('hidden');
   $('stats_modal').classList.remove('center-modal');
 });
-
 if ($('close_backups')) $('close_backups').addEventListener('click', function() {
   $('backups_modal').classList.add('hidden');
   $('backups_modal').classList.remove('center-modal');
 });
-
 window.addEventListener('click', function(event) {
   if (event.target === $('stats_modal')) $('stats_modal').classList.add('hidden');
   if (event.target === $('backups_modal')) $('backups_modal').classList.add('hidden');
   if (event.target === $('detail_modal')) $('detail_modal').classList.add('hidden');
 });
-
 window.addEventListener('keydown', function(event) {
   if (event.key === 'Escape') {
     if ($('stats_modal') && !$('stats_modal').classList.contains('hidden')) $('stats_modal').classList.add('hidden');
@@ -2406,7 +2170,6 @@ window.addEventListener('keydown', function(event) {
     if ($('detail_modal') && !$('detail_modal').classList.contains('hidden')) $('detail_modal').classList.add('hidden');
   }
 });
-
 // ---------- شروع اولیه ----------
 if((storageGet('pairs')||[]).length === 0){ 
   storageSet('pairs', [
@@ -2416,21 +2179,17 @@ if((storageGet('pairs')||[]).length === 0){
     {id:uid(), name:'ETHUSD', categoryId: 'crypto'}
   ]); 
 }
-
 window.addEventListener('load', () => {
   const today = new Date().toISOString().split('T')[0];
   if(historyDate) historyDate.value = today;
   setTimeout(() => { if(numericFields[0]) numericFields[0].focus(); }, 1000);
 });
-
 renderPairs(); 
 renderHistory();
-
 setTimeout(() => {
   console.log('✅ سیستم Calculator PRO - برنامه اول آماده است!');
 }, 1000);
 </script>
-
 <div class="signature">
     طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
 </div>
