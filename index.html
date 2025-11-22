@@ -9,18 +9,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ربات CST - ورود با Google Authenticator</title>
     
-    <!-- ========== PWA CONFIGURATION ========== -->
     <link rel="manifest" href="/cst/manifest.json">
     <link rel="icon" type="image/x-icon" href="/cst/icons/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="/cst/icons/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/cst/icons/favicon-32x32.png">
     
-    <!-- برای iOS - فقط از آیکون‌های موجود استفاده کن -->
     <link rel="apple-touch-icon" href="/cst/icons/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="192x192" href="/cst/icons/android-chrome-192x192.png">
     <link rel="apple-touch-icon" sizes="512x512" href="/cst/icons/android-chrome-512x512.png">
     
-    <!-- THEME COLORS -->
     <meta name="theme-color" content="#735af2">
     <meta name="msapplication-TileColor" content="#735af2">
     <meta name="msapplication-navbutton-color" content="#735af2">
@@ -28,7 +25,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ربات CST">
     
-    <!-- FONTS & STYLES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -146,66 +142,64 @@
             position: relative;
         }
         
-/* ==== چرخ‌دنده گوشه‌ای بدون مخفی شدن روی هیچ دستگاهی ==== */
-.settings-icon {
-    position: absolute;
-    top: -25px;                /* یه کم بیرون از کادر */
-    right: -16px;              /* کاملاً گوشه گوشه */
-    color: white;
-    font-size: 1.75rem;
-    cursor: pointer;
-    transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 99999;            /* خیلی بالا – از همه چیز بالاتر! */
+        /* ==== چرخ‌دنده گوشه‌ای بدون مخفی شدن روی هیچ دستگاهی ==== */
+        .settings-icon {
+            position: absolute;
+            top: -25px;                /* یه کم بیرون از کادر */
+            right: -16px;              /* کاملاً گوشه گوشه */
+            color: white;
+            font-size: 1.75rem;
+            cursor: pointer;
+            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 99999;            /* خیلی بالا – از همه چیز بالاتر! */
 
-    /* اینا باعث می‌شن هیچ‌وقت جابجا نشه */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
-    height: 56px;
-    transform-origin: center center !important;
+            /* اینا باعث می‌شن هیچ‌وقت جابجا نشه */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            transform-origin: center center !important;
+            /* افکت شیشه‌ای + سایه قوی */
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            padding: 10px;
+            /* این خط طلاییه: حتی اگر پدرش overflow: hidden داشته باشه، اینو نشون می‌ده! */
+            transform: translateZ(0);
+            /* فعال کردن GPU acceleration */
+            -webkit-transform: translateZ(0);
+        }
 
-    /* افکت شیشه‌ای + سایه قوی */
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    padding: 10px;
+        /* هاور */
+        .settings-icon:hover,
+        .settings-icon:active {
+            transform: rotate(0deg) translateZ(0) !important;
+            background: rgba(255, 255, 255, 0.28);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+        }
 
-    /* این خط طلاییه: حتی اگر پدرش overflow: hidden داشته باشه، اینو نشون می‌ده! */
-    transform: translateZ(0); /* فعال کردن GPU acceleration */
-    -webkit-transform: translateZ(0);
-}
+        /* جلوگیری از مخفی شدن چرخ‌دنده وقتی صفحه کوچیک می‌شه */
+        .header-group,
+        .login-container {
+            overflow: visible !important;
+            position: relative !important;
+        }
 
-/* هاور */
-.settings-icon:hover,
-.settings-icon:active {
-    transform: rotate(0deg) translateZ(0) !important;
-    background: rgba(255, 255, 255, 0.28);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
-}
-
-/* ==== این قسمت خیلی مهمه – اضافه کن به CSS ==== */
-/* جلوگیری از مخفی شدن چرخ‌دنده وقتی صفحه کوچیک می‌شه */
-.header-group,
-.login-container {
-    overflow: visible !important;   /* این خط همه مشکلات رو حل می‌کنه */
-    position: relative !important;
-}
-
-/* برای موبایل‌های خیلی کوچیک (زیر 380px) یه کم جمع‌ترش کن */
-@media (max-width: 380px) {
-    .settings-icon {
-        top: -18px;
-        right: -10px;
-        width: 40px;
-        height: 40px;
-        font-size: 1.5rem;
-        padding: 8px;
-    }
-}
+        /* برای موبایل‌های خیلی کوچیک (زیر 380px) یه کم جمع‌ترش کن */
+        @media (max-width: 380px) {
+            .settings-icon {
+                top: -18px;
+                right: -10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+                padding: 8px;
+            }
+        }
         
         .input-group {
             display: flex;
@@ -219,7 +213,9 @@
             text-align: right;
         }
         
-        input[type="text"] {
+        /* استایل اینپوت - حالا هم text و هم tel را پوشش می‌دهد */
+        input[type="text"], 
+        input[type="tel"] {
             padding: 15px;
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -229,16 +225,19 @@
             transition: all 0.3s ease;
             text-align: center;
             width: 100%;
+            direction: ltr; /* جهت متن چپ‌چین برای اعداد */
         }
         
-        input[type="text"]:focus {
+        input[type="text"]:focus,
+        input[type="tel"]:focus {
             outline: none;
             border-color: rgba(255, 255, 255, 0.6);
             background: rgba(255, 255, 255, 0.25);
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
         
-        input[type="text"]::placeholder {
+        input[type="text"]::placeholder,
+        input[type="tel"]::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
         
@@ -697,10 +696,10 @@
             transition: all 0.3s ease;
         }
 		.settings-icon,
-.settings-icon:hover,
-.settings-icon:active {
-    box-shadow: none !important;
-}
+        .settings-icon:hover,
+        .settings-icon:active {
+            box-shadow: none !important;
+        }
 
         .close-settings {
             position: absolute;
@@ -820,33 +819,30 @@
         }
 		
 		/* ========== BEAUTIFY SETTINGS MODAL SCROLLBAR ========== */
-.settings-content::-webkit-scrollbar {
-    width: 8px; /* عرض اسکرول‌بار */
-}
+        .settings-content::-webkit-scrollbar {
+            width: 8px;
+        }
 
-.settings-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1); /* رنگ پس‌زمینه مسیر اسکرول‌بار */
-    border-radius: 4px;
-}
+        .settings-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
 
-.settings-content::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3); /* رنگ خود اسکرول‌بار */
-    border-radius: 4px;
-}
+        .settings-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3); 
+            border-radius: 4px;
+        }
 
-.settings-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5); /* رنگ اسکرول‌بار وقتی موس روش میره */
-}
+        .settings-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
 
-/* برای مرورگر Firefox */
-.settings-content {
-    scrollbar-width: thin; /* میتونه thin یا auto یا none باشه */
-    scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1); /* رنگ اسکرول‌بار و رنگ پس‌زمینه */
-}
-
-.settings-content {
-    border-radius: 5px;
-}
+        /* برای مرورگر Firefox */
+        .settings-content {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
 
         /* ========== POPUP & OVERLAY STYLES ========== */
         #popupOverlay {
@@ -918,7 +914,7 @@
         <div class="login-form" id="verifyForm">
             <div class="input-group">
                 <label for="otp">کد ۶ رقمی Google Authenticator:</label>
-                <input type="text" id="otp" placeholder="کد ۶ رقمی" maxlength="6" required>
+                <input type="tel" id="otp" placeholder="کد ۶ رقمی" maxlength="6" required inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code">
             </div>
             <button type="button" class="login-btn" id="verifyOtpBtn">ورود به سیستم</button>
             <div class="error-message" id="verifyError">کد نامعتبر است</div>
@@ -978,7 +974,6 @@
 
     <button class="pwa-install-btn" id="pwaInstallButton">📥 نصب برنامه</button>
 
-    <!-- Settings Modal -->
     <div id="settingsModal">
         <div class="settings-content">
             <span class="close-settings" onclick="toggleSettings()">&times;</span>
@@ -1024,7 +1019,6 @@
         </div>
     </div>
 
-    <!-- ========== POPUP ELEMENTS (OUTSIDE LOGIN CONTAINER!) ========== -->
     <div id="popupOverlay"></div>
     <div class="simple-mobile-popup" id="simpleMobilePopup">
         <div class="ds-icon">
@@ -1082,7 +1076,6 @@
             if (document.body.classList.contains('desktop')) {
                 // حذف کلاس قبلی
                 tabsContainer.classList.remove('icons-only');
-                
                 // فقط در سایزهای بسیار کوچک دسکتاپ (600px و پایین‌تر) حالت آیکون فعال شود
                 if (windowWidth <= 600) {
                     tabsContainer.classList.add('icons-only');
@@ -1099,11 +1092,9 @@
                 document.head.appendChild(meta);
             }
             meta.content = color;
-
             document.querySelectorAll('meta[name="msapplication-TileColor"]').forEach(el => {
                 el.content = color;
             });
-            
             document.querySelectorAll('meta[name="msapplication-navbutton-color"]').forEach(el => {
                 el.content = color;
             });
@@ -1146,17 +1137,15 @@
         // تابع تحلیل عناصر (اسکن متن‌ها، دکمه‌ها، لینک‌ها، تب‌ها و غیره)
         function analyzeElements(bgColor, textColor) {
             // عناصر کلیدی برای چک: متن‌ها، عنوان‌ها، دکمه‌ها، تب‌ها، لیبل‌ها
-            const elements = document.querySelectorAll('h1, p, label, button, .tab, .tab-text, .signature, .login-signature, .login-btn, input[type="text"], .settings-section h3');
+            const elements = document.querySelectorAll('h1, p, label, button, .tab, .tab-text, .signature, .login-signature, .login-btn, input[type="text"], input[type="tel"], .settings-section h3');
             const bgLum = getLuminance(bgColor);
             const textLum = getLuminance(textColor); // فرض: متن‌ها سفید (white) هستند
             let hasIssue = false;
-
             for (let el of elements) {
                 if (el.textContent.trim().length > 0) { // فقط عناصر با متن
                     const isInteractive = el.tagName === 'BUTTON' || el.classList.contains('tab') || el.classList.contains('login-btn');
                     const minRatio = isInteractive ? 3 : 4.5;
                     const ratio = getContrastRatio(bgLum, textLum);
-                    
                     if (ratio < minRatio) {
                         hasIssue = true;
                         break; // اگر یکی مشکل داشته باشه، کافیه
@@ -1187,7 +1176,6 @@
             light: { gradient: 'linear-gradient(135deg, #735af2 0%, #5a3fd0 100%)', primary: '#735af2' },
             dark: { gradient: 'linear-gradient(135deg, #1e1e1e 0%, #333 100%)', primary: '#333' }
         };
-
         function loadTheme() {
             const saved = localStorage.getItem('themeSettings');
             if (saved) {
@@ -1308,7 +1296,6 @@
                 colorType,
                 glass
             };
-
             localStorage.setItem('themeSettings', JSON.stringify(settings));
             applyTheme(settings);
             toggleSettings();
@@ -1324,12 +1311,10 @@
         document.getElementById('settingsModal').addEventListener('click', function(e) {
             if (e.target === this) toggleSettings();
         });
-
         // ==================== VISUAL FIXES FOR GLASS EFFECT ====================
         function applyVisualFixes() {
             // این تابع مشکلات بصری backdrop-filter را رفع می‌کند
             const elements = document.querySelectorAll('.login-container, .tabs-container, .setup-guide, .signature, .login-signature, .tab');
-            
             elements.forEach(element => {
                 // اطمینان از اینکه border-radius به درستی اعمال شده
                 const computedStyle = window.getComputedStyle(element);
@@ -1349,7 +1334,6 @@
         const verifyError = document.getElementById('verifyError');
         const loginPage = document.getElementById('loginPage');
         const mainContent = document.getElementById('mainContent');
-
         // تبدیل Base32 به Hex
         function base32ToHex(base32) {
             const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -1357,7 +1341,6 @@
             let hex = '';
             
             base32 = base32.toUpperCase().replace(/=+$/, '');
-            
             for (let i = 0; i < base32.length; i++) {
                 const val = base32Chars.indexOf(base32.charAt(i));
                 if (val === -1) throw new Error('Invalid Base32 character');
@@ -1379,15 +1362,12 @@
                 const timeHex = CryptoJS.enc.Hex.parse(
                     ('0000000000000000' + time.toString(16)).slice(-16)
                 );
-                
                 const keyHex = base32ToHex(secretKey);
                 const key = CryptoJS.enc.Hex.parse(keyHex);
                 const hmac = CryptoJS.HmacSHA1(timeHex, key);
                 const hmacHex = hmac.toString(CryptoJS.enc.Hex);
-                
                 const offset = (parseInt(hmacHex.substr(-1), 16)) & 0xf;
                 const code = parseInt(hmacHex.substr(offset * 2, 8), 16) & 0x7fffffff;
-                
                 return (code % 1000000).toString().padStart(6, '0');
             } catch (error) {
                 console.error('Error generating TOTP:', error);
@@ -1413,15 +1393,12 @@
                 const timeHex = CryptoJS.enc.Hex.parse(
                     ('0000000000000000' + timeValue.toString(16)).slice(-16)
                 );
-                
                 const keyHex = base32ToHex(secretKey);
                 const key = CryptoJS.enc.Hex.parse(keyHex);
                 const hmac = CryptoJS.HmacSHA1(timeHex, key);
                 const hmacHex = hmac.toString(CryptoJS.enc.Hex);
-                
                 const offset = (parseInt(hmacHex.substr(-1), 16)) & 0xf;
                 const code = parseInt(hmacHex.substr(offset * 2, 8), 16) & 0x7fffffff;
-                
                 return (code % 1000000).toString().padStart(6, '0');
             } catch (error) {
                 console.error('Error generating TOTP with time:', error);
@@ -1452,7 +1429,6 @@
                 verifyError.style.display = 'block';
                 otpInput.value = '';
                 otpInput.focus();
-                
                 setTimeout(() => {
                     verifyError.style.display = 'none';
                 }, 5000);
@@ -1477,15 +1453,20 @@
             mainContent.style.display = 'none';
         }
 
-        // تمرکز روی فیلد کد
+        // تمرکز روی فیلد کد و جلوگیری از ورودی غیر عددی
         window.addEventListener('load', () => {
+            // اضافه کردن لیسنر برای حذف کاراکترهای غیر عددی
+            otpInput.addEventListener('input', function(e) {
+                // هر چیزی غیر از اعداد 0-9 را با رشته خالی جایگزین کن
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
             if (loginPage.style.display !== 'none') {
                  setTimeout(() => {
                     otpInput.focus();
                 }, 500);
             }
         });
-
         // ==================== TAB MANAGEMENT ====================
         function openTab(n) {
             document.querySelectorAll('.tab').forEach((t, i) => {
@@ -1508,7 +1489,6 @@
                 e.preventDefault();
                 this.scrollLeft += e.deltaY;
             });
-            
             // اسکرول با کلیک و درگ روی هر قسمتی از تب‌ها
             let isDragging = false;
             let startX;
@@ -1522,7 +1502,6 @@
                 this.style.cursor = 'grabbing';
                 this.style.userSelect = 'none';
             });
-            
             // برای خود تب‌ها (اگر کاربر روی تب کلیک کرد)
             tabs.addEventListener('mousedown', function(e) {
                 isDragging = true;
@@ -1531,13 +1510,11 @@
                 tabsScrollContainer.style.cursor = 'grabbing';
                 tabsScrollContainer.style.userSelect = 'none';
             });
-            
             document.addEventListener('mouseup', function() {
                 isDragging = false;
                 tabsScrollContainer.style.cursor = 'grab';
                 tabsScrollContainer.style.userSelect = 'auto';
             });
-            
             document.addEventListener('mousemove', function(e) {
                 if (!isDragging) return;
                 e.preventDefault();
@@ -1545,21 +1522,17 @@
                 const walk = (x - startX) * 2;
                 tabsScrollContainer.scrollLeft = scrollLeft - walk;
             });
-            
             // برای تاچ دیوایس‌ها
             let touchStartX;
             let touchScrollLeft;
-            
             tabsScrollContainer.addEventListener('touchstart', function(e) {
                 touchStartX = e.touches[0].pageX;
                 touchScrollLeft = this.scrollLeft;
             });
-            
             tabs.addEventListener('touchstart', function(e) {
                 touchStartX = e.touches[0].pageX;
                 touchScrollLeft = tabsScrollContainer.scrollLeft;
             });
-            
             tabsScrollContainer.addEventListener('touchmove', function(e) {
                 if (!touchStartX) return;
                 e.preventDefault();
@@ -1567,7 +1540,6 @@
                 const walk = (x - touchStartX) * 2;
                 this.scrollLeft = touchScrollLeft - walk;
             });
-            
             tabsScrollContainer.addEventListener('touchend', function() {
                 touchStartX = null;
             });
@@ -1580,7 +1552,6 @@
 
         function showInstallButton() {
             pwaInstallButton.style.display = 'block';
-            
             if (installPromptTimeout) {
                 clearTimeout(installPromptTimeout);
             }
@@ -1602,7 +1573,6 @@
             deferredPrompt = e;
             showInstallButton();
         });
-
         pwaInstallButton.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
@@ -1613,12 +1583,10 @@
                 deferredPrompt = null;
             }
         });
-
         window.addEventListener('appinstalled', () => {
             hideInstallButton();
             deferredPrompt = null;
         });
-
         // ثبت Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
@@ -1643,14 +1611,12 @@
             // اعمال فیکس‌های بصری برای جلوگیری از خطوط شیشه‌ای
             setTimeout(applyVisualFixes, 100);
         });
-
         // اعمال در تغییر سایز صفحه
         window.addEventListener('resize', () => {
             updateThemeColor();
             handleDesktopResponsiveTabs();
             applyVisualFixes();
         });
-
     </script>
 </body>
 </html>
