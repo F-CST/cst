@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ماشین حساب پیشرفته اصلاح شده</title>
+  <title>ماشین حساب پیشرفته</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
@@ -66,11 +66,15 @@
     
     <div class="bg-gray-800 p-4 pb-2 relative z-10 border-b border-gray-700">
       <div class="flex justify-between items-center mb-2">
-        <button id="openHistoryBtn" type="button" class="text-gray-400 hover:text-white p-2 rounded-full transition cursor-pointer z-50 relative" title="تاریخچه">
-          <i class="fas fa-history text-lg pointer-events-none"></i>
+        
+        <button id="openHistoryBtn" type="button" class="bg-gray-700 hover:bg-gray-600 text-gray-200 hover:text-white px-4 py-1.5 rounded-md transition cursor-pointer z-50 relative text-sm font-medium shadow-sm border border-gray-600/50 flex items-center gap-2" title="مشاهده تاریخچه">
+          <i class="fas fa-history text-xs opacity-70"></i>
+          <span>تاریخچه</span>
         </button>
+
         <span class="text-gray-500 text-xs font-bold tracking-widest uppercase">Calculator</span>
-        <div class="w-8"></div>
+        
+        <div class="w-20"></div> 
       </div>
 
       <div class="bg-gray-900 p-4 rounded-xl border border-gray-700">
@@ -273,7 +277,6 @@
       }
       
       listToRender.forEach(item => {
-        // نادیده گرفتن داده‌های خراب یا قدیمی
         if (!item || typeof item !== 'object' || !item.res) return;
 
         const div = document.createElement('div');
@@ -365,9 +368,7 @@
 
     function toggleModal(show) {
       if (show) { 
-          // اول مودال را نشان بده
           historyModal.classList.add('show');
-          // بعد رندر کن که اگر خطایی بود، مودال باز شده باشد
           setTimeout(() => renderHistory(), 10);
       } else { 
           historyModal.classList.remove('show'); 
@@ -376,7 +377,6 @@
 
     // ایونت لیسنرها
     document.addEventListener('DOMContentLoaded', () => {
-        // دکمه باز کردن تاریخچه
         const openBtn = document.getElementById('openHistoryBtn');
         if(openBtn) {
             openBtn.addEventListener('click', (e) => {
@@ -386,10 +386,8 @@
             });
         }
 
-        // دکمه بستن
         document.getElementById('closeHistoryBtn').addEventListener('click', () => toggleModal(false));
         
-        // پاک کردن همه
         document.getElementById('clearHistory').addEventListener('click', () => { 
             if(confirm('آیا مطمئن هستید؟')) {
                 calculationHistory = []; 
@@ -398,19 +396,16 @@
             }
         });
 
-        // اعمال فیلتر
         document.getElementById('applyFilter').addEventListener('click', () => {
             renderHistory(getFilteredHistory());
         });
 
-        // نمایش همه
         document.getElementById('showAll').addEventListener('click', () => {
             startDateInput.value = '';
             endDateInput.value = '';
             renderHistory();
         });
 
-        // حذف بازه
         document.getElementById('deleteRange').addEventListener('click', () => {
             if(!startDateInput.value && !endDateInput.value) {
                 alert('لطفا بازه زمانی را انتخاب کنید');
@@ -436,7 +431,6 @@
 
         historyModal.addEventListener('click', (e) => { if(e.target === historyModal) toggleModal(false); });
         
-        // ماشین حساب
         document.querySelectorAll('button[data-value]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const val = btn.getAttribute('data-value');
@@ -457,7 +451,6 @@
             });
         });
 
-        // کیبورد
         document.addEventListener('keydown', (e) => {
             const map = {'Enter': '=', 'Escape': 'C', 'Backspace': 'backspace'};
             const key = map[e.key] || e.key;
