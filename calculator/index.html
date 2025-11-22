@@ -21,7 +21,7 @@
     .display-hide-scroll::-webkit-scrollbar { display: none; }
     .display-hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     
-    /* مودال */
+    /* استایل مودال (اصلاح شده برای نمایش از بالا) */
     .modal { display: none; background-color: rgba(0, 0, 0, 0.9); transition: opacity 0.3s; opacity: 0; }
     .modal.show { display: flex; opacity: 1; }
     
@@ -119,7 +119,7 @@
     طراحی و ساخت توسط ⦙ سعید شیخ احمد صفاری
   </div>
 
-  <div id="historyModal" class="modal fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-none">
+  <div id="historyModal" class="modal fixed inset-0 z-50 flex items-start justify-center p-6 pt-12 backdrop-blur-none">
     <div class="bg-gray-800 w-full max-w-md rounded-2xl shadow-2xl border border-gray-600 flex flex-col max-h-full">
       
       <div class="flex justify-between items-center p-4 border-b border-gray-700 bg-gray-800 rounded-t-2xl shrink-0">
@@ -165,24 +165,17 @@
   </div>
 
   <script>
+    // متغیرهای سراسری
     let currentInput = '0';
     let previousInput = '';
     let operation = null;
     let resetInput = false;
     let calculationHistory = [];
     
-    // المنت‌ها
-    const calcDisplay = document.getElementById('calcDisplay');
-    const calcHistory = document.getElementById('calcHistory');
-    const historyList = document.getElementById('historyList');
-    const historyModal = document.getElementById('historyModal');
-    const keyboardHint = document.getElementById('keyboardHint');
-    const calculator = document.getElementById('calculator');
-    const closeHintBtn = document.getElementById('closeHintBtn');
-    const startDateInput = document.getElementById('startDate');
-    const endDateInput = document.getElementById('endDate');
+    // متغیرهای DOM (بعداً پر می‌شوند)
+    let calcDisplay, calcHistory, historyList, historyModal, keyboardHint, calculator, closeHintBtn, startDateInput, endDateInput;
 
-    // تابع هوشمند تشخیص دستگاه‌های غیر لمسی (دارای کیبورد/ماوس)
+    // تشخیص دستگاه
     function isDesktopOrKeyboardDevice() {
       const isDesktopOS = /Win|Mac|Linux|CrOS/.test(navigator.platform);
       const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -194,43 +187,24 @@
     }
 
     function showKeyboardHint() {
-       keyboardHint.classList.add('show');
+       if(keyboardHint) keyboardHint.classList.add('show');
     }
     function hideKeyboardHint() {
-      keyboardHint.classList.remove('show');
+      if(keyboardHint) keyboardHint.classList.remove('show');
     }
     function focusCalculator() {
-      calculator.focus();
-      hideKeyboardHint();
-    }
-
-    // بارگذاری اولیه 
-    function init() {
-      if (isDesktopOrKeyboardDevice()) {
-        setTimeout(showKeyboardHint, 500);
-      }
-
-      const savedHistory = localStorage.getItem('calc_history_v3');
-      if (savedHistory) {
-          try {
-            const parsed = JSON.parse(savedHistory);
-            if (Array.isArray(parsed)) {
-                calculationHistory = parsed;
-            } else {
-                calculationHistory = [];
-            }
-          } catch(e) {
-            console.error("خطا در خواندن تاریخچه:", e);
-            calculationHistory = []; 
-          }
+      if(calculator) {
+          calculator.focus();
+          hideKeyboardHint();
       }
     }
 
     function updateDisplay() {
+      if(!calcDisplay) return;
       const formattedInput = currentInput === 'خطا' ?
       'خطا' : parseFloat(currentInput).toLocaleString('en-US', { maximumFractionDigits: 10 });
       calcDisplay.textContent = currentInput.includes('.') ? currentInput : formattedInput;
-      calcHistory.textContent = previousInput + (operation ? ` ${getOperationSymbol(operation)}` : '');
+      if(calcHistory) calcHistory.textContent = previousInput + (operation ? ` ${getOperationSymbol(operation)}` : '');
     }
 
     function getOperationSymbol(op) {
@@ -253,21 +227,23 @@
       } catch (e) { console.log('Storage full or disabled'); }
     }
 
-    function toPersianDate(isoString) {
+    // تابع جدید برای نمایش تاریخ میلادی
+    function formatToGregorian(isoString) {
         if(!isoString) return '---';
         try {
             const date = new Date(isoString);
             if(isNaN(date.getTime())) return '---';
-            return new Intl.DateTimeFormat('fa-IR', {
+            // فرمت en-US تاریخ را به میلادی تبدیل می‌کند
+            return new Intl.DateTimeFormat('en-US', {
                 year: 'numeric', month: 'long', day: 'numeric',
-                hour: '2-digit', minute: '2-digit'
+                hour: '2-digit', minute: '2-digit',
+                hour12: false // فرمت 24 ساعته
             }).format(date);
-        } catch (e) {
-            return '---';
-        }
+        } catch (e) { return '---'; }
     }
 
     function renderHistory(filteredList = null) {
+      if(!historyList) return;
       const listToRender = filteredList || calculationHistory;
       historyList.innerHTML = '';
 
@@ -282,10 +258,11 @@
         const div = document.createElement('div');
         div.className = 'p-3 border-b border-gray-700 hover:bg-gray-700 cursor-pointer flex flex-col gap-1 rounded transition-colors mx-1';
         
-        const dateStr = item.date ? toPersianDate(item.date) : 'بدون تاریخ';
+        // استفاده از تابع تاریخ میلادی
+        const dateStr = item.date ? formatToGregorian(item.date) : 'No Date';
         
         div.innerHTML = `
-            <span class="text-gray-500 text-[10px] self-end">${dateStr}</span>
+            <span class="text-gray-500 text-[10px] self-end dir-ltr">${dateStr}</span>
             <div class="flex justify-between items-center w-full">
                 <span class="text-gray-400 text-xs dir-ltr font-mono">${item.expr || '?'} =</span>
                 <span class="text-indigo-400 font-bold text-lg dir-ltr">${item.res}</span>
@@ -303,6 +280,7 @@
     }
 
     function getFilteredHistory() {
+        if(!startDateInput || !endDateInput) return calculationHistory;
         const startStr = startDateInput.value;
         const endStr = endDateInput.value;
         
@@ -368,6 +346,10 @@
     }
 
     function toggleModal(show) {
+      if(!historyModal) {
+          console.error("Modal element not found!");
+          return;
+      }
       if (show) { 
           historyModal.classList.add('show');
           setTimeout(() => renderHistory(), 10);
@@ -376,62 +358,101 @@
       }
     }
 
-    // ایونت لیسنرها
+    // اجرای کد پس از لود کامل صفحه
     document.addEventListener('DOMContentLoaded', () => {
+        // 1. مقداردهی متغیرهای DOM
+        calcDisplay = document.getElementById('calcDisplay');
+        calcHistory = document.getElementById('calcHistory');
+        historyList = document.getElementById('historyList');
+        historyModal = document.getElementById('historyModal');
+        keyboardHint = document.getElementById('keyboardHint');
+        calculator = document.getElementById('calculator');
+        closeHintBtn = document.getElementById('closeHintBtn');
+        startDateInput = document.getElementById('startDate');
+        endDateInput = document.getElementById('endDate');
+
+        // 2. بازیابی تاریخچه
+        const savedHistory = localStorage.getItem('calc_history_v3');
+        if (savedHistory) {
+            try {
+                const parsed = JSON.parse(savedHistory);
+                if (Array.isArray(parsed)) calculationHistory = parsed;
+            } catch(e) { calculationHistory = []; }
+        }
+
+        // 3. نمایش هینت کیبورد
+        if (isDesktopOrKeyboardDevice()) {
+            setTimeout(showKeyboardHint, 500);
+        }
+
+        // 4. فعال‌سازی دکمه تاریخچه (فیکس شده)
         const openBtn = document.getElementById('openHistoryBtn');
         if(openBtn) {
-            openBtn.addEventListener('click', (e) => {
+            openBtn.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 toggleModal(true);
+            };
+        } else {
+            console.error("دکمه تاریخچه پیدا نشد");
+        }
+
+        // 5. سایر دکمه‌ها
+        const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+        if(closeHistoryBtn) closeHistoryBtn.addEventListener('click', () => toggleModal(false));
+        
+        const clearHistoryBtn = document.getElementById('clearHistory');
+        if(clearHistoryBtn) {
+            clearHistoryBtn.addEventListener('click', () => { 
+                if(confirm('Are you sure?')) {
+                    calculationHistory = []; 
+                    localStorage.removeItem('calc_history_v3');
+                    renderHistory(); 
+                }
             });
         }
 
-        document.getElementById('closeHistoryBtn').addEventListener('click', () => toggleModal(false));
-        
-        document.getElementById('clearHistory').addEventListener('click', () => { 
-            if(confirm('آیا مطمئن هستید؟')) {
-                calculationHistory = []; 
-                localStorage.removeItem('calc_history_v3');
-                renderHistory(); 
-            }
-        });
+        const applyFilterBtn = document.getElementById('applyFilter');
+        if(applyFilterBtn) applyFilterBtn.addEventListener('click', () => renderHistory(getFilteredHistory()));
 
-        document.getElementById('applyFilter').addEventListener('click', () => {
-            renderHistory(getFilteredHistory());
-        });
-
-        document.getElementById('showAll').addEventListener('click', () => {
-            startDateInput.value = '';
-            endDateInput.value = '';
-            renderHistory();
-        });
-
-        document.getElementById('deleteRange').addEventListener('click', () => {
-            if(!startDateInput.value && !endDateInput.value) {
-                alert('لطفا بازه زمانی را انتخاب کنید');
-                return;
-            }
-            if(confirm('حذف سوابق این بازه زمانی؟')) {
-                const startStr = startDateInput.value;
-                const endStr = endDateInput.value;
-                const start = startStr ? new Date(startStr) : new Date('1970-01-01');
-                const end = endStr ? new Date(endStr) : new Date();
-                end.setHours(23, 59, 59, 999);
-
-                calculationHistory = calculationHistory.filter(item => {
-                    if(!item.date) return false; 
-                    const itemDate = new Date(item.date);
-                    return !(itemDate >= start && itemDate <= end);
-                });
-
-                localStorage.setItem('calc_history_v3', JSON.stringify(calculationHistory));
+        const showAllBtn = document.getElementById('showAll');
+        if(showAllBtn) {
+            showAllBtn.addEventListener('click', () => {
+                if(startDateInput) startDateInput.value = '';
+                if(endDateInput) endDateInput.value = '';
                 renderHistory();
-            }
-        });
+            });
+        }
 
-        historyModal.addEventListener('click', (e) => { if(e.target === historyModal) toggleModal(false); });
+        const deleteRangeBtn = document.getElementById('deleteRange');
+        if(deleteRangeBtn) {
+            deleteRangeBtn.addEventListener('click', () => {
+                if((!startDateInput.value && !endDateInput.value)) {
+                    alert('Please select a date range');
+                    return;
+                }
+                if(confirm('Delete history in this range?')) {
+                    const startStr = startDateInput.value;
+                    const endStr = endDateInput.value;
+                    const start = startStr ? new Date(startStr) : new Date('1970-01-01');
+                    const end = endStr ? new Date(endStr) : new Date();
+                    end.setHours(23, 59, 59, 999);
+
+                    calculationHistory = calculationHistory.filter(item => {
+                        if(!item.date) return false; 
+                        const itemDate = new Date(item.date);
+                        return !(itemDate >= start && itemDate <= end);
+                    });
+
+                    localStorage.setItem('calc_history_v3', JSON.stringify(calculationHistory));
+                    renderHistory();
+                }
+            });
+        }
+
+        if(historyModal) historyModal.addEventListener('click', (e) => { if(e.target === historyModal) toggleModal(false); });
         
+        // دکمه‌های ماشین حساب
         document.querySelectorAll('button[data-value]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const val = btn.getAttribute('data-value');
@@ -441,28 +462,28 @@
                 else if (val === 'backspace') { currentInput = currentInput.length > 1 ? currentInput.slice(0, -1) : '0'; }
                 else if (val === '=') { if (operation) calculate(); }
                 else if (['+', '-', '*', '/'].includes(val)) {
-                if (operation && previousInput && !resetInput) calculate();
-                previousInput = currentInput; operation = val; resetInput = true;
+                    if (operation && previousInput && !resetInput) calculate();
+                    previousInput = currentInput; operation = val; resetInput = true;
                 } else if (val === 'percent') { currentInput = (parseFloat(currentInput) / 100).toString(); }
                 else {
-                if (resetInput) { currentInput = val; resetInput = false; }
-                else { currentInput = currentInput === '0' && val !== '.' ? val : currentInput + val; }
+                    if (resetInput) { currentInput = val; resetInput = false; }
+                    else { currentInput = currentInput === '0' && val !== '.' ? val : currentInput + val; }
                 }
                 updateDisplay();
             });
         });
 
+        // کیبورد
         document.addEventListener('keydown', (e) => {
             const map = {'Enter': '=', 'Escape': 'C', 'Backspace': 'backspace'};
             const key = map[e.key] || e.key;
             const btn = document.querySelector(`button[data-value="${key}"]`);
             if(btn) { e.preventDefault(); btn.click(); }
         });
-        calculator.addEventListener('click', focusCalculator);
-        closeHintBtn.addEventListener('click', hideKeyboardHint);
-        keyboardHint.addEventListener('click', (e) => { if (e.target === keyboardHint) hideKeyboardHint(); });
-
-        init();
+        
+        if(calculator) calculator.addEventListener('click', focusCalculator);
+        if(closeHintBtn) closeHintBtn.addEventListener('click', hideKeyboardHint);
+        if(keyboardHint) keyboardHint.addEventListener('click', (e) => { if (e.target === keyboardHint) hideKeyboardHint(); });
     });
   </script>
 </body>
