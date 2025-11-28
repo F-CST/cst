@@ -827,6 +827,32 @@ function ensureDefaults(){
   ]);
 }
 ensureDefaults();
+function upgradeClosestInfoForAllEntries() {
+  const entries = storageGet('entries') || [];
+  let changed = false;
+  entries.forEach(e => {
+    if (!e.outputsDisplay || !Array.isArray(e.outputsDisplay) || e.outputsDisplay.length < 2) return;
+    // از خروجی‌های ذخیره‌شده، دوباره لیست اعداد را می‌سازیم
+    const resultsForClosest = e.outputsDisplay
+      .map(it => ({ label: it.label, value: it.raw }))
+      .filter(x => typeof x.value === 'number' && !isNaN(x.value));
+    if (resultsForClosest.length < 2) return;
+    const { pairs, minDistance, secondPairs, secondDistance } = findClosestNumbers(resultsForClosest);
+    if (!e.closestInfo) e.closestInfo = {};
+    e.closestInfo.closestPairs = pairs;
+    e.closestInfo.minDistance = minDistance;
+    e.closestInfo.secondPairs = secondPairs;
+    e.closestInfo.secondDistance = secondDistance;
+    if (typeof e.inputFormat === 'undefined') {
+      e.inputFormat = null;
+    }
+    changed = true;
+  });
+  if (changed) {
+    storageSet('entries', entries);
+  }
+}
+upgradeClosestInfoForAllEntries();
 // ---------- تشخیص دستگاه موبایل/تبلت ----------
 function isMobileOrTablet() {
     return window.innerWidth <= 1024;
@@ -955,27 +981,57 @@ function formatOutputByInputFormat(number, inputFormat) {
 }
 
 function findClosestNumbers(numbers) {
-  if (numbers.length < 2) return { pairs: [], minDistance: 0 };
+  if (numbers.length < 2) {
+    return { pairs: [], minDistance: 0, secondPairs: [], secondDistance: null };
+  }
   let minDistance = Infinity;
+  let secondDistance = Infinity;
   const closestPairs = [];
+  const secondPairs = [];
+
   for (let i = 0; i < numbers.length; i++) {
     for (let j = i + 1; j < numbers.length; j++) {
       const distance = Math.abs(numbers[i].value - numbers[j].value);
+
       if (distance < minDistance) {
+        // قبلی‌ها می‌شوند فاصلهٔ دوم
+        secondDistance = minDistance;
+        secondPairs.length = 0;
+        Array.prototype.push.apply(secondPairs, closestPairs);
+
+        // مقدار جدید می‌شود نزدیک‌ترین
         minDistance = distance;
         closestPairs.length = 0;
         closestPairs.push([numbers[i], numbers[j]]);
       } else if (distance === minDistance) {
         closestPairs.push([numbers[i], numbers[j]]);
+      } else if (distance > minDistance) {
+        if (distance < secondDistance) {
+          secondDistance = distance;
+          secondPairs.length = 0;
+          secondPairs.push([numbers[i], numbers[j]]);
+        } else if (distance === secondDistance) {
+          secondPairs.push([numbers[i], numbers[j]]);
+        }
       }
     }
   }
-  return { pairs: closestPairs, minDistance };
+
+  if (!isFinite(secondDistance)) {
+    secondDistance = null;
+  }
+
+  return { 
+    pairs: closestPairs, 
+    minDistance, 
+    secondPairs, 
+    secondDistance 
+  };
 }
 
-function renderClosestInfo(closestPairs, minDistance, inputFormat) {
+function renderClosestInfo(closestPairs, minDistance, inputFormat, secondPairs = [], secondDistance = null) {
   if (!closestInfo) return;
-  if (closestPairs.length === 0) {
+  if (!closestPairs || closestPairs.length === 0) {
     closestInfo.classList.add('hidden');
     return;
   }
@@ -986,6 +1042,17 @@ function renderClosestInfo(closestPairs, minDistance, inputFormat) {
     const display2 = formatOutputByInputFormat(pair[1].value, inputFormat);
     closestText += `<div class="text-xs mb-1">• ${pair[0].label} (${display1}) و ${pair[1].label} (${display2})</div>`;
   });
+
+  if (secondPairs && secondPairs.length > 0 && secondDistance !== null) {
+    const displayDist2 = formatOutputByInputFormat(secondDistance, inputFormat);
+    closestText += `<div class="text-sm font-semibold mt-3 mb-2">نزدیک‌ترین فاصله بعدی (فاصله: ${displayDist2}):</div>`;
+    secondPairs.forEach(pair => {
+      const display1 = formatOutputByInputFormat(pair[0].value, inputFormat);
+      const display2 = formatOutputByInputFormat(pair[1].value, inputFormat);
+      closestText += `<div class="text-xs mb-1">• ${pair[0].label} (${display1}) و ${pair[1].label} (${display2})</div>`;
+    });
+  }
+
   closestInfo.innerHTML = closestText;
   closestInfo.classList.remove('hidden');
 }
@@ -1145,11 +1212,11 @@ if(calculateButton) calculateButton.addEventListener('click', ()=>{
     if (!isNaN(outputs[6])) resultsForClosest.push({ label: "فرمول ۷ (کف روزانه)", value: outputs[6] });
     if (!isNaN(outputs[7])) resultsForClosest.push({ label: "فرمول ۸ (کف روزانه)", value: outputs[7] });
 
-    const { pairs: closestPairs, minDistance } = findClosestNumbers(resultsForClosest);
+    const { pairs: closestPairs, minDistance, secondPairs, secondDistance } = findClosestNumbers(resultsForClosest);
 
     const displays = buildDisplayOutputs(outputs, currentLow, currentHigh, parsedY1.format, closestPairs);
     renderResultsDisplay(displays);
-    renderClosestInfo(closestPairs, minDistance, parsedY1.format);
+    renderClosestInfo(closestPairs, minDistance, parsedY1.format, secondPairs, secondDistance);
 
     let chosenISO = null;
     if(datePicker && datePicker.value){
@@ -1174,7 +1241,9 @@ if(calculateButton) calculateButton.addEventListener('click', ()=>{
       originalDailyLow: inputDailyLow.value
     }, displays, note, chosenISO, parsedY1.format, {
       closestPairs: closestPairs,
-      minDistance: minDistance
+      minDistance: minDistance,
+      secondPairs: secondPairs,
+      secondDistance: secondDistance
     });
   }catch(err){ 
     if(errorMessage) errorMessage.textContent = 'خطا: '+err.message; 
@@ -1443,12 +1512,29 @@ function renderHistory(){
         <div class="mt-2 pt-2 border-t border-white/10">
           <div class="text-xs muted mb-1">نزدیک‌ترین اعداد (فاصله: ${displayDist}):</div>
           <div class="text-xs space-y-1">
-            ${e.closestInfo.closestPairs.map(pair => 
-              `• ${pair[0].label} و ${pair[1].label}`
-            ).join('<br>')}
+            ${e.closestInfo.closestPairs.map(pair => {
+              const v1 = formatOutputByInputFormat(pair[0].value, e.inputFormat);
+              const v2 = formatOutputByInputFormat(pair[1].value, e.inputFormat);
+              return `• ${pair[0].label} (${v1}) و ${pair[1].label} (${v2})`;
+            }).join('<br>')}
           </div>
-        </div>
       `;
+
+      if (e.closestInfo.secondPairs && e.closestInfo.secondPairs.length > 0 && e.closestInfo.secondDistance !== null) {
+        const displayDist2 = formatOutputByInputFormat(e.closestInfo.secondDistance, e.inputFormat);
+        closestHTML += `
+          <div class="text-xs muted mt-2 mb-1">نزدیک‌ترین فاصله بعدی (فاصله: ${displayDist2}):</div>
+          <div class="text-xs space-y-1">
+            ${e.closestInfo.secondPairs.map(pair => {
+              const v1 = formatOutputByInputFormat(pair[0].value, e.inputFormat);
+              const v2 = formatOutputByInputFormat(pair[1].value, e.inputFormat);
+              return `• ${pair[0].label} (${v1}) و ${pair[1].label} (${v2})`;
+            }).join('<br>')}
+          </div>
+        `;
+      }
+
+      closestHTML += '</div>';
     }
     wrapper.innerHTML = `
       <div class="flex items-center justify-between">
@@ -1495,12 +1581,31 @@ function showDetail(entryId){
       <div class="bg-white/5 p-4 rounded">
         <div class="text-xs muted mb-3">نزدیک‌ترین اعداد</div>
         <div class="text-sm space-y-2">
-          <div class="font-semibold">فاصله: ${displayDist}</div>
-          ${e.closestInfo.closestPairs.map(pair => 
-            `<div class="flex justify-between items-center p-2 bg-white/5 rounded">
-              <div>${pair[0].label} و ${pair[1].label}</div>
-            </div>`
-          ).join('')}
+          <div class="font-semibold">نزدیک‌ترین اعداد (فاصله: ${displayDist})</div>
+          ${e.closestInfo.closestPairs.map(pair => {
+            const v1 = formatOutputByInputFormat(pair[0].value, e.inputFormat);
+            const v2 = formatOutputByInputFormat(pair[1].value, e.inputFormat);
+            return `<div class="flex justify-between items-center p-2 bg-white/5 rounded">
+              <div>• ${pair[0].label} (${v1}) و ${pair[1].label} (${v2})</div>
+            </div>`;
+          }).join('')}
+    `;
+
+    if (e.closestInfo.secondPairs && e.closestInfo.secondPairs.length > 0 && e.closestInfo.secondDistance !== null) {
+      const displayDist2 = formatOutputByInputFormat(e.closestInfo.secondDistance, e.inputFormat);
+      closestHTML += `
+          <div class="font-semibold mt-3">نزدیک‌ترین فاصله بعدی (فاصله: ${displayDist2})</div>
+          ${e.closestInfo.secondPairs.map(pair => {
+            const v1 = formatOutputByInputFormat(pair[0].value, e.inputFormat);
+            const v2 = formatOutputByInputFormat(pair[1].value, e.inputFormat);
+            return `<div class="flex justify-between items-center p-2 bg-white/5 rounded">
+              <div>• ${pair[0].label} (${v1}) و ${pair[1].label} (${v2})</div>
+            </div>`;
+          }).join('')}
+      `;
+    }
+
+    closestHTML += `
         </div>
       </div>
     `;
