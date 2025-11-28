@@ -209,7 +209,7 @@
       background: #10b981;
       border-color: #34d399;
     }
-    /* استایل برای دکمه‌های در حالت disabled */
+    /* استایل برای دکمه‌ها در حالت disabled */
     .small-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -547,7 +547,7 @@
     <aside class="card">
       <div id="hdr_pairs" class="section-header">
 <div class="title-click">
-    <span class="hamburger-icon">↕</span>
+    <span class="hamburger-icon">⇅</span>
     <span class="section-title">مدیریت جفت‌ارز - برنامه سوم</span>
 </div>
       </div>
@@ -630,7 +630,7 @@ type="number" min="1" max="3650" value="365" class="flex-1 text-center"/>
     <main class="card">
       <div id="hdr_calc" class="section-header">
         <div class="title-click">
-    <span class="hamburger-icon">↕</span>
+    <span class="hamburger-icon">⇅</span>
     <span class="section-title">ماشین حساب فرمول‌ها — 
 برنامه سوم</span>
 </div>
@@ -702,7 +702,7 @@ id="error_message" class="muted text-rose-400 mt-2"></p>
     <section class="card">
       <div id="hdr_history" class="section-header">
                 <div class="title-click">
-    <span class="hamburger-icon">↕</span>
+    <span class="hamburger-icon">⇅</span>
     <span class="section-title">تاریخچه - برنامه سوم</span>
 </div>
       </div>
@@ -755,7 +755,7 @@ class="multi-date-controls">
                   </button>
                   <button id="apply_multi_date_btn" class="small-btn bg-blue-600 hover:bg-blue-700 flex-1">
         
-             🛠 اعمال فیلتر
+             ✅ اعمال فیلتر
                   </button>
                 </div>
               </div>
@@ -1028,6 +1028,42 @@ let result = finalLeft + '.' + rightPart;
   return result;
 }
 
+function findClosestNumbers(numbers) {
+  if (numbers.length < 2) return { pairs: [], minDistance: 0 };
+  let minDistance = Infinity;
+const closestPairs = [];
+  for (let i = 0; i < numbers.length; i++) {
+    for (let j = i + 1; j < numbers.length; j++) {
+      const distance = Math.abs(numbers[i].value - numbers[j].value);
+if (distance < minDistance) {
+        minDistance = distance;
+        closestPairs.length = 0;
+        closestPairs.push([numbers[i], numbers[j]]);
+} else if (distance === minDistance) {
+        closestPairs.push([numbers[i], numbers[j]]);
+}
+    }
+  }
+  return { pairs: closestPairs, minDistance };
+}
+
+function renderClosestInfo(closestPairs, minDistance, inputFormat) {
+  if (!closestInfo) return;
+  if (closestPairs.length === 0) {
+    closestInfo.classList.add('hidden');
+    return;
+}
+  const displayDist = formatOutputByInputFormat(minDistance, inputFormat);
+  let closestText = `<div class="text-sm font-semibold mb-2">نزدیک‌ترین اعداد (فاصله: ${displayDist}):</div>`;
+closestPairs.forEach(pair => {
+    const display1 = formatOutputByInputFormat(pair[0].value, inputFormat);
+    const display2 = formatOutputByInputFormat(pair[1].value, inputFormat);
+    closestText += `<div class="text-xs mb-1">• ${pair[0].label} (${display1}) و ${pair[1].label} (${display2})</div>`;
+  });
+closestInfo.innerHTML = closestText;
+  closestInfo.classList.remove('hidden');
+}
+
 function computeOutputs(y1, y2, currentLow, currentHigh) {
   const result1 = Math.floor(Math.pow(Math.sqrt(y1) - 1, 2));
 const result2 = Math.floor(Math.pow(Math.sqrt(y1) - 0.5, 2));
@@ -1042,7 +1078,7 @@ function decideColor(v, currentLow, currentHigh){
   return 'box-gray';
 }
 
-function buildDisplayOutputs(outputs, currentLow, currentHigh, inputFormat) {
+function buildDisplayOutputs(outputs, currentLow, currentHigh, inputFormat, closestPairs = []) {
   const results = [];
 if (!isNaN(outputs[0])) results.push({ label: "فرمول ۱ (سقف)", value: outputs[0] });
   if (!isNaN(outputs[1])) results.push({ label: "فرمول ۲ (سقف)", value: outputs[1] });
@@ -1102,7 +1138,7 @@ function copyToClipboard(text) {
 }
 
 // ---------- مدیریت داده‌ها ----------
-function saveEntry(pairId, inputs, outputsDisplay, note='', dateISO=null, inputFormat=null){
+function saveEntry(pairId, inputs, outputsDisplay, note='', dateISO=null, inputFormat=null, closestInfo=null){
   const entries = storageGet('entries')||[];
 const si = dateISO || nowISO();
   const entry = { 
@@ -1113,7 +1149,9 @@ const si = dateISO || nowISO();
     inputs, 
     outputsDisplay, 
     note,
-    inputFormat: inputFormat
+    inputFormat: inputFormat,
+    closestInfo: closestInfo ||
+null
   };
   entries.push(entry); 
   storageSet('entries', entries);
@@ -1154,15 +1192,16 @@ if(calculateButton) calculateButton.addEventListener('click', ()=>{
     if(y1 < 0 || y2 < 0) throw new Error('لطفاً فقط اعداد مثبت وارد کنید.');
 const outputs = computeOutputs(y1, y2, currentLow, currentHigh);
 
-    const displays = buildDisplayOutputs(outputs, currentLow, currentHigh, parsedY1.format);
+    const resultsForClosest = [];
+if (!isNaN(outputs[0])) resultsForClosest.push({ label: "فرمول ۱ (سقف)", value: outputs[0] });
+    if (!isNaN(outputs[1])) resultsForClosest.push({ label: "فرمول ۲ (سقف)", value: outputs[1] });
+if (!isNaN(outputs[2])) resultsForClosest.push({ label: "فرمول ۳ (کف)", value: outputs[2] });
+    if (!isNaN(outputs[3])) resultsForClosest.push({ label: "فرمول ۴ (کف)", value: outputs[3] });
+const { pairs: closestPairs, minDistance } = findClosestNumbers(resultsForClosest);
+
+    const displays = buildDisplayOutputs(outputs, currentLow, currentHigh, parsedY1.format, closestPairs);
     renderResultsDisplay(displays);
-    
-    // مخفی کردن بخش نزدیک‌ترین اعداد
-    if(closestInfo) {
-      closestInfo.innerHTML = '';
-      closestInfo.classList.add('hidden');
-    }
-    
+    renderClosestInfo(closestPairs, minDistance, parsedY1.format);
 let chosenISO = null;
     if(datePicker && datePicker.value){
       const dp = datePicker.value;
@@ -1182,7 +1221,10 @@ saveEntry(pairId, {
       originalCurrentHigh: inputCurrentHigh.value,
       originalY2: inputY2.value,
       originalCurrentLow: inputCurrentLow.value
-    }, displays, note, chosenISO, parsedY1.format);
+    }, displays, note, chosenISO, parsedY1.format, {
+      closestPairs: closestPairs,
+      minDistance: minDistance
+    });
 }catch(err){ 
     if(errorMessage) errorMessage.textContent = 'خطا: '+err.message; 
   }
@@ -1477,7 +1519,21 @@ let hasAny = false;
         const category = pair ? categories.find(c=>c.id===pair.categoryId) : null;
 const wrapper = document.createElement('div'); 
         wrapper.className = 'history-entry-compact flex flex-col gap-3 hover:border-white/20 transition-colors';
-        
+        let closestHTML = '';
+if (e.closestInfo && e.closestInfo.closestPairs && e.closestInfo.closestPairs.length > 0) {
+          const displayDist = formatOutputByInputFormat(e.closestInfo.minDistance, e.inputFormat);
+closestHTML = `
+            <div class="mt-2 pt-2 border-t border-white/10">
+              <div class="text-xs muted mb-1">نزدیک‌ترین اعداد (فاصله: ${displayDist}):</div>
+              <div class="text-xs space-y-1">
+                ${e.closestInfo.closestPairs.map(pair => 
+                  `• ${pair[0].label} و ${pair[1].label}`
+       
+         ).join('<br>')}
+              </div>
+            </div>
+          `;
+}
         wrapper.innerHTML = `
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
@@ -1497,6 +1553,8 @@ const wrapper = document.createElement('div');
               </span>`
             ).join('')}
           </div>
+      
+     ${closestHTML}
         `;
         const bottom = document.createElement('div');
 bottom.className = 'flex gap-2 justify-end';
@@ -1549,7 +1607,21 @@ if(filtered.length === 0){
     const category = pair ? (storageGet('categories')||[]).find(c=>c.id===pair.categoryId) : null;
     const wrapper = document.createElement('div'); 
     wrapper.className = 'history-entry-compact flex flex-col gap-3 hover:border-white/20 transition-colors';
-    
+    let closestHTML = '';
+    if (e.closestInfo && e.closestInfo.closestPairs && e.closestInfo.closestPairs.length > 0) {
+      const displayDist = formatOutputByInputFormat(e.closestInfo.minDistance, e.inputFormat);
+      closestHTML = `
+        <div class="mt-2 pt-2 border-t border-white/10">
+  
+        <div class="text-xs muted mb-1">نزدیک‌ترین اعداد (فاصله: ${displayDist}):</div>
+          <div class="text-xs space-y-1">
+            ${e.closestInfo.closestPairs.map(pair => 
+              `• ${pair[0].label} و ${pair[1].label}`
+            ).join('<br>')}
+          </div>
+        </div>
+      `;
+}
     wrapper.innerHTML = `
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
@@ -1569,6 +1641,7 @@ if(filtered.length === 0){
           </span>`
         ).join('')}
       </div>
+      ${closestHTML}
     `;
 const bottom = document.createElement('div'); 
     bottom.className = 'flex gap-2 justify-end';
@@ -1589,7 +1662,24 @@ const e = entries.find(x=>x.id===entryId);
   const pairName = pair?.name || '—';
 const category = pair ? (storageGet('categories')||[]).find(c=>c.id===pair.categoryId) : null;
   if(detailContent) detailContent.innerHTML = '';
-  
+  let closestHTML = '';
+if (e.closestInfo && e.closestInfo.closestPairs && e.closestInfo.closestPairs.length > 0) {
+    const displayDist = formatOutputByInputFormat(e.closestInfo.minDistance, e.inputFormat);
+closestHTML = `
+      <div class="bg-white/5 p-4 rounded">
+        <div class="text-xs muted mb-3">نزدیک‌ترین اعداد</div>
+        <div class="text-sm space-y-2">
+          <div class="font-semibold">فاصله: ${displayDist}</div>
+          ${e.closestInfo.closestPairs.map(pair => 
+            `<div class="flex justify-between items-center p-2 bg-white/5 rounded">
+              <div>${pair[0].label} و ${pair[1].label}</div>
+         
+   </div>`
+          ).join('')}
+        </div>
+      </div>
+    `;
+}
   detailContent.innerHTML = `
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="space-y-3">
@@ -1635,6 +1725,7 @@ const category = pair ? (storageGet('categories')||[]).find(c=>c.id===pair.categ
 ).join('')}
       </div>
     </div>
+    ${closestHTML}
   `;
 if(detailModal) {
     detailModal.classList.remove('hidden');
@@ -1666,7 +1757,7 @@ if(idx===-1) return;
 function editRecord(id){
   const entries = storageGet('entries')||[];
 const e = entries.find(x=>x.id===id); if(!e) return;
-  if(!confirm('مقادیر رکورد در فرم بارگذاری خواهد شد. پس از ویرایش دکمه‌" محاسبه" را بزنید تا رکورد جدید ذخیره شود. رکورد قدیمی حذف می‌شود. ادامهمی‌دهید؟')) return;
+  if(!confirm('مقادیر رکورد در فرم بارگذاری خواهد شد. پس از ویرایش دکمه‌” محاسبه را بزنید تا رکورد جدید ذخیره شود. رکورد قدیمی حذف می‌شود. ادامۀ می‌دهید؟')) return;
 if(pairSelect) pairSelect.value = e.pairId || '';
   if(inputY1) inputY1.value = e.inputs.originalY1; 
   if(inputCurrentHigh) inputCurrentHigh.value = e.inputs.originalCurrentHigh; 
@@ -1846,24 +1937,29 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1. متغیر برای نگهداری آخرین فیلد انتخاب شده
     let lastFocusedInput = null;
     
-    // 2. ترتیب فیلدها برای پرش خودکار
+    // 2. متغیر برای دنبال کردن فیلد فعلی در چرخه
+    let currentInputIndex = 0;
+    
+    // 3. لیست فیلدهای ورودی اصلی
     const inputFields = [
         document.getElementById('input_y1'),
-        document.getElementById('input_current_high'), 
+        document.getElementById('input_current_high'),
         document.getElementById('input_y2'),
         document.getElementById('input_current_low')
-    ].filter(Boolean);
+    ];
 
-    // 3. شناسایی تمام فیلدها و اضافه کردن لیسنر
+    // 4. شناسایی تمام فیلدها و اضافه کردن لیسنر
     const allInputs = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
     allInputs.forEach(input => {
         input.addEventListener('focus', () => {
             lastFocusedInput = input;
-            console.log("Last focused:", input.id);
+            // به روزرسانی ایندکس فعلی
+            currentInputIndex = inputFields.indexOf(input);
+            console.log("Last focused:", input.id, "Index:", currentInputIndex);
         });
     });
 
-    // 4. تنظیمات میکروفون
+    // 5. تنظیمات میکروفون
     let recognition;
     let listening = false;
     const voiceBtn = document.getElementById("voice_btn");
@@ -1879,7 +1975,7 @@ document.addEventListener("DOMContentLoaded", () => {
         recognition.onresult = function (event) {
             let transcript = event.results[event.results.length - 1][0].transcript.trim();
             
-            // تبدیل اعداد فارسی و عربی به انگلیسی
+            // تبدیل اعداد فارسی به انگلیسی
             const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
             const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
             
@@ -1888,29 +1984,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 transcript = transcript.replace(new RegExp(arabicDigits[i], 'g'), i);
             }
 
-            // پردازش اعداد اعشاری
-            transcript = transcript.replace(/ و /g, '.');
-            transcript = transcript.replace(/ ممیز /g, '.');
-            transcript = transcript.replace(/ نقطه /g, '.');
-            transcript = transcript.replace(/ /g, '');
-
+            // پردازش ممیز و اعشار
+            transcript = transcript.replace(/ممیز/gi, '.');
+            transcript = transcript.replace(/اعشار/gi, '.');
+            transcript = transcript.replace(/نقطه/gi, '.');
+            transcript = transcript.replace(/دقیقه/gi, '.');
+            
+            // حذف فاصله از اعداد
+            transcript = transcript.replace(/\s+/g, '');
+            
             // حذف همه چیز غیر از اعداد و نقطه
             const cleaned = transcript.replace(/[^0-9.]/g, "");
             
             // نوشتن در آخرین فیلد فعال
             if (lastFocusedInput && cleaned) {
                 lastFocusedInput.value = cleaned;
-                
-                // تریگر ایونت‌ها برای آپدیت شدن محاسبات
+                // تریگر کردن ایونت‌ها برای آپدیت شدن محاسبات
                 lastFocusedInput.dispatchEvent(new Event('input'));
                 lastFocusedInput.dispatchEvent(new Event('change'));
                 
-                // افکت بصری برای تایید
-                lastFocusedInput.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
+                // افکت بصری کوچک برای تایید
+                lastFocusedInput.style.backgroundColor = 'rgba(16, 185, 129, 0.2)'; // سبز کم‌رنگ
                 setTimeout(() => lastFocusedInput.style.backgroundColor = '', 300);
                 
-                // پرش خودکار به فیلد بعدی
-                autoJumpToNextField(lastFocusedInput);
+                // حرکت خودکار به فیلد بعدی
+                setTimeout(() => {
+                    moveToNextField();
+                }, 500);
+            } else {
+                console.log("No valid input detected or no field focused");
             }
         };
 
@@ -1926,56 +2028,60 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         recognition.onend = () => {
-            // اگر حالت پیوسته فعال است، دوباره شروع کن
+            // اگر هنوز در حالت شنود هستیم، دوباره شروع کنیم
             if (listening) {
-                try {
-                    recognition.start();
-                } catch (e) {
-                    console.log("Could not restart recognition:", e);
-                }
+                recognition.start();
+            } else {
+                voiceBtn.style.background = "#7c3aed";
+                voiceBtn.textContent = "🎤";
             }
         };
 
     } else {
-        voiceBtn.style.display = 'none';
+        voiceBtn.style.display = 'none'; // مخفی کردن دکمه اگر پشتیبانی نشود
         alert("مرورگر شما از فرمان صوتی پشتیبانی نمی‌کند!");
     }
 
-    // تابع پرش خودکار به فیلد بعدی
-    function autoJumpToNextField(currentField) {
-        const currentIndex = inputFields.indexOf(currentField);
-        if (currentIndex !== -1 && currentIndex < inputFields.length - 1) {
-            setTimeout(() => {
-                inputFields[currentIndex + 1].focus();
-            }, 500);
+    // تابع برای حرکت به فیلد بعدی
+    function moveToNextField() {
+        if (currentInputIndex < inputFields.length - 1) {
+            currentInputIndex++;
+            inputFields[currentInputIndex].focus();
+            lastFocusedInput = inputFields[currentInputIndex];
+        } else {
+            // اگر به آخرین فیلد رسیدیم، به اول برگردیم
+            currentInputIndex = 0;
+            inputFields[currentInputIndex].focus();
+            lastFocusedInput = inputFields[currentInputIndex];
         }
     }
 
     voiceBtn.onclick = () => {
         if (!recognition) return;
         if (!listening) {
-            try {
-                recognition.start();
-                listening = true;
-                voiceBtn.style.background = "#10b981";
-                voiceBtn.textContent = "🎤 روشن...";
-                voiceBtn.title = "میکروفون روشن - برای خاموش کردن کلیک کنید";
-            } catch (e) {
-                console.log("Recognition start error:", e);
+            recognition.start();
+            listening = true;
+            voiceBtn.style.background = "#10b981";
+            voiceBtn.textContent = "🎤 گوش‌دادن...";
+            
+            // اگر هیچ فیلدی فوکوس ندارد، اولی را فوکوس کن
+            if (!lastFocusedInput) {
+                inputFields[0].focus();
+                lastFocusedInput = inputFields[0];
+                currentInputIndex = 0;
             }
         } else {
             recognition.stop();
             listening = false;
             voiceBtn.style.background = "#7c3aed";
             voiceBtn.textContent = "🎤";
-            voiceBtn.title = "فعال کردن فرمان صوتی";
         }
     };
 });
 </script>
 
 <div class="signature">
-    طراحی و ساخت توسط ❤ سعید شیخ احمد صفاری
+    طراحی و ساخت توسط ❤️ سعید شیخ احمد صفاری
 </div>
 
 </body>
