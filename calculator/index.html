@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
-    body { font-family: 'Vazirmatn', sans-serif; background-color: #111827; }
+    body { font-family: 'Vazirmatn, system-ui, sans-serif; background-color: #111827; }
     /* اسکرول بار سفارشی */
     .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scroll::-webkit-scrollbar-track { background: #1f2937; border-radius: 4px; }
@@ -38,24 +38,8 @@
     }
     .no-select { user-select: none; -webkit-user-select: none; }
     .btn-active:active { opacity: 0.7; transform: scale(0.98); }
-        .signature {
-        text-align: center;
-        padding: 16px;
-        font-family: Vazirmatn, system-ui;
-        border-radius: 10px;
-        backdrop-filter: blur(5px);
-        font-size: 14px;
-        font-weight: 500;
-        display: block;
-        margin: 30px auto;
-        width: fit-content;
-        max-width: 90%;
-        box-sizing: border-box;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        background: rgba(0, 0, 0, 0.05);
-        color: #666;
-    }
+.signature { color: white; text-align: center; padding: 16px; font-family: Vazirmatn, system-ui; background: rgba(255, 255, 255, 0.05); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 14px; font-weight: 500; display: block; margin: 30px auto; width: fit-content; max-width: 90%; box-sizing: border-box; }
+
     /* کیبورد هینت */
     .keyboard-hint { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.4s ease; pointer-events: none; }
     .keyboard-hint.show { opacity: 1; pointer-events: all; }
