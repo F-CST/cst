@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سیستم مدیریت جفت ارزها - فارکس</title>
+    <!-- لینک فونت وزیرمتن -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
         :root {
@@ -36,7 +38,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Vazirmatn , sans-serif;
+            font-family: 'Vazirmatn', sans-serif; /* اصلاح نام فونت */
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
         body {
@@ -45,7 +47,7 @@
             min-height: 100vh;
             padding: 15px;
             line-height: 1.6;
-            font-size: 14px;
+            font-size: 16px; /* افزایش سایز پایه برای خوانایی بهتر */
         }
         .dark-mode body {
             background: var(--bg-dark);
@@ -735,7 +737,7 @@
         @media (max-width: 768px) {
             body {
                 padding: 10px;
-                font-size: 13px;
+                font-size: 15px; /* تنظیم بهینه برای تبلت و موبایل */
             }
             .header-glass {
                 padding: 20px 25px;
@@ -805,7 +807,7 @@
         @media (max-width: 576px) {
             body {
                 padding: 8px;
-                font-size: 12px;
+                font-size: 14px; /* حداقل سایز استاندارد برای موبایل */
             }
             .header-glass {
                 padding: 15px 20px;
