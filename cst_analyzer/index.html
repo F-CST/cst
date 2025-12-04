@@ -5,21 +5,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>CST Geometry Analyzer</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- افزودن فونت وزیرمتن مشابه کد اول -->
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
 <style>
   :root {
     /* --- پالت رنگی جدید --- */
-    --bg-primary: #071020;       /* پس‌زمینه اصلی (دست‌نخورده) */
+    --bg-primary: #071020;       /* پس‌زمینه اصلی */
     
-    /* رنگ زمینه محتوای باکس‌ها (وقتی باز می‌شوند) - سرمه‌ای تیره و متمایز */
+    /* رنگ زمینه محتوای باکس‌ها */
     --bg-card: #0f172a;          
     
-    /* رنگ زمینه هدرها (تیترهای قابل کلیک) - روشن‌تر و برجسته‌تر */
+    /* رنگ زمینه هدرها */
     --bg-header: #1e293b;        
     
-    /* رنگ ورودی‌ها (Input) */
+    /* رنگ ورودی‌ها */
     --bg-input: #1e293b;
 
-    --border-color: #334155;     /* رنگ بوردرها کمی روشن‌تر برای دید بهتر */
+    --border-color: #334155;     
     --text-primary: #e6eef8;
     --text-secondary: #94a3b8;
     --accent-color: #0ea5a4;
@@ -32,13 +34,15 @@
   }
   
   body {
-    font-family: system-ui, "Segoe UI", Roboto, Tahoma, sans-serif;
+    /* اعمال فونت وزیرمتن برای کل صفحه */
+    font-family: 'Vazirmatn', sans-serif;
     background: var(--bg-primary);
     color: var(--text-primary);
     padding: 12px;
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.6; /* کمی افزایش ارتفاع خط برای خوانایی بهتر */
     overscroll-behavior-y: none;
+    font-size: 16px; /* سایز پایه استاندارد */
   }
   
   .container {
@@ -55,7 +59,7 @@
   }
   
   .card {
-    background: var(--bg-card); /* تغییر رنگ زمینه محتوا */
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 10px;
     margin-bottom: 0;
@@ -81,18 +85,19 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px;
-    background: var(--bg-header); /* تغییر رنگ هدرها */
+    background: var(--bg-header);
     border-bottom: 1px solid var(--border-color);
     transition: background-color 0.2s;
   }
 
   .collapsible-header:hover {
-      filter: brightness(1.1); /* روشن‌تر شدن هنگام هاور */
+      filter: brightness(1.1);
   }
   
   .collapsible-header h3 {
     margin: 0;
     font-size: 1.2rem;
+    font-weight: 600; /* کمی ضخیم‌تر برای تیترها */
     border-bottom: none;
     padding-bottom: 0;
     flex: 1;
@@ -111,18 +116,20 @@
   .collapsible-content {
     padding: 0 16px 16px;
     overflow: visible;
-    background: var(--bg-card); /* اطمینان از رنگ زمینه محتوا */
+    background: var(--bg-card);
   }
   
   h1, h2, h3 {
     margin-top: 0;
     color: var(--text-primary);
+    font-family: 'Vazirmatn', sans-serif;
   }
   
   h1 {
     font-size: 1.5rem;
     text-align: center;
     margin-bottom: 20px;
+    font-weight: 700;
   }
   
   h3 {
@@ -137,10 +144,11 @@
     margin-bottom: 6px;
     color: var(--text-secondary);
     font-size: 0.9rem;
+    font-weight: 500;
   }
   
   input, select, textarea, button {
-    font-family: inherit;
+    font-family: 'Vazirmatn', sans-serif; /* اطمینان از فونت در ورودی‌ها */
     font-size: 1rem;
   }
   
@@ -173,7 +181,7 @@
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     transition: all 0.2s;
     margin-bottom: 8px;
     white-space: nowrap;
@@ -203,11 +211,11 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 8px;
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* کمی بزرگتر برای خوانایی بهتر */
   }
   
   th, td {
-    padding: 8px;
+    padding: 10px 8px;
     border-bottom: 1px solid var(--border-color);
     text-align: center;
     white-space: nowrap;
@@ -217,13 +225,13 @@
   th {
     background: var(--bg-header);
     color: var(--text-secondary);
-    font-weight: 500;
+    font-weight: 600;
   }
   
   .small {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
-    line-height: 1.4;
+    line-height: 1.5;
   }
   
   .symbols-grid {
@@ -316,6 +324,7 @@
     white-space: pre-wrap;
     font-size: 0.8rem;
     overflow-x: auto;
+    font-family: 'Vazirmatn', monospace;
   }
   
   .icon-btn {
@@ -371,6 +380,7 @@
     font-size: 0.85rem;
     width: auto;
     min-width: auto;
+    font-family: 'Vazirmatn', sans-serif;
   }
   
   .date-range-toggle.active { background: var(--accent-color); color: #021; }
@@ -456,6 +466,7 @@
     transition: opacity 0.2s;
     z-index: 103;
     pointer-events: none;
+    font-family: 'Vazirmatn', sans-serif;
   }
   
   .horizontal-line-wrapper:hover .line-guide { opacity: 1; }
@@ -508,7 +519,7 @@
     }
     .chart-wrapper .small {
       font-size: 0.75rem !important;
-      line-height: 1.3 !important;
+      line-height: 1.4 !important;
       word-break: break-word !important;
       overflow-wrap: break-word !important;
       padding-right: 3rem !important;
@@ -551,7 +562,7 @@
   }
   
   @media (max-width: 768px) {
-    body { padding: 8px; }
+    body { padding: 8px; font-size: 15px; } /* سایز فونت موبایل */
     .card { margin-bottom: 0; }
     .collapsible-header { padding: 12px; }
     h1 { font-size: 1.3rem; }
@@ -564,22 +575,22 @@
     .chart-container { height: 300px; }
     .chart-wrapper { padding: 12px; }
     .symbols-grid { padding: 8px; gap: 6px; }
-    .chip { padding: 8px 12px; font-size: 0.8rem; min-width: 70px; }
-    table { font-size: 0.75rem; display: block; overflow-x: auto; white-space: nowrap; }
-    th, td { padding: 6px 4px; }
+    .chip { padding: 8px 12px; font-size: 0.85rem; min-width: 70px; }
+    table { font-size: 0.8rem; display: block; overflow-x: auto; white-space: nowrap; }
+    th, td { padding: 8px 4px; }
     .icon-btn { padding: 4px 6px; font-size: 0.7rem; }
-    input, select, textarea { padding: 12px; }
+    input, select, textarea { padding: 12px; font-size: 1rem; }
     .collapsible-content { max-height: none !important; }
   }
   
   @media (max-width: 480px) {
-    body { padding: 6px; }
+    body { padding: 6px; font-size: 14px; } /* سایز فونت موبایل کوچک */
     .card { margin-bottom: 0; }
     h1 { font-size: 1.2rem; }
     .chart-container { height: 250px; }
     .symbols-grid { padding: 6px; gap: 4px; }
-    .chip { padding: 6px 10px; font-size: 0.75rem; min-width: 60px; }
-    table { font-size: 0.7rem; }
+    .chip { padding: 6px 10px; font-size: 0.8rem; min-width: 60px; }
+    table { font-size: 0.75rem; }
     th, td { padding: 4px 2px; }
     .collapsible-content { max-height: none !important; }
   }
@@ -614,7 +625,7 @@
   }
   
   .history-card .row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-  .history-card .label { color: var(--text-secondary); font-size: 0.8rem; }
+  .history-card .label { color: var(--text-secondary); font-size: 0.85rem; }
   .history-card .value { color: var(--text-primary); font-size: 0.9rem; text-align: left; }
   .history-card .actions { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
   
@@ -622,7 +633,7 @@
     color: white;
     text-align: center;
     padding: 16px;
-    font-family: Vazirmatn, system-ui;
+    font-family: 'Vazirmatn', system-ui;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     backdrop-filter: blur(5px);
@@ -651,6 +662,7 @@
     font-size: 0.9rem;
     text-align: center;
     font-weight: 500;
+    font-family: 'Vazirmatn', sans-serif;
   }
   
   .toast.show { transform: translateX(0); }
