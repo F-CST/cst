@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>calculator pro w/d - برنامه سوم</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- لینک فونت وزیرمتن -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  
   <style>
-    /* استایل‌های CSS شما (بدون تغییر) */
+    /* استایل‌های CSS */
     :root{
       --bg:#1e293b;
       --card:#334155;
@@ -15,12 +18,20 @@
       --text-light:#f1f5f9;
     }
     body{
-      font-family: Vazirmatn , sans-serif; 
+      font-family: 'Vazirmatn', sans-serif; 
       background:var(--bg); 
       color:var(--text-light); 
       min-height:100vh; 
       padding:20px;
+      font-size: 16px; /* سایز استاندارد پایه */
+      line-height: 1.6;
     }
+    
+    /* اطمینان از اعمال فونت روی تمام اجزا */
+    button, input, optgroup, select, textarea {
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
     .card{
       background:var(--card); 
       border:1px solid rgba(255,255,255,0.08); 
@@ -43,17 +54,18 @@
     }
     .muted{
       color:var(--muted); 
-      font-size:.95rem;
+      font-size:.9rem;
     }
     input[type="text"], input[type="date"], input[type="number"], select, textarea { 
       background:var(--input-bg); 
       border:1px solid rgba(255,255,255,0.1);
       color:var(--text-light); 
-      padding:.5rem; 
+      padding:.6rem .5rem; 
       border-radius:6px; 
       width:100%; 
       outline: none;
       transition: all 0.2s ease;
+      font-size: 1rem; /* سایز مناسب برای موبایل */
     }
     input[type="text"]:focus, input[type="date"]:focus, input[type="number"]:focus, select:focus, textarea:focus { 
       border-color: rgba(59, 130, 246, 0.5);
@@ -70,6 +82,7 @@
       margin:.25rem 0;
       border: 1px solid transparent;
       transition: all 0.2s ease;
+      font-size: 0.95rem;
     }
     .box-red{ 
       background:#7f1d1d;
@@ -104,7 +117,7 @@
     .small-btn{ 
       padding:0.5rem 0.75rem;
       border-radius:0.5rem; 
-      font-size:0.875rem; 
+      font-size:0.9rem; 
       cursor:pointer; 
       border: 2px solid rgba(255, 255, 255, 0.2);
       background: var(--input-bg);
@@ -135,100 +148,41 @@
       transform: translateY(0);
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
-    .small-btn.bg-slate-600 {
-      background: #475569;
-      border-color: #64748b;
-      color: #fff;
-    }
-    .small-btn.bg-slate-600:hover {
-      background: #64748b;
-      border-color: #94a3b8;
-    }
-    .small-btn.bg-emerald-600 {
-      background: #059669;
-      border-color: #10b981;
-      color: #fff;
-    }
-    .small-btn.bg-emerald-600:hover {
-      background: #10b981;
-      border-color: #34d399;
-    }
-    .small-btn.bg-rose-600 {
-      background: #dc2626;
-      border-color: #ef4444;
-      color: #fff;
-    }
-    .small-btn.bg-rose-600:hover {
-      background: #ef4444;
-      border-color: #f87171;
-    }
-    .small-btn.bg-blue-600 {
-      background: #2563eb;
-      border-color: #3b82f6;
-      color: #fff;
-    }
-    .small-btn.bg-blue-600:hover {
-      background: #3b82f6;
-      border-color: #60a5fa;
-    }
-    .small-btn.bg-yellow-600 {
-      background: #d97706;
-      border-color: #f59e0b;
-      color: #fff;
-    }
-    .small-btn.bg-yellow-600:hover {
-      background: #f59e0b;
-      border-color: #fbbf24;
-    }
-    .small-btn.bg-indigo-600 {
-      background: #4f46e5;
-      border-color: #6366f1;
-      color: #fff;
-    }
-    .small-btn.bg-indigo-600:hover {
-      background: #6366f1;
-      border-color: #818cf8;
-    }
-    .small-btn.bg-purple-600 {
-      background: #7c3aed;
-      border-color: #8b5cf6;
-      color: #fff;
-    }
-    .small-btn.bg-purple-600:hover {
-      background: #8b5cf6;
-      border-color: #a78bfa;
-    }
-    .small-btn.bg-green-600 {
-      background: #059669;
-      border-color: #10b981;
-      color: #fff;
-    }
-    .small-btn.bg-green-600:hover {
-      background: #10b981;
-      border-color: #34d399;
-    }
+    /* رنگ دکمه‌ها */
+    .small-btn.bg-slate-600 { background: #475569; border-color: #64748b; color: #fff; }
+    .small-btn.bg-slate-600:hover { background: #64748b; border-color: #94a3b8; }
+    .small-btn.bg-emerald-600 { background: #059669; border-color: #10b981; color: #fff; }
+    .small-btn.bg-emerald-600:hover { background: #10b981; border-color: #34d399; }
+    .small-btn.bg-rose-600 { background: #dc2626; border-color: #ef4444; color: #fff; }
+    .small-btn.bg-rose-600:hover { background: #ef4444; border-color: #f87171; }
+    .small-btn.bg-blue-600 { background: #2563eb; border-color: #3b82f6; color: #fff; }
+    .small-btn.bg-blue-600:hover { background: #3b82f6; border-color: #60a5fa; }
+    .small-btn.bg-yellow-600 { background: #d97706; border-color: #f59e0b; color: #fff; }
+    .small-btn.bg-yellow-600:hover { background: #f59e0b; border-color: #fbbf24; }
+    .small-btn.bg-indigo-600 { background: #4f46e5; border-color: #6366f1; color: #fff; }
+    .small-btn.bg-indigo-600:hover { background: #6366f1; border-color: #818cf8; }
+    .small-btn.bg-purple-600 { background: #7c3aed; border-color: #8b5cf6; color: #fff; }
+    .small-btn.bg-purple-600:hover { background: #8b5cf6; border-color: #a78bfa; }
+    .small-btn.bg-green-600 { background: #059669; border-color: #10b981; color: #fff; }
+    .small-btn.bg-green-600:hover { background: #10b981; border-color: #34d399; }
+
     .small-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       transform: none;
     }
-    .small-btn:disabled:hover {
-      background: inherit;
-      border-color: inherit;
-      transform: none;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+    
     #categories_container .small-btn {
       padding: 0.2rem 0.4rem !important;
-      font-size: 0.7rem !important;
-      min-height: 24px !important;
+      font-size: 0.75rem !important;
+      min-height: 28px !important;
       border-width: 1px !important;
       white-space: nowrap;
     }
     #categories_container select.small-btn {
       padding: 0.15rem 0.3rem !important;
-      font-size: 0.65rem !important;
-      min-height: 22px !important;
+      font-size: 0.7rem !important;
+      min-height: 26px !important;
       max-width: 120px;
     }
     #categories_container button.small-btn {
@@ -426,7 +380,7 @@
       color: white;
       text-align: center;
       padding: 16px;
-      font-family: Vazirmatn, system-ui;
+      font-family: 'Vazirmatn', system-ui;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       backdrop-filter: blur(5px);
@@ -439,22 +393,27 @@
       max-width: 90%;
       box-sizing: border-box;
     }
+    
+    /* مدیا کوئری برای موبایل */
     @media only screen and (max-width: 768px) {
+      body {
+        padding: 10px; /* حاشیه کمتر در موبایل */
+      }
       .small-btn {
         min-height: 44px;
-        padding: 0.75rem 1rem;
-        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.95rem; /* فونت خواناتر */
         border-width: 2px;
       }
       #categories_container .small-btn {
-        padding: 0.15rem 0.3rem !important;
-        font-size: 0.65rem !important;
-        min-height: 22px !important;
+        padding: 0.2rem 0.3rem !important;
+        font-size: 0.75rem !important;
+        min-height: 26px !important;
       }
       #categories_container select.small-btn {
         padding: 0.1rem 0.25rem !important;
-        font-size: 0.6rem !important;
-        min-height: 20px !important;
+        font-size: 0.7rem !important;
+        min-height: 24px !important;
         max-width: 100px;
       }
       #categories_container button.small-btn {
@@ -479,7 +438,7 @@
         width: 100%;
       }
       .signature {
-        font-size: 14px;
+        font-size: 13px;
         padding: 15px;
       }
       .small-btn:active {
@@ -492,6 +451,7 @@
         min-height: 44px;
         display: flex;
         align-items: center;
+        font-size: 1rem;
       }
       .stats-grid {
         grid-template-columns: 1fr;
@@ -501,11 +461,14 @@
     @media only screen and (max-width: 480px) {
       .signature {
         font-size: 12px;
-        padding: 13px;
+        padding: 12px;
       }
       .small-btn {
-        padding: 0.875rem 1rem;
+        padding: 0.7rem 0.9rem;
         font-size: 0.95rem;
+      }
+      .section-title {
+        font-size: 1rem;
       }
     }
     #toggle_icon {
