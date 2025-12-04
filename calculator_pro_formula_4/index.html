@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator Pro Formula 4</title>
+    <!-- لینک فونت وزیرمتن اضافه شد -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <style>
-        /* تمام استایل‌های CSS شما بدون تغییر باقی مانده است */
         :root {
             --bg-color: #f5f5f5;
             --container-bg: white;
@@ -31,11 +32,12 @@
             --category-bg: #e8f4fd;
             --category-border: #3498db;
         }
+        /* اعمال فونت وزیرمتن روی تمام المان‌ها */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Vazirmatn', sans-serif; /* فونت جدید جایگزین شد */
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
         .dark-mode {
@@ -63,11 +65,8 @@
             --category-bg: #2a4d6e;
             --category-border: #3498db;
         }
-        * {
-            box-sizing: border-box;
-        }
         body {
-            font-family: Vazirmatn , sans-serif;
+            font-family: 'Vazirmatn', sans-serif;
             background-color: var(--bg-color);
             margin: 0;
             padding: 20px;
@@ -91,11 +90,11 @@
             flex-wrap: wrap;
             position: relative;
             min-height: 60px;
-            /* ارتفاع ثابت برای هدر */
         }
         h1, h2, h3 {
             color: var(--header-color);
             margin: 0 0 15px 0;
+            font-weight: 700; /* کمی ضخیم‌تر برای تیترها */
         }
         .theme-toggle {
             background: none;
@@ -108,12 +107,11 @@
             left: 10px;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 101; /* بالاتر از منوی همبرگری */
+            z-index: 101;
         }
         .theme-toggle:hover {
             transform: translateY(-50%) scale(1.1);
         }
-        /* استایل‌های تب‌ها - بهبود یافته برای اسکرول */
         .tabs {
             display: flex;
             margin-bottom: 20px;
@@ -154,6 +152,7 @@
             white-space: nowrap;
             flex-shrink: 0;
             position: relative;
+            font-weight: 500;
         }
         .tab.active {
             background-color: var(--button-primary);
@@ -168,7 +167,6 @@
         .tab-content.active {
             display: block;
         }
-        /* منوی همبرگری برای موبایل - کاملاً اصلاح شده */
         .mobile-menu-toggle {
             display: none;
             flex-direction: column;
@@ -272,10 +270,11 @@
             border: 1px solid var(--input-border);
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 16px;
+            font-size: 16px; /* سایز استاندارد برای موبایل */
             background-color: var(--container-bg);
             color: var(--text-color);
             transition: border-color 0.3s;
+            font-family: 'Vazirmatn', sans-serif;
         }
         input:focus, select:focus {
             outline: none;
@@ -297,6 +296,8 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 500;
         }
         button:hover {
             background-color: var(--button-primary-hover);
@@ -368,6 +369,7 @@
         .card-value {
             cursor: pointer;
             transition: all 0.2s ease;
+            font-family: 'Vazirmatn', sans-serif;
         }
         .card-value:hover {
             background-color: var(--button-primary);
@@ -400,13 +402,12 @@
             background-color: var(--result-bg);
             border-radius: 4px;
             font-size: 14px;
+            line-height: 1.6;
         }
-        /* استایل‌های جدول برای دسکتاپ - بهبود یافته برای اسکرول */
         .table-container {
             overflow-x: auto;
-            overflow-y: auto; /* تغییر از hidden به auto برای فعال کردن اسکرول عمودی */
+            overflow-y: auto;
             max-height: 60vh;
-            /* محدود کردن ارتفاع برای ایجاد اسکرول عمودی در صورت نیاز */
             margin: 20px 0;
             cursor: grab;
             scroll-behavior: smooth;
@@ -435,10 +436,9 @@
         }
         table {
             width: 200%;
-            /* افزایش عرض برای ایجاد اسکرول افقی واقعی */
             border-collapse: collapse;
             margin: 10px 0;
-            min-width: 1200px; /* حداقل عرض برای ستون‌های زیاد */
+            min-width: 1200px;
         }
         th, td {
             padding: 12px 15px;
@@ -446,7 +446,6 @@
             border-bottom: 1px solid var(--input-border);
             white-space: nowrap;
             user-select: text;
-            /* فعال کردن انتخاب متن */
         }
         th {
             background-color: var(--table-header);
@@ -470,7 +469,6 @@
             font-size: 12px;
             border-radius: 3px;
         }
-        /* استایل‌های کارت برای موبایل */
         .mobile-cards-container {
             display: none;
             flex-direction: column;
@@ -531,7 +529,6 @@
             justify-content: flex-end;
             gap: 5px;
         }
-        /* استایل‌های مدیریت جفت ارز - بهبود یافته */
         .category-section {
             margin: 8px 0;
             padding: 12px;
@@ -696,7 +693,6 @@
         .delete-currency-pair:hover {
             background-color: var(--button-secondary-hover);
         }
-        /* استایل‌های مقایسه - بهبود یافته */
         .comparison-container {
             display: flex;
             flex-wrap: wrap;
@@ -735,7 +731,6 @@
         .remove-date-btn:hover {
             background-color: var(--button-secondary-hover);
         }
-        /* استایل‌های مودال */
         .modal {
             display: none;
             position: fixed;
@@ -773,7 +768,6 @@
         .form-group {
             margin-bottom: 15px;
         }
-        /* استایل‌های اعلان */
         .notification {
             position: fixed;
             top: 20px;
@@ -816,7 +810,6 @@
             padding: 0;
             margin-right: auto;
         }
-        /* استایل‌های فیلتر و جستجو */
         .filter-container {
             display: flex;
             gap: 10px;
@@ -827,7 +820,6 @@
             flex: 1;
             min-width: 150px;
         }
-        /* استایل‌های ریسپانسیو */
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -838,11 +830,9 @@
             .header {
                 flex-direction: row;
                 align-items: center;
-                padding-left: 45px; /* کاهش فاصله برای دکمه تاریک/روشن */
+                padding-left: 45px;
                 padding-right: 45px;
-                /* کاهش فاصله برای منوی همبرگری */
                 min-height: 50px;
-                /* ارتفاع کمتر در موبایل */
             }
             .input-row {
                 flex-direction: column;
@@ -864,7 +854,6 @@
             .filter-item {
                 width: 100%;
             }
-            /* نمایش کارت‌ها در موبایل و مخفی کردن جدول */
             .table-container {
                 display: none;
             }
@@ -876,7 +865,6 @@
             }
             h1 {
                 font-size: 18px;
-                /* کاهش سایز فونت برای موبایل */
                 text-align: center;
                 flex: 1;
                 margin: 0 5px;
@@ -893,7 +881,6 @@
             .mobile-tabs {
                 display: none;
             }
-            /* بهبود نمایش جفت ارزها در موبایل */
             .category-section {
                 padding: 10px;
                 margin: 6px 0;
@@ -925,7 +912,7 @@
             }
             .action-btn {
                 padding: 3px 6px;
-                font-size: 10px;
+                font-size: 11px; /* افزایش سایز برای خوانایی بهتر در موبایل */
                 min-width: 40px;
             }
             .move-buttons {
@@ -934,7 +921,7 @@
             }
             .move-btn {
                 padding: 2px 3px;
-                font-size: 9px;
+                font-size: 10px; /* افزایش سایز برای خوانایی بهتر در موبایل */
                 min-width: 20px;
             }
             .icon-btn {
@@ -942,7 +929,6 @@
                 min-width: 28px;
                 font-size: 12px;
             }
-            /* چیدمان جدید برای موبایل در تب ماشین حساب */
             .mobile-input-order {
                 display: flex;
                 flex-direction: column;
@@ -951,10 +937,8 @@
             .desktop-input-order {
                 display: none;
             }
-            /* تنظیم موقعیت دکمه تاریک/روشن در موبایل */
             .theme-toggle {
                 left: 0;
-                /* چسباندن به لبه */
                 padding: 8px 10px;
             }
         }
@@ -979,25 +963,23 @@
             }
             h1 {
                 font-size: 16px;
-                /* کاهش بیشتر سایز فونت */
                 margin: 0 2px;
                 padding: 0 5px;
             }
-            /* بهبود بیشتر برای موبایل‌های کوچک */
             .currency-pair-item {
                 padding: 4px 5px;
             }
             .currency-pair-name {
-                font-size: 11px;
+                font-size: 12px; /* اصلاح شده برای خوانایی بهتر */
             }
             .action-btn {
                 padding: 2px 4px;
-                font-size: 9px;
+                font-size: 11px; /* اصلاح شده برای خوانایی بهتر */
                 min-width: 35px;
             }
             .move-btn {
                 padding: 1px 2px;
-                font-size: 8px;
+                font-size: 10px; /* اصلاح شده برای خوانایی بهتر */
                 min-width: 18px;
             }
             .mobile-menu-toggle {
@@ -1009,11 +991,9 @@
             }
             .theme-toggle {
                 font-size: 20px;
-                /* کاهش سایز آیکون */
                 padding: 6px 8px;
             }
         }
-        /* نمایش هر دو حالت در دسکتاپ */
         @media (min-width: 769px) {
             .mobile-cards-container {
                 display: none !important;
@@ -1058,7 +1038,6 @@
                 grid-row: 2;
             }
         }
-        /* استایل‌های جدید برای حذف دسته‌بندی */
         .delete-options {
             margin: 15px 0;
             padding: 15px;
@@ -1080,7 +1059,6 @@
             width: auto;
             margin: 0;
         }
-        /* استایل‌های جدید برای نمایش نتایج */
         .results-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1095,10 +1073,10 @@
     .signature {
         text-align: center;
         padding: 16px;
-        font-family: Vazirmatn, system-ui;
+        font-family: 'Vazirmatn', sans-serif;
         border-radius: 10px;
         backdrop-filter: blur(5px);
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 500;
         display: block;
         margin: 30px auto;
@@ -1117,7 +1095,7 @@
     }
 @media only screen and (max-width: 768px) {
     .signature {
-        font-size: 14px;
+        font-size: 12px;
         padding: 15px;
     }
 }
