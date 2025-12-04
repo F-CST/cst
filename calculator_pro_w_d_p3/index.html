@@ -322,6 +322,8 @@
       text-align: center;
       border: 1px solid rgba(255,255,255,0.1);
     }
+    
+    /* --- FIX: Unified Modal Styles --- */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -331,17 +333,34 @@
       background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(4px);
       z-index: 1000;
+      
+      /* Flexbox for perfect centering */
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
+      
+      /* Padding to ensure space from screen edges on mobile */
+      padding: 20px; 
     }
+    
     .modal-content {
       position: relative;
-      max-height: 90vh;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      
+      /* Size constraints */
+      width: 100%;
+      /* Adjust max-height to leave some space vertically if needed, though padding on overlay handles most */
+      max-height: 90vh; 
       overflow-y: auto;
-      margin: auto;
+      
+      /* Inner spacing handled by padding utility classes in HTML, but ensured here */
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
+    
+    /* Specific max-widths can be handled by Tailwind classes (max-w-md, max-w-2xl) */
+
     .closest-info {
       background: rgba(245, 158, 11, 0.2);
       border: 1px solid rgba(245, 158, 11, 0.3);
@@ -711,8 +730,9 @@
           </div>
           <div id="history_list" class="history-compact space-y-2"></div>
         </div>
-        <div id="detail_modal" class="hidden fixed inset-0 bg-black bg-opacity-60 items-center justify-center p-4 z-50">
-          <div class="bg-[var(--card)] p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/10">
+        <!-- اصلاح شده: استفاده از کلاس استاندارد modal-overlay -->
+        <div id="detail_modal" class="hidden modal-overlay">
+          <div class="modal-content p-6 max-w-2xl">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
               <h4 class="font-bold text-lg">جزئیات کامل رکورد - برنامه سوم</h4>
               <button id="close_detail" class="small-btn bg-slate-600 hover:bg-slate-700">بستن</button>
@@ -728,8 +748,10 @@
       </div>
     </section>
   </div>
+  
+  <!-- اصلاح شده: حذف mx-4 اضافی و استفاده از کلاس‌های جدید -->
   <div id="stats_modal" class="hidden modal-overlay">
-    <div class="modal-content bg-[var(--card)] p-6 rounded-lg max-w-md w-full border border-white/10">
+    <div class="modal-content p-6 max-w-md">
       <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
         <h4 class="font-bold text-lg">📊 آمار و اطلاعات سیستم - برنامه سوم</h4>
         <button id="close_stats" class="small-btn bg-slate-600 hover:bg-slate-700">✕</button>
@@ -738,8 +760,9 @@
       </div>
     </div>
   </div>
+  
   <div id="backups_modal" class="hidden modal-overlay">
-    <div class="modal-content bg-[var(--card)] p-6 rounded-lg max-w-2xl w-full border border-white/10">
+    <div class="modal-content p-6 max-w-2xl">
       <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
         <h4 class="font-bold text-lg">💾 مدیریت بک‌آپ‌ها - برنامه سوم</h4>
         <button id="close_backups" class="small-btn bg-slate-600 hover:bg-slate-700">✕</button>
@@ -1869,7 +1892,8 @@
       
       if (detailModal) {
         detailModal.classList.remove('hidden');
-        detailModal.classList.add('center-modal');
+        // detailModal is now using generic modal-overlay which has flex center built-in
+        // no need to add extra class center-modal unless specific override needed, but removed it for consistency
       }
       
       if (editRecordBtn) editRecordBtn.onclick = () => editRecord(e.id);
@@ -1881,7 +1905,6 @@
       closeDetail.addEventListener('click', () => { 
         if (detailModal) {
           detailModal.classList.add('hidden');
-          detailModal.classList.remove('center-modal');
         }
       });
     }
@@ -1899,7 +1922,6 @@
       
       if (detailModal) {
         detailModal.classList.add('hidden');
-        detailModal.classList.remove('center-modal');
       }
     }
     
@@ -1928,7 +1950,6 @@
       
       if (detailModal) {
         detailModal.classList.add('hidden');
-        detailModal.classList.remove('center-modal');
       }
       
       window.scrollTo({top: 0, behavior: 'smooth'});
@@ -1955,7 +1976,6 @@
       
       if (detailModal) {
         detailModal.classList.add('hidden');
-        detailModal.classList.remove('center-modal');
       }
     }
     
