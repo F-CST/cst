@@ -936,24 +936,32 @@
         }
         
         /* امضا */
-        .signature {
-            color: var(--signature-text-light);
-            text-align: center;
-            padding: 16px;
-            font-family: 'Vazirmatn', sans-serif;
-            background: var(--signature-bg-light);
-            border-radius: 10px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            font-size: 12px;
-            font-weight: 500;
-            display: block;
-            margin: 30px auto;
-            width: fit-content;
-            max-width: 90%;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
+.signature {
+    color: var(--signature-text-light);
+    text-align: center;
+    padding: 16px;
+    font-family: 'Vazirmatn', sans-serif;
+    background: var(--signature-bg-light);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 14px; /* دسکتاپ */
+    font-weight: 500;
+    display: block;
+    margin: 30px auto;
+    width: fit-content;
+    max-width: 90%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .signature {
+        font-size: 12px; /* موبایل */
+        padding: 15px;
+    }
+}
+
 
         .dark-mode .signature {
             color: var(--signature-text-dark);
