@@ -1707,7 +1707,15 @@ document.getElementById('deleteSelectedSymbol').addEventListener('click', ()=>{
   const date = document.getElementById('inputDate').value || null;
   if(high===null || low===null){ showToast('High و Low معتبر وارد کنید'); return; }
   const ok = addDayToSymbol(symName, high, low, date);
-  if(ok){ showToast('ثبت شد'); renderSummaryForRange(symName, true, 5); document.getElementById('inputHigh').value = ''; document.getElementById('inputLow').value = ''; }
+  if(ok){ showToast('ثبت شد'); renderSummaryForRange(symName, true, 5); document.getElementById('inputHigh').value = ''; document.getElementById('inputLow').value = ''; 
+      // حرکت خودکار به جفت‌ارز بعدی
+      const idx = store.symbolOrder.indexOf(symName);
+      if(idx !== -1 && idx + 1 < store.symbolOrder.length){
+          const next = store.symbolOrder[idx + 1];
+          document.getElementById('selectedSymbol').value = next;
+          document.getElementById('selectedSymbol3').value = next;
+      }
+}
   else showToast('خطا در ثبت');
 });
   document.getElementById('daysRangeToggle').addEventListener('click', () => {
